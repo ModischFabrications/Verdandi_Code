@@ -46,7 +46,8 @@ void setup_WiFi() {
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
-    // TODO: abstract away pullup/-down. BUILTIN is inverted (LOW -> ON)
+    // light LED whenever user interaction is needed
+    // BUILTIN is inverted (LOW -> ON)
     digitalWrite(LED_BUILTIN, LOW);
 
     setup_serial(9600);
