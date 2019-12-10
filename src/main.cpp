@@ -50,7 +50,9 @@ void setup()
     pinMode(LED_BUILTIN, OUTPUT);
     // TODO: abstract away pullup/-down. BUILTIN is inverted (LOW -> ON)
     digitalWrite(LED_BUILTIN, LOW);
+    
     setup_serial(9600);
+    setup_WiFi();
 
     // ...
 
