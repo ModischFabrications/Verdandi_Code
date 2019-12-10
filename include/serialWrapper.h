@@ -8,8 +8,7 @@ const bool USE_SERIAL = true;
 const bool USE_SERIAL = false;
 #endif
 
-void setup_serial(int baud)
-{
+void setup_serial(int baud) {
     if (!USE_SERIAL)
         return;
 
@@ -19,8 +18,7 @@ void setup_serial(int baud)
     Serial.println(F("Debug mode is activated"));
 }
 
-void heartbeat_serial()
-{
+void heartbeat_serial() {
     if (!USE_SERIAL)
         return;
 
@@ -29,25 +27,21 @@ void heartbeat_serial()
 
     uint32_t time = millis();
 
-    if (time - last_msg > time_interval)
-    {
+    if (time - last_msg > time_interval) {
         Serial.print(F("."));
         last_msg = time;
     }
 }
 
 // protected method to enforce "F" and ensure flag usage
-void println(const __FlashStringHelper *string)
-{
+void println(const __FlashStringHelper* string) {
     if (!USE_SERIAL)
         return;
     Serial.println(string);
 }
 
-void printlnRaw(String string)
-{
+void printlnRaw(String string) {
     if (!USE_SERIAL)
         return;
     Serial.println(string);
 }
-
