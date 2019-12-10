@@ -2,50 +2,55 @@
 #include <ESP8266WiFi.h> // we have WiFi
 #include <WiFiManager.h> // captive portal
 
-//#include <HardwareSerial.h>
-
-const bool USE_SERIAL = true;
+// define before importing
+#define DEBUG
+#include "serialWrapper.h"
 
 // could (should?) be moved into other files
 const uint8_t PIN_RGB = D1;
 const uint8_t N_LEDS = 24;
 
+WiFiManager wifiManager;
 
-void setup_serial()
+//gets called when WiFiManager enters configuration mode
+void configModeCallback(WiFiManager *myWiFiManager)
 {
-    if (!USE_SERIAL)
-        return;
-
-    Serial.begin(9600);
-    Serial.println();
-    Serial.println(F("Welcome to Verdandi"));
-    Serial.println(F("Debug mode is activated"));
+    println(F("Entered config mode"));
+    // auto generated SSID might be unknown
+    printlnRaw(myWiFiManager->getConfigPortalSSID());
+    printlnRaw(WiFi.softAPIP().toString());
 }
 
-void heartbeat_serial()
+void setup_WiFi()
 {
-    if (!USE_SERIAL)
-        return;
-    
-    static uint32_t last_msg = 0;
-    const uint16_t time_interval = 5 * 1000;
+    println(F("setting up wifi (with captive portal)"));
 
-    uint32_t time = millis();
+    // DEBUGGING:
+    // wifiManager.resetSettings();
 
-    if (time - last_msg > time_interval)
+    wifiManager.setAPCallback(configModeCallback);
+    wifiManager.setAPStaticIPConfig(IPAddress(192, 168, 1, 1), IPAddress(192, 168, 1, 1), IPAddress(255, 255, 255, 0));
+    //wifiManager.setConfigPortalTimeout(60);
+
+    // TODO: while? with blinking
+    if (!wifiManager.autoConnect("Verdandi"))
     {
-        Serial.print(F("."));
-        last_msg = time;
+        println(F("failed to connect and hit timeout"));
+        //reset and try again, or maybe put it to deep sleep
+        ESP.reset();
+        delay(1000);
     }
-}
 
+    //if you get here you have connected to the WiFi
+    println(F("connected...yeey :)"));
+}
 
 void setup()
 {
     pinMode(LED_BUILTIN, OUTPUT);
-    // TODO: abstract away pullup/-down
+    // TODO: abstract away pullup/-down. BUILTIN is inverted (LOW -> ON)
     digitalWrite(LED_BUILTIN, LOW);
-    setup_serial();
+    setup_serial(9600);
 
     // ...
 
@@ -58,4 +63,3 @@ void loop()
 
     heartbeat_serial();
 }
-
