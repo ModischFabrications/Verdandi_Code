@@ -32,12 +32,13 @@ void setup_WiFi() {
                                     IPAddress(255, 255, 255, 0));
     // wifiManager.setConfigPortalTimeout(60);
 
-    // TODO: while? with blinking
     if (!wifiManager.autoConnect("Verdandi")) {
         println(F("failed to connect and hit timeout"));
-        // reset and try again, or maybe put it to deep sleep
-        ESP.reset();
+        // reset and try again after waking up
+        // TODO: put it into deep sleep? How do we handle "broken"?
+        ESP.restart();
         delay(1000);
+        println(F("This should never happen..."));
     }
 
     // if you get here you have connected to the WiFi
