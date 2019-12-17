@@ -93,7 +93,7 @@ void setup() {
     // BUILTIN is inverted (LOW -> ON)
     digitalWrite(LED_BUILTIN, LOW);
 
-    setup_serial(9600);
+    setup_serial(115200);
     setup_WiFi();
 
     // TODO: display connection error
