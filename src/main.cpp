@@ -1,6 +1,8 @@
 //#include <Arduino.h>
 #include <ESP8266WiFi.h> // we have WiFi
-#include <WiFiManager.h> // captive portal
+#include <ESP8266HTTPClient.h>  // connect to API
+#include <ESP8266WebServer.h>  // config portal
+#include <WiFiManager.h> // captive portal for wifi
 
 // define before importing
 #define DEBUG
@@ -11,6 +13,7 @@ const uint8_t PIN_RGB = D1;
 const uint8_t N_LEDS = 24;
 
 WiFiManager wifiManager;
+HTTPClient httpClient;
 
 // gets called when WiFiManager enters configuration mode
 void configModeCallback(WiFiManager* myWiFiManager) {
@@ -18,6 +21,21 @@ void configModeCallback(WiFiManager* myWiFiManager) {
     // auto generated SSID might be unknown
     printlnRaw(myWiFiManager->getConfigPortalSSID());
     printlnRaw(WiFi.softAPIP().toString());
+}
+
+void test_connection() {
+    httpClient.begin(F("http://worldtimeapi.org/api/ip"));
+    int httpCode = httpClient.GET();
+    
+    // String payload = http.getString();
+
+    if (httpCode != HTTP_CODE_OK) {
+        print(F("Connection test failed with status code "));
+        printlnRaw(String(httpCode));
+        return;
+    }
+
+    println(F("internet connection established"));
 }
 
 void setup_WiFi() {
@@ -40,6 +58,9 @@ void setup_WiFi() {
         delay(1000);
         println(F("This should never happen..."));
     }
+
+    // TODO: display connection error
+    test_connection();
 
     // if you get here you have connected to the WiFi
     println(F("connected...yeey :)"));

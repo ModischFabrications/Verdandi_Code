@@ -45,3 +45,15 @@ void printlnRaw(String string) {
         return;
     Serial.println(string);
 }
+
+void print(const __FlashStringHelper* string) {
+    if (!USE_SERIAL)
+        return;
+    Serial.print(string);
+}
+
+void printRaw(String string) {
+    if (!USE_SERIAL)
+        return;
+    Serial.print(string);
+}
