@@ -23,11 +23,12 @@ void configModeCallback(WiFiManager* myWiFiManager) {
     printlnRaw(WiFi.softAPIP().toString());
 }
 
-void test_connection() {
+void test_internet_connection() {
     httpClient.begin(F("http://worldtimeapi.org/api/ip"));
     int httpCode = httpClient.GET();
-    
-    // String payload = http.getString();
+    String payload = httpClient.getString();
+    printlnRaw(payload);
+    httpClient.end();
 
     if (httpCode != HTTP_CODE_OK) {
         print(F("Connection test failed with status code "));
@@ -60,7 +61,7 @@ void setup_WiFi() {
     }
 
     // TODO: display connection error
-    test_connection();
+    test_internet_connection();
 
     // if you get here you have connected to the WiFi
     println(F("connected...yeey :)"));
