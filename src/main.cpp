@@ -1,12 +1,13 @@
 //#include <Arduino.h>
-#include <ESP8266WiFi.h> // we have WiFi
-#include <ESP8266HTTPClient.h>  // connect to API
+#include <ESP8266HTTPClient.h> // connect to API
 #include <ESP8266WebServer.h>  // config portal
-#include <WiFiManager.h> // captive portal for wifi
+#include <ESP8266WiFi.h>       // we have WiFi
+#include <WiFiManager.h>       // captive portal for wifi
 
 // define before importing
 #define DEBUG
 #include "SerialWrapper.h"
+#include "Website.h"
 
 // could (should?) be moved into other files
 const uint8_t PIN_RGB = D1;
@@ -15,7 +16,6 @@ const uint8_t N_LEDS = 24;
 WiFiManager wifiManager;
 HTTPClient httpClient;
 WiFiServer server(80);
-
 
 // gets called when WiFiManager enters configuration mode
 void configModeCallback(WiFiManager* myWiFiManager) {
@@ -66,8 +66,25 @@ void setup_WiFi() {
     println(F("connected to the local network"));
 }
 
-void setup_server() {
+void handle_server() {
+    // Check if a client has connected
+    WiFiClient client = server.available();
+    if (!client) {
+        return;
+    }
 
+    // Wait until the client sends some data
+    println(F("new client connected"));
+    while (!client.available()) {
+        delay(1);
+    }
+
+    client.println("HTTP/1.1 200 OK");
+    client.println("Content-Type: text/html");
+    client.println(""); //  do not forget this one!!
+    client.println(getContent());
+
+    client.flush();
 }
 
 void setup() {
@@ -84,11 +101,16 @@ void setup() {
 
     // ...
 
+    server.begin();
+    println(F("Server started"));
+
     digitalWrite(LED_BUILTIN, HIGH);
 }
 
 void loop() {
     delay(100);
+
+    handle_server();
 
     heartbeat_serial();
 }
