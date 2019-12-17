@@ -6,7 +6,7 @@
 
 // define before importing
 #define DEBUG
-#include "serialWrapper.h"
+#include "SerialWrapper.h"
 
 // could (should?) be moved into other files
 const uint8_t PIN_RGB = D1;
@@ -14,6 +14,8 @@ const uint8_t N_LEDS = 24;
 
 WiFiManager wifiManager;
 HTTPClient httpClient;
+WiFiServer server(80);
+
 
 // gets called when WiFiManager enters configuration mode
 void configModeCallback(WiFiManager* myWiFiManager) {
@@ -36,7 +38,7 @@ void test_internet_connection() {
         return;
     }
 
-    println(F("internet connection established"));
+    println(F("connected to the internet"));
 }
 
 void setup_WiFi() {
@@ -60,11 +62,12 @@ void setup_WiFi() {
         println(F("This should never happen..."));
     }
 
-    // TODO: display connection error
-    test_internet_connection();
-
     // if you get here you have connected to the WiFi
-    println(F("connected...yeey :)"));
+    println(F("connected to the local network"));
+}
+
+void setup_server() {
+
 }
 
 void setup() {
@@ -75,6 +78,9 @@ void setup() {
 
     setup_serial(9600);
     setup_WiFi();
+
+    // TODO: display connection error
+    test_internet_connection();
 
     // ...
 
