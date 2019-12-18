@@ -15,7 +15,7 @@ const uint8_t N_LEDS = 24;
 
 WiFiManager wifiManager;
 HTTPClient httpClient;
-WiFiServer server(80);
+ESP8266WebServer server(80);
 
 // gets called when WiFiManager enters configuration mode
 void configModeCallback(WiFiManager* myWiFiManager) {
@@ -66,26 +66,21 @@ void setup_WiFi() {
     println(F("connected to the local network"));
 }
 
-void handle_server() {
-    // Check if a client has connected
-    WiFiClient client = server.available();
-    if (!client) {
-        return;
+void handle_data_update() {
+    // send back information about arguments as a test
+    String message = "Number of args received:";
+    message += server.args();
+
+    for (int i = 0; i < server.args(); i++) {
+        message += "Arg nº" + (String)i + " –> ";
+        message += server.argName(i) + ": ";
+        message += server.arg(i) + "\n";
     }
 
-    // Wait until the client sends some data
-    println(F("new client connected"));
-    while (!client.available()) {
-        delay(1);
-    }
-
-    client.println("HTTP/1.1 200 OK");
-    client.println("Content-Type: text/html");
-    client.println(""); //  do not forget this one!!
-    client.println(getContent());
-
-    client.flush();
+    server.send(200, "text/plain", message);
 }
+
+void handle_server() { server.send(200, "text/html", getContent()); }
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
@@ -101,6 +96,8 @@ void setup() {
 
     // ...
 
+    server.on("/", handle_server);
+    server.on("/update", handle_data_update);
     server.begin();
     println(F("Server started"));
 
@@ -110,7 +107,7 @@ void setup() {
 void loop() {
     delay(100);
 
-    handle_server();
+    server.handleClient();
 
     heartbeat_serial();
 }
