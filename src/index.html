@@ -28,8 +28,8 @@
             var xhttp = new XMLHttpRequest();
             // xhttp.open("POST", 'http://192.168.0.27/update', true);
             xhttp.open(method, document.URL + 'update', true);
-            xhttp.setRequestHeader('Content-Type', 'application/json');
-            xhttp.send(`{"b":${brightness},"cH":${colorH},"cM":${colorM},"cS":${colorS}},"p":${pollInterval},"tz":${timeZone}`);
+            xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhttp.send(`b:${brightness}&cH=${colorH}&cM=${colorM}&cS=${colorS}&p=${pollInterval}&tz=${timeZone}`);
         }
     </script>
 </head>

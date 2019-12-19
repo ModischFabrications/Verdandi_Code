@@ -68,15 +68,16 @@ void setup_WiFi() {
 
 void handle_data_update() {
     // send back information about arguments as a test
-    String message = "Number of args received:";
+    String message = "Number of args received: ";
     message += server.args();
 
     for (int i = 0; i < server.args(); i++) {
-        message += "Arg nº" + (String)i + " –> ";
+        message += "\nArg #" + (String)i + " >> ";
         message += server.argName(i) + ": ";
-        message += server.arg(i) + "\n";
+        message += server.arg(i);
     }
 
+    printlnRaw(message);
     server.send(200, "text/plain", message);
 }
 
