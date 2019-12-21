@@ -4,9 +4,9 @@
 // define before importing
 #define DEBUG
 #include "SerialWrapper.h"
-#include "WiFiLoginManager.h"
 
-#include "ConfigPortal.h"
+#include "network/WiFiLoginManager.h"
+#include "network/ConfigPortal.h"
 
 // could (should?) be moved into other files
 const uint8_t PIN_RGB = D1;
