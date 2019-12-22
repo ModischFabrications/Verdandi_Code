@@ -12,22 +12,31 @@
 const uint8_t PIN_RGB = D1;
 const uint8_t N_LEDS = 24;
 
-HTTPClient httpClient;
+HTTPClient http;
+WiFiClient client;
 
 void test_internet_connection() {
-    httpClient.begin(F("http://worldtimeapi.org/api/ip"));
-    int httpCode = httpClient.GET();
-    String payload = httpClient.getString();
-    printlnRaw(payload);
-    httpClient.end();
+    http.begin(client, F("http://worldtimeapi.org/api/ip"));
+    int httpCode = http.GET();
 
-    if (httpCode != HTTP_CODE_OK) {
-        print(F("Connection test failed with status code "));
-        printlnRaw(String(httpCode));
-        return;
+    if (httpCode > 0) {
+        print(F("[HTTP] GET... code: "));
+        printlnRaw((String)httpCode);
+
+        // file found at server
+        if (httpCode == HTTP_CODE_OK ||
+            httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
+            String payload = http.getString();
+            printlnRaw(payload);
+        }
+    } else {
+        printRaw("[HTTP] GET... failed, error: ");
+        printlnRaw(http.errorToString(httpCode).c_str());
     }
 
     println(F("connected to the internet"));
+
+    http.end();
 }
 
 void setup() {
