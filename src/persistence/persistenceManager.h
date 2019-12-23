@@ -9,20 +9,27 @@
 
 const uint16_t delay_to_save_ms = (5 * 1000);
 
+
 // classes don't behave well with pointers!
 
+// singleton, we have only one EEPROM
 class PersistenceManager {
   private:
+    Configuration configuration;
     uint32_t t_next_savepoint = 0;
 
     PersistenceManager() {}
 
   public:
-    static const PersistenceManager instance;
+    static PersistenceManager* instance = PersistenceManager();
     // not threadsafe, but whatever
-    Configuration configuration;
+    
+    Configuration get() {
+        return configuration;
+    }
 
-    void apply(Configuration& new_config) {
+    // persistent only after a small timeout
+    void set(Configuration& new_config) {
         if (this->configuration == new_config) {
             return;
         }

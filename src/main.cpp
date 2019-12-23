@@ -68,5 +68,7 @@ void loop() {
 
     server.handleClient();
 
+    PersistenceManager::instance.try_save();
+
     heartbeat_serial();
 }
