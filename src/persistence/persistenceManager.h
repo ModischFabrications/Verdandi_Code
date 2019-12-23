@@ -1,55 +1,51 @@
 #pragma once
 
-#include <EEPROM.h>
+#include <Arduino.h>
+#include <stdint.h>
 
+#include "SerialWrapper.h"
 #include "configuration.h"
+#include "persistenceStore.h"
 
-/**
- * EEPROM has around 100k writes per cell, so use them carefully!
- * It might be a good idea to switch to new cells with each revision.
- * ATtiny has 512 bytes EEPROM.
- * 
- * TODO: Preserve EEPROM while programming -> EESAVE fuse
- * */
-#define EEPROM_VERSION_ADDR 12
-#define EEPROM_SETTINGS_ADDR 20
+const uint16_t delay_to_save_ms = (5 * 1000);
 
-// change with each design iteration to prevent EEPROM inconsistency
-// the chance that a random combination is a match is very low
-const uint8_t version = 2;
+// classes don't behave well with pointers!
 
-// -----------
+class PersistenceManager {
+  private:
+    uint32_t t_next_savepoint = 0;
 
-/**
- * save settings to EEPROM for persistent storage
- * TODO: check if convenience features actually use 2 bytes as before
- * */
-void save_settings(Configuration settings)
-{
-  EEPROM.write(EEPROM_VERSION_ADDR, version);
-  EEPROM.put(EEPROM_SETTINGS_ADDR, settings);
-}
+    PersistenceManager() {}
 
-/**
- * load settings from EEPROM, this will reset and return default values for
- * corrupted, outdated or missing settings.
- * */
-Configuration load_settings()
-{
-  // could be rubbish or zeros, either way should work
-  uint8_t saved_version = EEPROM.read(EEPROM_VERSION_ADDR);
+  public:
+    static const PersistenceManager instance;
+    // not threadsafe, but whatever
+    Configuration configuration;
 
-  if (saved_version != version)
-  {
-    // save new default settings, updates version
-    save_settings(default_configuration);
+    void apply(Configuration& new_config) {
+        if (this->configuration == new_config) {
+            return;
+        }
 
-    return default_configuration;
-  }
+        // set "moving" timer to save as soon as user is done
+        this->t_next_savepoint = (millis() + delay_to_save_ms);
+    }
 
-  // content should be correct, return it
-  Configuration settings;
-  EEPROM.get(EEPROM_SETTINGS_ADDR, settings);
+    /**
+     * Call regularly to persist settings to EEPROM.
+     * saves configuration to EEPROM if timeout has passed.
+     *
+     * TODO: roll-over protection
+     * */
+    void try_save() {
+        // TODO: is this safe with overflowing values (> 1 day)?
+        if (this->t_next_savepoint != 0 && millis() >= this->t_next_savepoint) {
+            save_settings(this->configuration);
+            this->t_next_savepoint = 0;
 
-  return settings;
-}
+            if (USE_SERIAL) {
+                println(F("Saving to EEPROM"));
+            }
+        }
+    }
+};

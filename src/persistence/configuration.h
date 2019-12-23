@@ -14,11 +14,15 @@ struct Configuration
     uint8_t colorS[3];
 
     uint16_t poll_interval_min;
-/*
-    bool operator==(const Configuration &s2)
+
+    const bool operator==(const Configuration &other)
     {
-        return (this->brightness == s2.brightness);
-    }*/
+        // TODO: extend with correct comparison
+        return (
+            this->brightness == other.brightness && 
+            this->show_minutes == other.show_minutes
+        );
+    }
 };
 
 Configuration default_configuration = {
