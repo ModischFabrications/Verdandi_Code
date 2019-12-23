@@ -5,6 +5,8 @@
 #define DEBUG
 #include "SerialWrapper.h"
 
+#include "persistence/persistenceManager.h"
+
 #include "network/WiFiLoginManager.h"
 #include "network/ConfigPortal.h"
 

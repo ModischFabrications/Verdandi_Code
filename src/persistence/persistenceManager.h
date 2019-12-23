@@ -26,7 +26,7 @@ const uint8_t version = 2;
  * */
 void save_settings(Configuration settings)
 {
-  EEPROM.put(EEPROM_VERSION_ADDR, version);
+  EEPROM.write(EEPROM_VERSION_ADDR, version);
   EEPROM.put(EEPROM_SETTINGS_ADDR, settings);
 }
 
@@ -36,8 +36,8 @@ void save_settings(Configuration settings)
  * */
 Configuration load_settings()
 {
-  uint8_t saved_version;
-  EEPROM.get(EEPROM_VERSION_ADDR, saved_version);
+  // could be rubbish or zeros, either way should work
+  uint8_t saved_version = EEPROM.read(EEPROM_VERSION_ADDR);
 
   if (saved_version != version)
   {
