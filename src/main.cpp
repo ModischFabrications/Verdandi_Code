@@ -79,12 +79,12 @@ void loop() {
     if (received == "L") {
         println(F("Loading config"));
         Configuration config = PersistenceManager::get();
-        printRaw(String(config.show_minutes));
+        printRaw(String(config.brightness));
     }
     if (received == "S") {
         println(F("Modifying config"));
         Configuration config = PersistenceManager::get();
-        config.show_minutes = !config.show_minutes;
+        config.brightness += 8;
         PersistenceManager::set(config);
     }
 
