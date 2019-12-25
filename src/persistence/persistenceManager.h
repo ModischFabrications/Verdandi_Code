@@ -9,33 +9,35 @@
 
 const uint16_t delay_to_save_ms = (5 * 1000);
 
-
 // classes don't behave well with pointers!
 
 // singleton, we have only one EEPROM
 class PersistenceManager {
   private:
-    Configuration configuration;
-    uint32_t t_next_savepoint = 0;
+    static Configuration configuration;
+    static uint32_t t_next_savepoint; // =0 impossible here!
 
+    // fully static class, no constructor allowed
     PersistenceManager() {}
 
   public:
-    static PersistenceManager* instance = PersistenceManager();
     // not threadsafe, but whatever
-    
-    Configuration get() {
+    static Configuration get() {
+      // impossible!
+        if (!configuration) {
+            configuration = load_settings();
+        }
+
         return configuration;
     }
-
     // persistent only after a small timeout
-    void set(Configuration& new_config) {
-        if (this->configuration == new_config) {
+    static void set(Configuration& new_config) {
+        if (configuration == new_config) {
             return;
         }
 
         // set "moving" timer to save as soon as user is done
-        this->t_next_savepoint = (millis() + delay_to_save_ms);
+        t_next_savepoint = (millis() + delay_to_save_ms);
     }
 
     /**
@@ -44,11 +46,11 @@ class PersistenceManager {
      *
      * TODO: roll-over protection
      * */
-    void try_save() {
+    static void try_save() {
         // TODO: is this safe with overflowing values (> 1 day)?
-        if (this->t_next_savepoint != 0 && millis() >= this->t_next_savepoint) {
-            save_settings(this->configuration);
-            this->t_next_savepoint = 0;
+        if (t_next_savepoint != 0 && millis() >= t_next_savepoint) {
+            save_settings(configuration);
+            t_next_savepoint = 0;
 
             if (USE_SERIAL) {
                 println(F("Saving to EEPROM"));
@@ -56,3 +58,6 @@ class PersistenceManager {
         }
     }
 };
+
+Configuration PersistenceManager::configuration = nullptr;
+uint32_t PersistenceManager::t_next_savepoint = 0;
