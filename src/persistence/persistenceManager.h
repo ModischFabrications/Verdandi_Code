@@ -36,7 +36,7 @@ void set(Configuration& new_config) {
         return;
     }
 
-    unsaved == true;
+    unsaved = true;
     // set "moving" timer to save as soon as user is done
     t_next_savepoint = (millis() + delay_to_save_ms);
 }

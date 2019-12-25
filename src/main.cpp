@@ -69,6 +69,17 @@ void loop() {
     server.handleClient();
 
     PersistenceManager::try_save();
+    
+    // TODO: remove or extract
+    String received = readString();
+    if (received == "L") {
+        Configuration config = PersistenceManager::get();
+        printlnRaw(String(config.brightness));
+    }
+    if (received == "S") {
+        Configuration config = {0};
+        PersistenceManager::set(config);
+    }
 
     heartbeat_serial();
 }

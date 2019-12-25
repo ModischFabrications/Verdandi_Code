@@ -57,3 +57,20 @@ void printRaw(String string) {
         return;
     Serial.print(string);
 }
+
+String readString() {
+    if (!USE_SERIAL)
+        return "";
+
+    if (Serial.available() <= 0)
+        return "";
+
+    // read the incoming:
+    String incoming = Serial.readString();
+
+    // say what you got:
+    print(F("Received:"));
+    printlnRaw(incoming);
+
+    return incoming;
+}
