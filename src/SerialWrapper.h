@@ -46,8 +46,8 @@ String readString(uint8_t expected_length = 1) {
     incoming.trim();
 
     // say what you got:
-    print(F("Received:"));
-    printlnRaw(incoming);
+    Serial.print(F("Received:"));
+    Serial.println(incoming);
 
     return incoming;
 }

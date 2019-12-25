@@ -25,7 +25,7 @@ uint32_t t_next_savepoint = 0;
 
 Configuration get() {
     if (unsaved) {
-        println(F("Loading initial config form EEPROM"));
+        println(F("Loading initial config from EEPROM"));
         configuration = load_settings();
     }
 
