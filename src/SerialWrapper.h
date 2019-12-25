@@ -58,15 +58,17 @@ void printRaw(String string) {
     Serial.print(string);
 }
 
-String readString() {
+String readString(uint8_t expected_length = 1) {
     if (!USE_SERIAL)
         return "";
 
-    if (Serial.available() <= 0)
+    if (Serial.available() < expected_length)
         return "";
 
     // read the incoming:
     String incoming = Serial.readString();
+    // invisible chars will drive you mad while debugging
+    incoming.trim();
 
     // say what you got:
     print(F("Received:"));

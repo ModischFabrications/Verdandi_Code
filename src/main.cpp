@@ -7,8 +7,8 @@
 
 #include "persistence/persistenceManager.h"
 
-#include "network/WiFiLoginManager.h"
 #include "network/ConfigPortal.h"
+#include "network/WiFiLoginManager.h"
 
 // could (should?) be moved into other files
 const uint8_t PIN_RGB = D1;
@@ -69,15 +69,22 @@ void loop() {
     server.handleClient();
 
     PersistenceManager::try_save();
-    
+
     // TODO: remove or extract
-    String received = readString();
+    String received = readString(1);
+    if (received == "I") {
+        println(F("Resetting config"));
+        PersistenceManager::set(default_configuration);
+    }
     if (received == "L") {
+        println(F("Loading config"));
         Configuration config = PersistenceManager::get();
-        printlnRaw(String(config.brightness));
+        printRaw(String(config.show_minutes));
     }
     if (received == "S") {
-        Configuration config = {0};
+        println(F("Modifying config"));
+        Configuration config = PersistenceManager::get();
+        config.show_minutes = !config.show_minutes;
         PersistenceManager::set(config);
     }
 

@@ -12,7 +12,8 @@ namespace PersistenceManager {
 
 // anonymous namespace hides globals towards other
 namespace {
-const uint16_t delay_to_save_ms = (5 * 1000);
+    //TODO: set to realistic value (5s?)
+const uint16_t delay_to_save_ms = (1 * 1000);
 
 bool unsaved = true;
 // it's dangerous to leave this uninitialized but we get these values 
