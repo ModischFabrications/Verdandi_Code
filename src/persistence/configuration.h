@@ -1,8 +1,7 @@
 #pragma once
 #include <stdint.h>
 
-struct Configuration
-{
+struct Configuration {
     uint8_t brightness;
 
     bool show_minutes;
@@ -15,22 +14,12 @@ struct Configuration
 
     uint16_t poll_interval_min;
 
-    const bool operator==(const Configuration &other)
-    {
+    const bool operator==(const Configuration& other) {
         // FIXME: extend with correct comparison
-        return (
-            this->brightness == other.brightness && 
-            this->show_minutes == other.show_minutes
-        );
+        return (this->brightness == other.brightness &&
+                this->show_minutes == other.show_minutes);
     }
 };
 
 Configuration default_configuration = {
-    127, 
-    true, 
-    true, 
-    {255, 0, 0}, 
-    {255, 0, 0}, 
-    {255, 0, 0}, 
-    3*60
-};
+    127, true, true, {255, 0, 0}, {255, 0, 0}, {255, 0, 0}, 3 * 60};

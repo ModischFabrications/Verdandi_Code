@@ -48,6 +48,7 @@ void setup() {
     digitalWrite(LED_BUILTIN, LOW);
 
     setup_serial(115200);
+    setup_settings();
     setup_WiFi();
 
     // TODO: display connection error
