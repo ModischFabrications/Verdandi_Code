@@ -17,7 +17,7 @@ struct Configuration
 
     const bool operator==(const Configuration &other)
     {
-        // TODO: extend with correct comparison
+        // FIXME: extend with correct comparison
         return (
             this->brightness == other.brightness && 
             this->show_minutes == other.show_minutes
