@@ -5,6 +5,7 @@
 #include "configuration.h"
 
 // TODO: Preserve EEPROM while programming -> EESAVE fuse
+// TODO: address = f(version, sizeof(Configuration))
 
 /**
  * EEPROM has around 100k writes per cell, so use them carefully!
@@ -15,11 +16,11 @@
  * input. Storage pointers burn out the pointer cell, random won't be found
  * after a restart.
  * */
-#define EEPROM_VERSION_ADDR 12
-#define EEPROM_SETTINGS_ADDR 20
+const uint16_t EEPROM_VERSION_ADDR = 0;
+const uint16_t EEPROM_SETTINGS_ADDR = EEPROM_VERSION_ADDR + 1;
 
 // change with each design iteration to prevent EEPROM inconsistency
-// the chance that a random combination is a match is very low
+// the chance that a random, unset combination is a match is very low
 const uint8_t version = 2;
 
 const uint16_t BYTES_USED = 512;

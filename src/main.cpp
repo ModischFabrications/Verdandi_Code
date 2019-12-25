@@ -65,7 +65,7 @@ void setup() {
 }
 
 void loop() {
-    delay(100);
+    delay(10);
 
     server.handleClient();
 
@@ -80,7 +80,7 @@ void loop() {
     if (received == "L") {
         println(F("Loading config"));
         Configuration config = PersistenceManager::get();
-        printRaw(String(config.brightness));
+        printlnRaw(config.brightness);
     }
     if (received == "S") {
         println(F("Modifying config"));

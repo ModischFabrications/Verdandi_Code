@@ -45,6 +45,9 @@ void set(Configuration& new_config) {
         return;
     }
 
+    // TODO: copy or reassign? Reference could be tricky
+    configuration = new_config;
+
     // set "moving" timer to save as soon as user is done
     t_next_savepoint = (millis() + delay_to_save_ms);
 }
