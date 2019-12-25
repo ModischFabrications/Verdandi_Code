@@ -5,8 +5,7 @@
 
 #include "configuration.h"
 
-// TODO: Preserve EEPROM while programming -> EESAVE fuse
-// TODO: address = f(version, sizeof(Configuration))
+// Preserve EEPROM while programming -> EESAVE fuse
 
 /* change with each design iteration to prevent EEPROM inconsistency and help
  * with wear leveling of EEPROM cells.
@@ -27,12 +26,13 @@ const uint8_t VERSION = 2;
 const uint16_t EEPROM_VERSION_ADDR = VERSION;
 const uint16_t EEPROM_SETTINGS_ADDR = EEPROM_VERSION_ADDR + sizeof(VERSION);
 
-const uint16_t MAX_BYTES_USED = 512;
+const uint16_t MAX_BYTES_USED = 127;
 
 // -----------
 
+// call once to reserve (emulated) storage for usage
 void setup_settings() {
-    // ESP needs to know how much storage we actually need
+    // ESP needs to know how much storage we actually need, AVR won't
     EEPROM.begin(MAX_BYTES_USED);
 }
 
@@ -57,7 +57,7 @@ Configuration load_settings() {
     uint8_t saved_version = EEPROM.read(EEPROM_VERSION_ADDR);
 
     if (saved_version != VERSION) {
-        // save new default settings, updates version
+        // save new default settings as fallback, updates version for next run
         save_settings(default_configuration);
 
         return default_configuration;
