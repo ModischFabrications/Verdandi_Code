@@ -25,6 +25,7 @@ uint32_t t_next_savepoint = 0;
 
 Configuration get() {
     if (unsaved) {
+        println(F("Loading initial config form EEPROM"));
         configuration = load_settings();
     }
 
@@ -34,6 +35,7 @@ Configuration get() {
 // persistent only after a small timeout
 void set(Configuration& new_config) {
     if (configuration == new_config) {
+        println(F("config identical, skipping save"));
         return;
     }
 
