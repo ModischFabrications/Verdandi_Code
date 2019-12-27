@@ -4,6 +4,7 @@
 struct Configuration {
     uint8_t brightness;
 
+    bool show_hours;
     bool show_minutes;
     bool show_seconds;
 
