@@ -4,6 +4,7 @@
 // define before importing
 #define DEBUG
 #include "SerialWrapper.h"
+#include "ntp.h"
 
 #include "persistence/persistenceManager.h"
 
@@ -51,6 +52,7 @@ void setup() {
     setup_settings();
     setup_WiFi();
     setup_config_portal();
+    setup_ntp();
 
     // TODO: display connection error
     test_internet_connection();
@@ -83,6 +85,9 @@ void loop() {
         Configuration config = PersistenceManager::get();
         config.brightness += 8;
         PersistenceManager::set(config);
+    }
+    if(received == "T") {
+        timeUpdate();
     }
 
     heartbeat_serial();
