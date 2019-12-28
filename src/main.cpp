@@ -50,16 +50,12 @@ void setup() {
     setup_serial(115200);
     setup_settings();
     setup_WiFi();
+    setup_config_portal();
 
     // TODO: display connection error
     test_internet_connection();
 
     // ...
-
-    server.on("/", handle_server);
-    server.on("/update", handle_data_update);
-    server.begin();
-    println(F("Server started"));
 
     digitalWrite(LED_BUILTIN, HIGH);
 }

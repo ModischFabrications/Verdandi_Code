@@ -4,8 +4,59 @@
 
 #include "SerialWrapper.h"
 #include "Website.h"
+#include "../persistence/configuration.h"
 
 ESP8266WebServer server(80);
+
+void setup_config_portal();
+void handle_server();
+void handle_config_request();
+void handle_data_update();
+
+void setup_config_portal() {
+    server.on(F("/"), handle_server);
+    server.on(F("/config"), handle_config_request);
+    server.on(F("/update"), handle_data_update);
+    server.begin();
+    println(F("Server started"));
+}
+
+void handle_server() { server.send(200, "text/html", getContent()); }
+
+void handle_config_request() {
+    println(F("Received config request"));
+    String json = F("{");
+    json += F("\"brightness\":\"");
+    json += default_configuration.brightness;
+    json += F("\",\"show_hours\":\"");
+    json += default_configuration.show_hours;
+    json += F("\",\"show_minutes\":\"");
+    json += default_configuration.show_minutes;
+    json += F("\",\"show_seconds\":\"");
+    json += default_configuration.show_seconds;
+    json += F("\",\"colorH\":[");
+    json += default_configuration.colorH[0];
+    json += F(",");
+    json += default_configuration.colorH[1];
+    json += F(",");
+    json += default_configuration.colorH[2];
+    json += F("],\"colorM\":[");
+    json += default_configuration.colorM[0];
+    json += F(",");
+    json += default_configuration.colorM[1];
+    json += F(",");
+    json += default_configuration.colorM[2];
+    json += F("],\"colorS\":[");
+    json += default_configuration.colorS[0];
+    json += F(",");
+    json += default_configuration.colorS[1];
+    json += F(",");
+    json += default_configuration.colorS[2];
+    json += F("],\"poll_interval\":");
+    json += default_configuration.poll_interval_min;
+    json += F("}");
+    server.send(200, F("application/json"), json);
+}
 
 void handle_data_update() {
     // send back information about arguments as a test
@@ -21,5 +72,3 @@ void handle_data_update() {
     printlnRaw(message);
     server.send(200, "text/plain", message);
 }
-
-void handle_server() { server.send(200, "text/html", getContent()); }
