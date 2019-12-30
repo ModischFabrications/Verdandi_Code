@@ -40,7 +40,7 @@ Configuration get() {
 
 // set with lazy save, persistent only after a small timeout to reduce EEPROM
 // wear
-void set(Configuration& newConfig) {
+void set(Configuration newConfig) {
     if (configuration == newConfig) {
         println(F("config identical, skipping save"));
         return;
@@ -51,6 +51,8 @@ void set(Configuration& newConfig) {
 
     // set "moving" timer to save as soon as user is done
     tNextSavepoint = (millis() + delayToSaveMs);
+
+    // TODO: notify every listener of PersistenceManager that the values changed?
 }
 
 /**
