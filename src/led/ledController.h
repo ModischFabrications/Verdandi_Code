@@ -7,6 +7,12 @@
 
 namespace LedController {
 
+struct Time {
+    uint8_t hour;
+    uint8_t minute;
+    uint8_t second;
+};
+
 void flash(CRGB color, uint16_t duration = T_DEFAULT_FLASH_DURATION);
 
 void setup();
@@ -46,6 +52,11 @@ void helloPower() {
 
 void tick() {
     // TODO: wipe stripe, call "setIndicator(position, color)" x3
+}
+
+void setTime(Time time) {
+    // TODO: sync internal millis offset calculation with real time
+    // slow integration (like Visu3D.sync_factor) to prevent jumps
 }
 
 void updateConfiguration() {
