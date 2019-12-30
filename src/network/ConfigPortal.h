@@ -2,10 +2,9 @@
 
 #include <ESP8266WebServer.h> // config portal
 
-#include "persistence/configuration.h"
 #include "SerialWrapper.h"
 #include "Website.h"
-
+#include "persistence/persistenceManager.h"
 
 void setup_config_portal();
 void handle_server();
@@ -28,35 +27,37 @@ void handle_server() { server.send(200, "text/html", getContent()); }
 
 void handle_config_request() {
     println(F("Received config request"));
+    Configuration config = PersistenceManager::get();
+
     String json = F("{");
     json += F("\"brightness\":\"");
-    json += default_configuration.brightness;
+    json += config.brightness;
     json += F("\",\"show_hours\":\"");
-    json += default_configuration.show_hours;
+    json += config.show_hours;
     json += F("\",\"show_minutes\":\"");
-    json += default_configuration.show_minutes;
+    json += config.show_minutes;
     json += F("\",\"show_seconds\":\"");
-    json += default_configuration.show_seconds;
+    json += config.show_seconds;
     json += F("\",\"colorH\":[");
-    json += default_configuration.colorH[0];
+    json += config.colorH[0];
     json += F(",");
-    json += default_configuration.colorH[1];
+    json += config.colorH[1];
     json += F(",");
-    json += default_configuration.colorH[2];
+    json += config.colorH[2];
     json += F("],\"colorM\":[");
-    json += default_configuration.colorM[0];
+    json += config.colorM[0];
     json += F(",");
-    json += default_configuration.colorM[1];
+    json += config.colorM[1];
     json += F(",");
-    json += default_configuration.colorM[2];
+    json += config.colorM[2];
     json += F("],\"colorS\":[");
-    json += default_configuration.colorS[0];
+    json += config.colorS[0];
     json += F(",");
-    json += default_configuration.colorS[1];
+    json += config.colorS[1];
     json += F(",");
-    json += default_configuration.colorS[2];
+    json += config.colorS[2];
     json += F("],\"poll_interval\":");
-    json += default_configuration.poll_interval_min;
+    json += config.poll_interval_min;
     json += F("}");
     server.send(200, F("application/json"), json);
 }
