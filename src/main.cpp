@@ -52,6 +52,14 @@ void testInternetConnection() {
 
 void testListener() {
     println(F("Test listener called"));
+    logWarning(F("Test Warning"));
+    logError(F("Test Error"));
+
+    RingBuffer warnings = getWarnLog();
+    RingBuffer errors = getErrorLog();
+
+    println(warnings.log[warnings.iLog-1]);
+    println(errors.log[errors.iLog-1]);
 }
 
 void setup() {
@@ -66,6 +74,9 @@ void setup() {
     ConfigPortal::setup();
     TimeService::setup();
 
+    // TODO: remove
+    PersistenceManager::registerListener(testListener);
+    PersistenceManager::registerListener(testListener);
     PersistenceManager::registerListener(testListener);
 
     // TODO: display connection error
