@@ -23,4 +23,4 @@ struct Configuration {
 };
 
 Configuration default_configuration = {
-    127, true, true, true, {255, 0, 0}, {255, 0, 0}, {255, 0, 0}, 3 * 60};
+    127, true, true, true, {255, 0, 0}, {0, 255, 0}, {0, 0, 255}, 3 * 60};
