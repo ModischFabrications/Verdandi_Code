@@ -52,6 +52,8 @@ void testInternetConnection() {
 
 void testListener() {
     println(F("Test listener called"));
+    logWarning(F("Test Warning"));
+    logError(F("Test Error"));
 }
 
 void setup() {

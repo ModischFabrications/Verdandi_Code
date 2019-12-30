@@ -8,6 +8,16 @@ const bool USE_SERIAL = true;
 const bool USE_SERIAL = false;
 #endif
 
+namespace {
+const uint8_t N_MAX_LOGS = 15;
+
+const __FlashStringHelper* errorLog[N_MAX_LOGS] = {nullptr};
+uint8_t iErrorLog = 0;
+
+const __FlashStringHelper* warnLog[N_MAX_LOGS] = {nullptr};
+uint8_t iWarnLog = 0;
+} // namespace
+
 void setupSerial(int baud) {
     if (!USE_SERIAL)
         return;
@@ -88,3 +98,22 @@ void printRaw(uint16_t number) {
         return;
     Serial.print(number);
 }
+
+void logWarning(const __FlashStringHelper* string) {
+    if (iWarnLog >= N_MAX_LOGS) {
+        println(F("Warning list is full, wraparound"));
+        iWarnLog -= N_MAX_LOGS;
+    }
+
+    warnLog[iWarnLog++] = string;
+}
+
+void logError(const __FlashStringHelper* string) {
+    if (iErrorLog >= N_MAX_LOGS) {
+        println(F("Error list is full, wraparound"));
+        iErrorLog -= N_MAX_LOGS;
+    }
+
+    errorLog[iErrorLog++] = string;
+}
+
