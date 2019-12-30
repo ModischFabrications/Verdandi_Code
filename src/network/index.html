@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0, shrink-to-fit=no">
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width,initial-scale=1.0, shrink-to-fit=no'>
     <title>Verdandi Configuration</title>
     <style>
         * {
@@ -19,7 +19,7 @@
         }
     </style>
     <script>
-        "use strict";
+        'use strict';
         let d = document;
         let brightenessEl, showHoursEl, showMinutesEl, showSecondsEl, hourColorEl, minuteColorEl, secondColorEl, pollingEl;
         let config = {
@@ -34,18 +34,18 @@
         };
 
         function toggleHiddenById(id) {
-            d.getElementById(id).classList.toggle("showDisabled");
-            d.getElementById(id).toggleAttribute("disabled");
+            d.getElementById(id).classList.toggle('showDisabled');
+            d.getElementById(id).toggleAttribute('disabled');
         }
         function onload() {
-            brightenessEl = d.getElementById("brightnessSlider");
-            showHoursEl = d.getElementById("showHours");
-            showMinutesEl = d.getElementById("showMinutes");
-            showSecondsEl = d.getElementById("showSeconds");
-            hourColorEl = d.getElementById("colorH");
-            minuteColorEl = d.getElementById("colorM");
-            secondColorEl = d.getElementById("colorS");
-            pollingEl = d.getElementById("pollInterval");
+            brightenessEl = d.getElementById('brightnessSlider');
+            showHoursEl = d.getElementById('showHours');
+            showMinutesEl = d.getElementById('showMinutes');
+            showSecondsEl = d.getElementById('showSeconds');
+            hourColorEl = d.getElementById('colorH');
+            minuteColorEl = d.getElementById('colorM');
+            secondColorEl = d.getElementById('colorS');
+            pollingEl = d.getElementById('pollInterval');
 
             /* init value of brightness slider output */
             brightnessOutput.value = brightenessEl.value;
@@ -54,7 +54,7 @@
         }
         function loadConfigValues() {
             var xhttp = new XMLHttpRequest();
-            xhttp.open("GET", d.URL + "config", true);
+            xhttp.open('GET', d.URL + 'config', true);
             xhttp.send();
             xhttp.onreadystatechange = function() {
                 if(this.readyState == 4 && this.status == 200) {
@@ -79,8 +79,8 @@
             let urlString = generateUrlString();
 
             var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", d.URL + "update", true);
-            xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhttp.open('POST', d.URL + 'update', true);
+            xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhttp.send(urlString);
         }
         function generateUrlString() {
@@ -124,11 +124,33 @@
             sendUpdatedData();
         }
         function updateUIElements() {
+            /* FIXME: Check why brightness slider doesnt get set */
             brightenessEl.value = config.brighteness;
             brightnessOutput.value = config.brightness;
             showHoursEl.checked = config.showHours;
+            if(config.showHours)             {
+                d.getElementById('colorH').classList.remove('showDisabled');
+                d.getElementById('colorH').removeAttribute('disabled');
+            } else {
+                d.getElementById('colorH').classList.add('showDisabled');
+                d.getElementById('colorH').setAttributeNode(document.createAttribute('disabled'));
+            }
             showMinutesEl.checked = config.showMinutes;
+            if(config.showMinutes)             {
+                d.getElementById('colorM').classList.remove('showDisabled');
+                d.getElementById('colorM').removeAttribute('disabled');
+            } else {
+                d.getElementById('colorM').classList.add('showDisabled');
+                d.getElementById('colorM').setAttributeNode(document.createAttribute('disabled'));
+            }
             showSecondsEl.checked = config.showSeconds;
+            if(config.showSeconds)             {
+                d.getElementById('colorS').classList.remove('showDisabled');
+                d.getElementById('colorS').removeAttribute('disabled');
+            } else {
+                d.getElementById('colorS').classList.add('showDisabled');
+                d.getElementById('colorS').setAttributeNode(document.createAttribute('disabled'));
+            }
             hourColorEl.value = '#' + get2DigitHex(config.colorH[0]) + get2DigitHex(config.colorH[1]) + get2DigitHex(config.colorH[2]);
             minuteColorEl.value = '#' + get2DigitHex(config.colorM[0]) + get2DigitHex(config.colorM[1]) + get2DigitHex(config.colorM[2]);
             secondColorEl.value = '#' + get2DigitHex(config.colorS[0]) + get2DigitHex(config.colorS[1]) + get2DigitHex(config.colorS[2]);
@@ -139,72 +161,71 @@
         }
     </script>
 </head>
-<body onload="onload()">
-    <div style="margin: auto;
+<body onload='onload()'>
+    <div style='margin: auto;
         width: fit-content;
         padding: 2rem;
         background-color: #efefef;
         height: 100%;
-    ">
-        <h1 style="border-radius: 1rem;
+    '>
+        <h1 style='border-radius: 1rem;
                 margin: auto;
                 width: fit-content;
                 padding: 2rem;
                 background: black;
                 color: white;
                 margin-bottom: 1rem;
-        ">Verdandi Configuration Page</h1>
+        '>Verdandi Configuration Page</h1>
         <div>
-            <table class="config-table width100">
+            <table class='config-table width100'>
                 <tbody>
                     <tr>
                         <td>Brightness:</td>
-                        <td colspan="3">
+                        <td colspan='3'>
                             <input
-                                id="brightnessSlider" type="range" min="0" max="255"
-                                value="127" oninput="onValueChange(this, 'brightness')"
+                                id='brightnessSlider' type='range' min='0' max='255'
+                                value='127' oninput='onValueChange(this, "brightness")'
                                 >&nbsp;
-                            <output id="brightnessOutput"></output>
+                            <output id='brightnessOutput'></output>
                         </td>
                     </tr>
                     <tr>
                         <td>Colors:</td>
                         <td>
-                            <input id="showHours" for="colorH" class="css-checkbox" onchange="onValueChange(this, 'showHours')" type="checkbox" checked>
-                            <label for="colorH" class="css-label">&nbsp;H&nbsp;</label>
-                            <input id="colorH" type="color" value="#ff0000" onchange="onValueChange(this, 'colorH')">
+                            <input id='showHours' for='colorH' class='css-checkbox' onchange='onValueChange(this, "showHours")' type='checkbox' checked>
+                            <label for='colorH' class='css-label'>&nbsp;H&nbsp;</label>
+                            <input id='colorH' type='color' value='#ff0000' onchange='onValueChange(this, "colorH")'>
                         </td>
                         <td>
-                            <input id="showMinutes" for="colorM" class="css-checkbox" onchange="onValueChange(this, 'showMinutes')" type="checkbox" checked>
-                            <label for="colorM" class="css-label">&nbsp;M&nbsp;</label>
-                            <input id="colorM" type="color" value="#00ff00" onchange="onValueChange(this, 'colorM')">
+                            <input id='showMinutes' for='colorM' class='css-checkbox' onchange='onValueChange(this, "showMinutes")' type='checkbox' checked>
+                            <label for='colorM' class='css-label'>&nbsp;M&nbsp;</label>
+                            <input id='colorM' type='color' value='#00ff00' onchange='onValueChange(this, "colorM")'>
                         </td>
                         <td>
-                            <input id="showSeconds" for="colorS" class="css-checkbox" onchange="onValueChange(this, 'showSeconds')" type="checkbox" checked>
-                            <label for="colorS" class="css-label">&nbsp;S&nbsp;</label>
-                            <input id="colorS" type="color" value="#0000ff" onchange="onValueChange(this, 'colorS')">
+                            <input id='showSeconds' for='colorS' class='css-checkbox' onchange='onValueChange(this, "showSeconds")' type='checkbox' checked>
+                            <label for='colorS' class='css-label'>&nbsp;S&nbsp;</label>
+                            <input id='colorS' type='color' value='#0000ff' onchange='onValueChange(this, "colorS")'>
                         </td>
                     </tr>
                     <tr>
                         <td>Poll interval:</td>
-                        <td colspan="3">
-                            <input id="pollInterval" onchange="onValueChange(this, 'pollInterval')" type="number" max="600" min="1" value="10"> min
+                        <td colspan='3'>
+                            <input id='pollInterval' onchange='onValueChange(this, "pollInterval")' type='number' max='600' min='1' value='10'> min
                         </td>
                     </tr>
                     <!-- <tr>
                         <td>Time zone:</td>
-                        <td colspan="3">
-                            <select id="timeZone" name="timezone">
-                                <option value="cet">CET (Central European)</option>
-                                <option value="est">EST (Eastern Standard)</option>
-                                <option value="gmt">GMT (Greenwich Mean)</option>
-                                <option value="pst">PST (Pacific Standard)</option>
+                        <td colspan='3'>
+                            <select id='timeZone' name='timezone'>
+                                <option value='cet'>CET (Central European)</option>
+                                <option value='est'>EST (Eastern Standard)</option>
+                                <option value='gmt'>GMT (Greenwich Mean)</option>
+                                <option value='pst'>PST (Pacific Standard)</option>
                               </select>
                         </td>
                     </tr> -->
                 </tbody>
             </table>
-            <!-- <button onclick="sendUpdatedData()">Update</button> -->
         </div>
     </div>
 </body>
