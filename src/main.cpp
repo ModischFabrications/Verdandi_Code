@@ -1,15 +1,23 @@
 #include <Arduino.h>
 #include <ESP8266HTTPClient.h> // connect to API
 
-// define before importing
+// define before importing anything
 #define DEBUG
+
 #include "SerialWrapper.h"
-#include "ntp.h"
+#include "network/ntp.h"
+#include "serialInputTester.h"
 
 #include "persistence/persistenceManager.h"
 
 #include "network/ConfigPortal.h"
 #include "network/WiFiLoginManager.h"
+
+#ifdef DEBUG
+const bool DEBUG_MODE = true;
+#else
+const bool DEBUG_MODE = false;
+#endif
 
 // could (should?) be moved into other files
 const uint8_t PIN_RGB = D1;
@@ -65,30 +73,13 @@ void setup() {
 void loop() {
     delay(10);
 
+    if (DEBUG_MODE) {
+        SerialInputTest::handleInput();
+    }
+
     server.handleClient();
 
     PersistenceManager::try_save();
-
-    // TODO: remove or extract
-    String received = readString(1);
-    if (received == "I") {
-        println(F("Resetting config"));
-        PersistenceManager::set(default_configuration);
-    }
-    if (received == "L") {
-        println(F("Loading config"));
-        Configuration config = PersistenceManager::get();
-        printlnRaw(config.brightness);
-    }
-    if (received == "S") {
-        println(F("Modifying config"));
-        Configuration config = PersistenceManager::get();
-        config.brightness += 8;
-        PersistenceManager::set(config);
-    }
-    if(received == "T") {
-        timeUpdate();
-    }
 
     heartbeat_serial();
 }
