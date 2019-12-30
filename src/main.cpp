@@ -55,8 +55,11 @@ void testListener() {
     logWarning(F("Test Warning"));
     logError(F("Test Error"));
 
-    println(getWarnLog()[0]);
-    println(getErrorLog()[0]);
+    RingBuffer warnings = getWarnLog();
+    RingBuffer errors = getErrorLog();
+
+    println(warnings.log[warnings.iLog-1]);
+    println(errors.log[errors.iLog-1]);
 }
 
 void setup() {

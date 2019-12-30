@@ -11,11 +11,13 @@ const bool USE_SERIAL = false;
 namespace {
 const uint8_t N_MAX_LOGS = 15;
 
-const __FlashStringHelper* errorLog[N_MAX_LOGS] = {nullptr};
-uint8_t iErrorLog = 0;
+struct RingBuffer {
+    const __FlashStringHelper* log[N_MAX_LOGS] = {nullptr};
+    uint8_t iLog = 0;
+};
 
-const __FlashStringHelper* warnLog[N_MAX_LOGS] = {nullptr};
-uint8_t iWarnLog = 0;
+RingBuffer errors;
+RingBuffer warnings;
 } // namespace
 
 void setupSerial(int baud) {
@@ -100,29 +102,29 @@ void printRaw(uint16_t number) {
 }
 
 void logWarning(const __FlashStringHelper* string) {
-    if (iWarnLog >= N_MAX_LOGS) {
+    if (warnings.iLog >= N_MAX_LOGS) {
         println(F("Warning list is full, wraparound"));
-        iWarnLog -= N_MAX_LOGS;
+        warnings.iLog -= N_MAX_LOGS;
     }
 
-    warnLog[iWarnLog++] = string;
+    warnings.log[warnings.iLog++] = string;
 
     print(F("WARN: "));
     println(string);
 }
 
 void logError(const __FlashStringHelper* string) {
-    if (iErrorLog >= N_MAX_LOGS) {
+    if (errors.iLog >= N_MAX_LOGS) {
         println(F("Error list is full, wraparound"));
-        iErrorLog -= N_MAX_LOGS;
+        errors.iLog -= N_MAX_LOGS;
     }
 
-    errorLog[iErrorLog++] = string;
+    errors.log[errors.iLog++] = string;
 
     print(F("ERROR: "));
     println(string);
 }
 
-const __FlashStringHelper** getWarnLog() { return warnLog; }
+const RingBuffer& getWarnLog() { return warnings; }
 
-const __FlashStringHelper** getErrorLog() { return errorLog; }
+const RingBuffer& getErrorLog() { return errors; }
