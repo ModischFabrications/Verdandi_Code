@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ESP8266WebServer.h> // config portal
 #include <ArduinoJson.h>
+#include <ESP8266WebServer.h> // config portal
 
 #include "network/Website.h"
 #include "persistence/persistenceManager.h"
@@ -14,6 +14,8 @@ void handleServer();
 void handleConfigRequest();
 void handleDataUpdate();
 void check();
+String ArgsToString();
+Configuration ArgsToConfiguration();
 
 namespace {
 ESP8266WebServer server(80);
@@ -69,6 +71,15 @@ void handleConfigRequest() {
 
 void handleDataUpdate() {
     // send back information about arguments as a test
+
+    printlnRaw(ArgsToString());
+    PersistenceManager::set(ArgsToConfiguration());
+
+    // everything is fine
+    server.send(200);
+}
+
+String ArgsToString() {
     String message = "Number of args received: ";
     message += server.args();
 
@@ -78,7 +89,18 @@ void handleDataUpdate() {
         message += server.arg(i);
     }
 
-    printlnRaw(message);
-    server.send(200, "text/plain", message);
+    return message;
 }
+
+Configuration ArgsToConfiguration() {
+    Configuration new_values = Configuration();
+
+    // FIXME: implement argument parsing
+    // implicit clamping could make problems but it's just nicer to read
+    if (server.argName(0) == "brightness") new_values.brightness = server.arg(0).toInt();
+
+
+    return new_values;
+}
+
 } // namespace ConfigPortal
