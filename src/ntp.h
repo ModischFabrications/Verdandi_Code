@@ -3,6 +3,7 @@
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
+// TODO: make parameter
 // utc offset for your timezone: e.g. GMT +1 = 3600
 // can be set with timeClient.setTimeOffset(offset);
 const long utcOffsetInSeconds = 3600;
