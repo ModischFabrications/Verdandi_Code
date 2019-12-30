@@ -50,6 +50,10 @@ void testInternetConnection() {
     http.end();
 }
 
+void testListener() {
+    println(F("Test listener called"));
+}
+
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
     // light LED whenever user interaction is needed
@@ -61,6 +65,8 @@ void setup() {
     WiFiLoginManager::setup();
     ConfigPortal::setup();
     TimeService::setup();
+
+    PersistenceManager::registerListener(testListener);
 
     // TODO: display connection error
     testInternetConnection();
