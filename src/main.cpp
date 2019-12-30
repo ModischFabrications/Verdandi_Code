@@ -5,13 +5,13 @@
 #define DEBUG
 
 #include "SerialWrapper.h"
-#include "network/ntp.h"
 #include "serialInputTester.h"
 
 #include "persistence/persistenceManager.h"
 
 #include "network/ConfigPortal.h"
 #include "network/WiFiLoginManager.h"
+#include "network/timeService.h"
 
 #ifdef DEBUG
 const bool DEBUG_MODE = true;
@@ -35,8 +35,7 @@ void test_internet_connection() {
         printlnRaw((String)httpCode);
 
         // file found at server
-        if (httpCode == HTTP_CODE_OK ||
-            httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
+        if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
             String payload = http.getString();
             printlnRaw(payload);
         }
@@ -57,10 +56,10 @@ void setup() {
     digitalWrite(LED_BUILTIN, LOW);
 
     setup_serial(115200);
-    setup_settings();
-    setup_WiFi();
+    PersistenceStore::setup();
+    WiFiLoginManager::setup();
     ConfigPortal::setup_config_portal();
-    setup_ntp();
+    TimeService::setup();
 
     // TODO: display connection error
     test_internet_connection();
@@ -71,6 +70,7 @@ void setup() {
 }
 
 void loop() {
+    // reduce as needed
     delay(10);
 
     if (DEBUG_MODE) {

@@ -32,7 +32,7 @@ void setup_config_portal() {
     println(F("Server started"));
 }
 
-void handle_server() { server.send(200, "text/html", getContent()); }
+void handle_server() { server.send(200, "text/html", Website::getContent()); }
 
 void handle_config_request() {
     println(F("Received config request"));

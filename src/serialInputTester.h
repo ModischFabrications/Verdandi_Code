@@ -2,7 +2,7 @@
 
 #include "SerialWrapper.h"
 #include "persistence/PersistenceManager.h"
-#include "network/ntp.h"
+#include "network/timeService.h"
 
 namespace SerialInputTest {
 
@@ -25,7 +25,7 @@ void handleInput() {
         PersistenceManager::set(config);
     }
     if (received == "T") {
-        timeUpdate();
+        TimeService::timeUpdate();
     }
 }
 

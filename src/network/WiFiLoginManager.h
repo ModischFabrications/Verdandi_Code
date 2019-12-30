@@ -4,7 +4,11 @@
 
 #include "SerialWrapper.h"
 
+namespace WiFiLoginManager {
+
+namespace {
 WiFiManager wifiManager;
+}
 
 // gets called when WiFiManager enters configuration mode
 void configModeCallback(WiFiManager* myWiFiManager) {
@@ -14,15 +18,14 @@ void configModeCallback(WiFiManager* myWiFiManager) {
     printlnRaw(WiFi.softAPIP().toString());
 }
 
-void setup_WiFi() {
+void setup() {
     println(F("setting up wifi (with captive portal)"));
 
     // DEBUGGING:
     // wifiManager.resetSettings();
 
     wifiManager.setAPCallback(configModeCallback);
-    wifiManager.setAPStaticIPConfig(IPAddress(192, 168, 1, 1),
-                                    IPAddress(192, 168, 1, 1),
+    wifiManager.setAPStaticIPConfig(IPAddress(192, 168, 1, 1), IPAddress(192, 168, 1, 1),
                                     IPAddress(255, 255, 255, 0));
     // wifiManager.setConfigPortalTimeout(60);
 
@@ -38,3 +41,5 @@ void setup_WiFi() {
     // if you get here you have connected to the WiFi
     println(F("connected to the local network"));
 }
+
+} // namespace WiFiLoginManager
