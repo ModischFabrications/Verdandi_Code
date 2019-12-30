@@ -1,5 +1,6 @@
 #pragma once
 
+#define FASTLED_INTERNAL // disable pragma message
 #include <FastLED.h>
 
 #include "persistence/configuration.h"
@@ -13,17 +14,10 @@ struct Time {
     uint8_t second;
 };
 
-void flash(CRGB color, uint16_t duration = T_DEFAULT_FLASH_DURATION);
-
-void setup();
-void helloPower();
-void tick();
-
-void updateConfiguration();
-
 // hidden globals
 namespace {
-const uint16_t T_DEFAULT_FLASH_DURATION = (0.2 * 1000);
+const uint16_t T_DEFAULT_FLASH_DURATION_MS = (0.2 * 1000);
+const uint16_t T_ANIMATION_MS = (1 * 1000);
 
 const uint16_t MAX_MILLIAMPS = 1000;
 
@@ -32,11 +26,21 @@ const uint8_t N_LEDS = 24;
 
 const CRGB C_OK = CRGB::Green;
 const CRGB C_WARN = CRGB::Yellow;
-const CRGB C_CRIT = CRGB::Red;
+const CRGB C_ERR = CRGB::Red;
 
 CRGB leds[N_LEDS];
 
 } // namespace
+
+void flash(CRGB color, uint16_t duration = T_DEFAULT_FLASH_DURATION_MS);
+
+void setup();
+void helloPower();
+void tick();
+
+void updateConfiguration();
+
+// -------------------
 
 void setup() {
     pinMode(PIN_LEDS, OUTPUT);
@@ -47,7 +51,14 @@ void setup() {
 }
 
 void helloPower() {
-    // TODO: run around to check every LED (and make it look cool)
+    // TODO: use fading, might want to reuse clock functions
+    // might even want to use a rainbow fade? -> check FastLED buildin animations
+    for (uint8_t i = 0; i < N_LEDS; i++) {
+        leds[i] = CRGB::White;
+        FastLED.show();
+        delay(T_ANIMATION_MS / N_LEDS); // 1 second for whole bar
+        leds[i] = CRGB::Black;
+    }
 }
 
 void tick() {
@@ -71,7 +82,7 @@ void updateConfiguration() {
  * quick flash to signal something.
  * Designed for debug use.
  * */
-void flash(CRGB color, uint16_t duration = T_DEFAULT_FLASH_DURATION) {
+void flash(CRGB color, uint16_t duration) {
     // decrease to prevent burning out your eyes while debugging
     uint8_t prevBrightness = FastLED.getBrightness();
     FastLED.setBrightness(32);

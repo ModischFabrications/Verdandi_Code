@@ -13,8 +13,8 @@
 #include "network/WiFiLoginManager.h"
 #include "network/timeService.h"
 
-#include <FastLED.h>
 #include "led/ledController.h"
+#include <FastLED.h>
 
 #ifdef DEBUG
 const bool DEBUG_MODE = true;
@@ -72,6 +72,7 @@ void setup() {
     WiFiLoginManager::setup();
     ConfigPortal::setup();
     TimeService::setup();
+    LedController::setup();
 
     // TODO: remove
     PersistenceManager::registerListener(testListener);
