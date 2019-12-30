@@ -2,16 +2,19 @@
 
 #include <ESP8266WebServer.h> // config portal
 
+#include "persistence/configuration.h"
 #include "SerialWrapper.h"
 #include "Website.h"
-#include "../persistence/configuration.h"
 
-ESP8266WebServer server(80);
 
 void setup_config_portal();
 void handle_server();
 void handle_config_request();
 void handle_data_update();
+
+namespace {
+ESP8266WebServer server(80);
+}
 
 void setup_config_portal() {
     server.on(F("/"), handle_server);
