@@ -13,15 +13,14 @@
 #include "network/WiFiLoginManager.h"
 #include "network/timeService.h"
 
+#include <FastLED.h>
+#include "led/ledController.h"
+
 #ifdef DEBUG
 const bool DEBUG_MODE = true;
 #else
 const bool DEBUG_MODE = false;
 #endif
-
-// could (should?) be moved into other files
-const uint8_t PIN_RGB = D1;
-const uint8_t N_LEDS = 24;
 
 HTTPClient http;
 WiFiClient client;
@@ -58,8 +57,8 @@ void testListener() {
     RingBuffer warnings = getWarnLog();
     RingBuffer errors = getErrorLog();
 
-    println(warnings.log[warnings.iLog-1]);
-    println(errors.log[errors.iLog-1]);
+    println(warnings.log[warnings.iLog - 1]);
+    println(errors.log[errors.iLog - 1]);
 }
 
 void setup() {
@@ -89,7 +88,7 @@ void setup() {
 
 void loop() {
     // reduce as needed
-    delay(10);
+    FastLED.delay(10);
 
     if (DEBUG_MODE) {
         SerialInputTest::handleInput();
