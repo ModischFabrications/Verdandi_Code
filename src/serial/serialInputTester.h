@@ -1,8 +1,8 @@
 #pragma once
 
-#include "SerialWrapper.h"
-#include "persistence/PersistenceManager.h"
 #include "network/timeService.h"
+#include "persistence/PersistenceManager.h"
+#include "serial/SerialWrapper.h"
 
 namespace SerialInputTest {
 

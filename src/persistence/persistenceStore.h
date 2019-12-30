@@ -3,7 +3,7 @@
 // https://github.com/esp8266/Arduino/tree/master/libraries/EEPROM
 #include <EEPROM.h>
 
-#include "configuration.h"
+#include "persistence/configuration.h"
 
 namespace PersistenceStore {
 // Preserve EEPROM while programming with the EESAVE fuse on AVR

@@ -2,7 +2,7 @@
 
 #include <WiFiManager.h> // captive portal for wifi
 
-#include "SerialWrapper.h"
+#include "serial/SerialWrapper.h"
 
 namespace WiFiLoginManager {
 

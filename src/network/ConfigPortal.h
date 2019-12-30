@@ -2,9 +2,9 @@
 
 #include <ESP8266WebServer.h> // config portal
 
-#include "SerialWrapper.h"
-#include "Website.h"
+#include "network/Website.h"
 #include "persistence/persistenceManager.h"
+#include "serial/SerialWrapper.h"
 
 namespace ConfigPortal {
 

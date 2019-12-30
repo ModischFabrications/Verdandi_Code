@@ -4,8 +4,8 @@
 // define before importing anything
 #define DEBUG
 
-#include "SerialWrapper.h"
-#include "serialInputTester.h"
+#include "serial/SerialWrapper.h"
+#include "serial/serialInputTester.h"
 
 #include "persistence/persistenceManager.h"
 

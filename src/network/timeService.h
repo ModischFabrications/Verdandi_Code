@@ -3,7 +3,7 @@
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
-#include "SerialWrapper.h"
+#include "serial/SerialWrapper.h"
 
 namespace TimeService {
 namespace {

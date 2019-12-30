@@ -3,9 +3,10 @@
 #include <Arduino.h>
 #include <stdint.h>
 
-#include "SerialWrapper.h"
-#include "configuration.h"
-#include "persistenceStore.h"
+#include "serial/SerialWrapper.h"
+
+#include "persistence/configuration.h"
+#include "persistence/persistenceStore.h"
 
 // classes don't behave well with pointers, trust me!
 namespace PersistenceManager {
