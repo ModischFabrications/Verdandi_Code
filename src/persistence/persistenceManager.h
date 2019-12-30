@@ -3,9 +3,10 @@
 #include <Arduino.h>
 #include <stdint.h>
 
-#include "SerialWrapper.h"
-#include "configuration.h"
-#include "persistenceStore.h"
+#include "serial/SerialWrapper.h"
+
+#include "persistence/configuration.h"
+#include "persistence/persistenceStore.h"
 
 // classes don't behave well with pointers, trust me!
 namespace PersistenceManager {
@@ -30,7 +31,7 @@ Configuration get() {
     // singleton-like
     if (!initialized) {
         println(F("Loading initial config from EEPROM"));
-        configuration = load_settings();
+        configuration = PersistenceStore::load_settings();
         initialized = true;
     }
 
@@ -61,7 +62,7 @@ void set(Configuration& new_config) {
 void try_save() {
     // TODO: is this safe with overflowing values (> 1 day)?
     if (t_next_savepoint != 0 && millis() >= t_next_savepoint) {
-        save_settings(configuration);
+        PersistenceStore::save_settings(configuration);
         t_next_savepoint = 0;
 
         if (USE_SERIAL) {

@@ -3,6 +3,9 @@
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
+#include "serial/SerialWrapper.h"
+
+namespace TimeService {
 namespace {
 // TODO: make parameter
 // utc offset for your timezone: e.g. GMT +1 = 3600
@@ -13,7 +16,7 @@ const long utcOffsetInSeconds = 3600;
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds);
 
-void setup_ntp() { timeClient.begin(); }
+void setup() { timeClient.begin(); }
 
 void timeUpdate() {
     while (!timeClient.update()) {
@@ -24,3 +27,4 @@ void timeUpdate() {
     print(F("TIME: "));
     printlnRaw(formattedTime);
 }
+} // namespace TimeService

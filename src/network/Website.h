@@ -2,9 +2,10 @@
 
 #include <Arduino.h>
 
-// TODO: make constant variable
-// const __FlashStringHelper* content = F(\"Hallo\nWorld\");
 
+namespace Website {
+
+// this needs to be a function because F-strings are disguised function calls
 const __FlashStringHelper* getContent() {
     return F(
         "<!DOCTYPE html><html><head><meta charset=utf-8><meta "
@@ -112,3 +113,5 @@ const __FlashStringHelper* getContent() {
         "onchange=onValueChange(this,config.pollInterval) value=10 max=600 "
         "min=1> min</td></tr></tbody></table></div></div></body></html>");
 }
+
+} // namespace Website

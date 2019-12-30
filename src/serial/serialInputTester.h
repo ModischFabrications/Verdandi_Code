@@ -1,8 +1,8 @@
 #pragma once
 
-#include "SerialWrapper.h"
+#include "network/timeService.h"
 #include "persistence/PersistenceManager.h"
-#include "network/ntp.h"
+#include "serial/SerialWrapper.h"
 
 namespace SerialInputTest {
 
@@ -25,7 +25,7 @@ void handleInput() {
         PersistenceManager::set(config);
     }
     if (received == "T") {
-        timeUpdate();
+        TimeService::timeUpdate();
     }
 }
 

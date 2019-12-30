@@ -1,12 +1,14 @@
 #pragma once
 
-//https://github.com/esp8266/Arduino/tree/master/libraries/EEPROM
+// https://github.com/esp8266/Arduino/tree/master/libraries/EEPROM
 #include <EEPROM.h>
 
-#include "configuration.h"
+#include "persistence/configuration.h"
 
-// Preserve EEPROM while programming -> EESAVE fuse
+namespace PersistenceStore {
+// Preserve EEPROM while programming with the EESAVE fuse on AVR
 
+namespace {
 /* change with each design iteration to prevent EEPROM inconsistency and help
  * with wear leveling of EEPROM cells.
  * The chance that a random, unset combination is a match is very low.
@@ -27,18 +29,16 @@ const uint16_t EEPROM_VERSION_ADDR = VERSION;
 const uint16_t EEPROM_SETTINGS_ADDR = EEPROM_VERSION_ADDR + sizeof(VERSION);
 
 const uint16_t MAX_BYTES_USED = 127;
-
-// -----------
+} // namespace
 
 // call once to reserve (emulated) storage for usage
-void setup_settings() {
+void setup() {
     // ESP needs to know how much storage we actually need, AVR won't
     EEPROM.begin(MAX_BYTES_USED);
 }
 
 /**
  * save settings to EEPROM for persistent storage
- * TODO: check if convenience features actually use 2 bytes as before
  * */
 void save_settings(Configuration settings) {
     EEPROM.write(EEPROM_VERSION_ADDR, VERSION);
@@ -69,3 +69,5 @@ Configuration load_settings() {
 
     return settings;
 }
+
+} // namespace PersistenceStore

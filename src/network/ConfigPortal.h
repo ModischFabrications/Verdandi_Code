@@ -3,9 +3,9 @@
 #include <ESP8266WebServer.h> // config portal
 #include <ArduinoJson.h>
 
-#include "SerialWrapper.h"
-#include "Website.h"
+#include "network/Website.h"
 #include "persistence/persistenceManager.h"
+#include "serial/SerialWrapper.h"
 
 namespace ConfigPortal {
 
@@ -33,7 +33,7 @@ void setup_config_portal() {
     println(F("Server started"));
 }
 
-void handle_server() { server.send(200, "text/html", getContent()); }
+void handle_server() { server.send(200, "text/html", Website::getContent()); }
 
 void handle_config_request() {
     println(F("Received config request"));
