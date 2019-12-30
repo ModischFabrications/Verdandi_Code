@@ -53,13 +53,10 @@
             loadConfigValues();
         }
         function loadConfigValues() {
-            /* TODO: load config values with get */
-
             var xhttp = new XMLHttpRequest();
             xhttp.open("GET", d.URL + "config", true);
             xhttp.send();
             xhttp.onreadystatechange = function() {
-                console.log(this.readyState, this.status);
                 if(this.readyState == 4 && this.status == 200) {
                     /* sucessful response */
                     let res = JSON.parse(xhttp.responseText);
@@ -92,10 +89,10 @@
             return `
                 brightness=${config.brightness}&
                 show_hours=${config.showHours}&show_seconds=${config.showMinutes}&show_seconds=${config.showSeconds}&
-                colorH_R=${config.colorH[0]}&colorH_G=${config.colorH[1]}&colorH_B${config.colorH[2]}&
-                colorM_R=${config.colorM[0]}&colorM_G=${config.colorM[1]}&colorM_B${config.colorM[2]}&
-                colorS_R=${config.colorS[0]}&colorS_G=${config.colorS[1]}&colorS_B${config.colorS[2]}&
-                poll_interval_min=${pollInterval}`;
+                colorH_R=${config.colorH[0]}&colorH_G=${config.colorH[1]}&colorH_B=${config.colorH[2]}&
+                colorM_R=${config.colorM[0]}&colorM_G=${config.colorM[1]}&colorM_B=${config.colorM[2]}&
+                colorS_R=${config.colorS[0]}&colorS_G=${config.colorS[1]}&colorS_B=${config.colorS[2]}&
+                poll_interval_min=${config.pollInterval}`;
         }
         function onValueChange(htmlElement, targetVar) {
             /* possibly remove switch statement to update everything all the time to remove characters */
@@ -142,6 +139,7 @@
                     break;
                 default:break;
             }
+            sendUpdatedData();
         }
         function updateUIElements() {
             // TODO: check brightness value range value
@@ -182,8 +180,8 @@
                         <td>Brightness:</td>
                         <td colspan="3">
                             <input
-                                id="brightnessSlider" type="range" min="0" max="100"
-                                value="50" step="5" oninput="onValueChange(this, config.brightness)"
+                                id="brightnessSlider" type="range" min="0" max="255"
+                                value="127" oninput="onValueChange(this, config.brightness)"
                                 >&nbsp;
                             <output id="brightnessOutput"></output>
                         </td>
@@ -225,7 +223,7 @@
                     </tr> -->
                 </tbody>
             </table>
-            <button onclick="sendUpdatedData()">Update</button>
+            <!-- <button onclick="sendUpdatedData()">Update</button> -->
         </div>
     </div>
 </body>
