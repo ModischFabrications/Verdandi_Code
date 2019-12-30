@@ -11,7 +11,7 @@ void handleInput() {
     String received = readString(1);
     if (received == "I") {
         println(F("Resetting config"));
-        PersistenceManager::set(default_configuration);
+        PersistenceManager::set(defaultConfiguration);
     }
     if (received == "L") {
         println(F("Loading config"));

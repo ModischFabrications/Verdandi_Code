@@ -40,7 +40,7 @@ void setup() {
 /**
  * save settings to EEPROM for persistent storage
  * */
-void save_settings(Configuration settings) {
+void saveSettings(Configuration settings) {
     EEPROM.write(EEPROM_VERSION_ADDR, VERSION);
     EEPROM.put(EEPROM_SETTINGS_ADDR, settings);
 
@@ -52,15 +52,15 @@ void save_settings(Configuration settings) {
  * load settings from EEPROM, this will reset and return default values for
  * corrupted, outdated or missing settings.
  * */
-Configuration load_settings() {
+Configuration loadSettings() {
     // could be rubbish or zeros, either way should work
-    uint8_t saved_version = EEPROM.read(EEPROM_VERSION_ADDR);
+    uint8_t savedVersion = EEPROM.read(EEPROM_VERSION_ADDR);
 
-    if (saved_version != VERSION) {
+    if (savedVersion != VERSION) {
         // save new default settings as fallback, updates version for next run
-        save_settings(default_configuration);
+        saveSettings(defaultConfiguration);
 
-        return default_configuration;
+        return defaultConfiguration;
     }
 
     // content should be correct, return it

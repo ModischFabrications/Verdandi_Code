@@ -8,7 +8,7 @@ const bool USE_SERIAL = true;
 const bool USE_SERIAL = false;
 #endif
 
-void setup_serial(int baud) {
+void setupSerial(int baud) {
     if (!USE_SERIAL)
         return;
 
@@ -18,26 +18,26 @@ void setup_serial(int baud) {
     Serial.println(F("Debug mode is activated"));
 }
 
-void heartbeat_serial() {
+void heartbeatSerial() {
     if (!USE_SERIAL)
         return;
 
-    static uint32_t last_msg = 0;
-    const uint16_t time_interval = 5 * 1000;
+    static uint32_t lastMsg = 0;
+    const uint16_t timeInterval = 5 * 1000;
 
     uint32_t time = millis();
 
-    if (time - last_msg > time_interval) {
+    if (time - lastMsg > timeInterval) {
         Serial.print(F("."));
-        last_msg = time;
+        lastMsg = time;
     }
 }
 
-String readString(uint8_t expected_length = 1) {
+String readString(uint8_t expectedLength = 1) {
     if (!USE_SERIAL)
         return "";
 
-    if (Serial.available() < expected_length)
+    if (Serial.available() < expectedLength)
         return "";
 
     // read the incoming:

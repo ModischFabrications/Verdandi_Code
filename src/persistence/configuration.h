@@ -4,23 +4,23 @@
 struct Configuration {
     uint8_t brightness;
 
-    bool show_hours;
-    bool show_minutes;
-    bool show_seconds;
+    bool showHours;
+    bool showMinutes;
+    bool showSeconds;
 
     uint8_t colorH[3];
     // irrelevant if "!showX"
     uint8_t colorM[3];
     uint8_t colorS[3];
 
-    uint16_t poll_interval_min;
+    uint16_t pollInterval;
 
     const bool operator==(const Configuration& other) {
         // FIXME: extend with correct comparison
         return (this->brightness == other.brightness &&
-                this->show_minutes == other.show_minutes);
+                this->showMinutes == other.showMinutes);
     }
 };
 
-Configuration default_configuration = {
+Configuration defaultConfiguration = {
     127, true, true, true, {255, 0, 0}, {0, 255, 0}, {0, 0, 255}, 3 * 60};

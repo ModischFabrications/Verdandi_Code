@@ -9,10 +9,10 @@
 
 namespace ConfigPortal {
 
-void setup_config_portal();
-void handle_server();
-void handle_config_request();
-void handle_data_update();
+void setup();
+void handleServer();
+void handleConfigRequest();
+void handleDataUpdate();
 void check();
 
 namespace {
@@ -25,17 +25,17 @@ void check() {
     // put everything with regular updates in here
 }
 
-void setup_config_portal() {
-    server.on(F("/"), handle_server);
-    server.on(F("/config"), handle_config_request);
-    server.on(F("/update"), handle_data_update);
+void setup() {
+    server.on(F("/"), handleServer);
+    server.on(F("/config"), handleConfigRequest);
+    server.on(F("/update"), handleDataUpdate);
     server.begin();
     println(F("Server started"));
 }
 
-void handle_server() { server.send(200, "text/html", Website::getContent()); }
+void handleServer() { server.send(200, "text/html", Website::getContent()); }
 
-void handle_config_request() {
+void handleConfigRequest() {
     println(F("Received config request"));
     Configuration config = PersistenceManager::get();
 
@@ -43,9 +43,9 @@ void handle_config_request() {
     StaticJsonDocument<capacity> doc;
 
     doc["brightness"] = config.brightness;
-    doc["showHours"] = config.show_hours;
-    doc["showMinutes"] = config.show_minutes;
-    doc["showSeconds"] = config.show_seconds;
+    doc["showHours"] = config.showHours;
+    doc["showMinutes"] = config.showMinutes;
+    doc["showSeconds"] = config.showSeconds;
     JsonArray colorH = doc.createNestedArray("colorH");
     JsonArray colorM = doc.createNestedArray("colorM");
     JsonArray colorS = doc.createNestedArray("colorS");
@@ -58,7 +58,7 @@ void handle_config_request() {
     colorS.add(config.colorS[0]);
     colorS.add(config.colorS[1]);
     colorS.add(config.colorS[2]);
-    doc["pollInterval"] = config.poll_interval_min;
+    doc["pollInterval"] = config.pollInterval;
 
     String json = "";
     serializeJson(doc, json);
@@ -67,7 +67,7 @@ void handle_config_request() {
     server.send(200, F("application/json"), json);
 }
 
-void handle_data_update() {
+void handleDataUpdate() {
     // send back information about arguments as a test
     String message = "Number of args received: ";
     message += server.args();

@@ -26,7 +26,8 @@ const uint8_t N_LEDS = 24;
 HTTPClient http;
 WiFiClient client;
 
-void test_internet_connection() {
+// TODO: remove as soon as ntp time fetch works
+void testInternetConnection() {
     http.begin(client, F("http://worldtimeapi.org/api/ip"));
     int httpCode = http.GET();
 
@@ -55,14 +56,14 @@ void setup() {
     // BUILTIN is inverted (LOW -> ON)
     digitalWrite(LED_BUILTIN, LOW);
 
-    setup_serial(115200);
+    setupSerial(115200);
     PersistenceStore::setup();
     WiFiLoginManager::setup();
-    ConfigPortal::setup_config_portal();
+    ConfigPortal::setup();
     TimeService::setup();
 
     // TODO: display connection error
-    test_internet_connection();
+    testInternetConnection();
 
     // ...
 
@@ -79,7 +80,7 @@ void loop() {
 
     ConfigPortal::check();
 
-    PersistenceManager::try_save();
+    PersistenceManager::trySave();
 
-    heartbeat_serial();
+    heartbeatSerial();
 }

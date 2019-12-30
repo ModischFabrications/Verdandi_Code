@@ -88,11 +88,11 @@
 
             return `
                 brightness=${config.brightness}&
-                show_hours=${config.showHours}&show_seconds=${config.showMinutes}&show_seconds=${config.showSeconds}&
+                showHours=${config.showHours}&showMinutes=${config.showMinutes}&showSeconds=${config.showSeconds}&
                 colorH_R=${config.colorH[0]}&colorH_G=${config.colorH[1]}&colorH_B=${config.colorH[2]}&
                 colorM_R=${config.colorM[0]}&colorM_G=${config.colorM[1]}&colorM_B=${config.colorM[2]}&
                 colorS_R=${config.colorS[0]}&colorS_G=${config.colorS[1]}&colorS_B=${config.colorS[2]}&
-                poll_interval_min=${config.pollInterval}`;
+                pollInterval=${config.pollInterval}`;
         }
         function onValueChange(htmlElement, targetVar) {
             /* possibly remove switch statement to update everything all the time to remove characters */
