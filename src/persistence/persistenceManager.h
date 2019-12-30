@@ -45,6 +45,7 @@ Configuration get() {
     if (!initialized) {
         println(F("Loading initial config from EEPROM"));
         configuration = PersistenceStore::loadSettings();
+        callListeners();
         initialized = true;
     }
 
