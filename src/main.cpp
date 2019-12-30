@@ -59,7 +59,7 @@ void setup() {
     setup_serial(115200);
     setup_settings();
     setup_WiFi();
-    setup_config_portal();
+    ConfigPortal::setup_config_portal();
     setup_ntp();
 
     // TODO: display connection error
@@ -77,7 +77,7 @@ void loop() {
         SerialInputTest::handleInput();
     }
 
-    server.handleClient();
+    ConfigPortal::check();
 
     PersistenceManager::try_save();
 

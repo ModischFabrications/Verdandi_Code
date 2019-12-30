@@ -6,13 +6,22 @@
 #include "Website.h"
 #include "persistence/persistenceManager.h"
 
+namespace ConfigPortal {
+
 void setup_config_portal();
 void handle_server();
 void handle_config_request();
 void handle_data_update();
+void check();
 
 namespace {
 ESP8266WebServer server(80);
+}
+
+void check() {
+    server.handleClient();
+
+    // put everything with regular updates in here
 }
 
 void setup_config_portal() {
@@ -76,3 +85,4 @@ void handle_data_update() {
     printlnRaw(message);
     server.send(200, "text/plain", message);
 }
+} // namespace ConfigPortal
