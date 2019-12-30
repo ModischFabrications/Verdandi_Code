@@ -106,6 +106,9 @@ void logWarning(const __FlashStringHelper* string) {
     }
 
     warnLog[iWarnLog++] = string;
+
+    print(F("WARN: "));
+    println(string);
 }
 
 void logError(const __FlashStringHelper* string) {
@@ -115,5 +118,11 @@ void logError(const __FlashStringHelper* string) {
     }
 
     errorLog[iErrorLog++] = string;
+
+    print(F("ERROR: "));
+    println(string);
 }
 
+const __FlashStringHelper** getWarnLog() { return warnLog; }
+
+const __FlashStringHelper** getErrorLog() { return errorLog; }

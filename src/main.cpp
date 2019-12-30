@@ -54,6 +54,9 @@ void testListener() {
     println(F("Test listener called"));
     logWarning(F("Test Warning"));
     logError(F("Test Error"));
+
+    println(getWarnLog()[0]);
+    println(getErrorLog()[0]);
 }
 
 void setup() {
@@ -68,6 +71,9 @@ void setup() {
     ConfigPortal::setup();
     TimeService::setup();
 
+    // TODO: remove
+    PersistenceManager::registerListener(testListener);
+    PersistenceManager::registerListener(testListener);
     PersistenceManager::registerListener(testListener);
 
     // TODO: display connection error
