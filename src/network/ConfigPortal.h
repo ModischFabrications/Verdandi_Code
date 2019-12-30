@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ESP8266WebServer.h> // config portal
+#include <ArduinoJson.h>
 
 #include "SerialWrapper.h"
 #include "Website.h"
@@ -38,36 +39,31 @@ void handle_config_request() {
     println(F("Received config request"));
     Configuration config = PersistenceManager::get();
 
-    String json = F("{");
-    json += F("\"brightness\":\"");
-    json += config.brightness;
-    json += F("\",\"show_hours\":\"");
-    json += config.show_hours;
-    json += F("\",\"show_minutes\":\"");
-    json += config.show_minutes;
-    json += F("\",\"show_seconds\":\"");
-    json += config.show_seconds;
-    json += F("\",\"colorH\":[");
-    json += config.colorH[0];
-    json += F(",");
-    json += config.colorH[1];
-    json += F(",");
-    json += config.colorH[2];
-    json += F("],\"colorM\":[");
-    json += config.colorM[0];
-    json += F(",");
-    json += config.colorM[1];
-    json += F(",");
-    json += config.colorM[2];
-    json += F("],\"colorS\":[");
-    json += config.colorS[0];
-    json += F(",");
-    json += config.colorS[1];
-    json += F(",");
-    json += config.colorS[2];
-    json += F("],\"poll_interval\":");
-    json += config.poll_interval_min;
-    json += F("}");
+    const uint16_t capacity = JSON_OBJECT_SIZE(17);
+    StaticJsonDocument<capacity> doc;
+
+    doc["brightness"] = config.brightness;
+    doc["showHours"] = config.show_hours;
+    doc["showMinutes"] = config.show_minutes;
+    doc["showSeconds"] = config.show_seconds;
+    JsonArray colorH = doc.createNestedArray("colorH");
+    JsonArray colorM = doc.createNestedArray("colorM");
+    JsonArray colorS = doc.createNestedArray("colorS");
+    colorH.add(config.colorH[0]);
+    colorH.add(config.colorH[1]);
+    colorH.add(config.colorH[2]);
+    colorM.add(config.colorM[0]);
+    colorM.add(config.colorM[1]);
+    colorM.add(config.colorM[2]);
+    colorS.add(config.colorS[0]);
+    colorS.add(config.colorS[1]);
+    colorS.add(config.colorS[2]);
+    doc["pollInterval"] = config.poll_interval_min;
+
+    String json = "";
+    serializeJson(doc, json);
+    printlnRaw(json);
+
     server.send(200, F("application/json"), json);
 }
 
