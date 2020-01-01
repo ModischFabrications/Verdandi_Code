@@ -13,6 +13,8 @@
 #include "network/WiFiLoginManager.h"
 #include "network/timeService.h"
 
+#include "fileServer.h"
+
 #include "led/ledController.h"
 #include <FastLED.h>
 
@@ -73,6 +75,7 @@ void setup() {
     ConfigPortal::setup();
     TimeService::setup();
     LedController::setup();
+    FileServer::setup();
 
     // TODO: remove
     PersistenceManager::registerListener(testListener);
