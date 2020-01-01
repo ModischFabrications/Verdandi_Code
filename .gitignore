@@ -6,4 +6,4 @@
 
 .vscode/extensions.json
 
-src/network/index.min.html
+data/index.min.html
