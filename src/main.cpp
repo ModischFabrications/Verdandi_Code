@@ -13,6 +13,8 @@
 #include "network/WiFiLoginManager.h"
 #include "network/timeService.h"
 
+#include "led/ledController.h"
+
 #include "fileServer.h"
 
 #include "led/ledController.h"
@@ -88,19 +90,25 @@ void setup() {
     // ...
 
     digitalWrite(LED_BUILTIN, HIGH);
+
+    LedController::helloPower();
 }
 
 void loop() {
     // reduce as needed
-    FastLED.delay(1);
+    FastLED.delay(666);
 
     if (DEBUG_MODE) {
         SerialInputTest::handleInput();
     }
 
+    TimeService::timeUpdate();
+
     ConfigPortal::check();
 
     PersistenceManager::trySave();
+
+    LedController::tick();
 
     heartbeatSerial();
 }
