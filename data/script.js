@@ -56,7 +56,7 @@ function loadConfigValues() {
             config.colorH = res.colorH;
             config.colorM = res.colorM;
             config.colorS = res.colorS;
-            config.pollInterval = res.pollInterval;
+            config.pollInterval = parseInt(res.pollInterval);
 
             updateUIElements();
         }
@@ -106,8 +106,7 @@ function onValueChange(htmlElement, targetVar) {
     sendUpdatedData();
 }
 function updateUIElements() {
-    /* FIXME: Check why brightness slider doesnt get set */
-    brightenessEl.value = config.brighteness;
+    brightenessEl.value = config.brightness;
     brightnessOutput.value = config.brightness;
     showHoursEl.checked = config.showHours;
     if (config.showHours) {
