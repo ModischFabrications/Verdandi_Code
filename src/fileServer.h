@@ -35,6 +35,8 @@ File getFile(String path) {
     String pathWithGz = path + ".gz";
     if (SPIFFS.exists(pathWithGz))
         path += ".gz";
+    print(F("Getting file from path: "));
+    printlnRaw(path);
     return SPIFFS.open(path, "r");
 }
 

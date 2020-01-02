@@ -63,6 +63,7 @@ function loadConfigValues() {
     };
 }
 function sendUpdatedData() {
+    // TODO: send only every 200 ms
     let urlString = generateUrlString();
 
     var xhttp = new XMLHttpRequest();

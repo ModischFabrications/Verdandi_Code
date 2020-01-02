@@ -38,12 +38,8 @@ void setup() {
 void handleServer() {
     String path = server.uri();
     if (path.endsWith("/")) path += "index.html";
-    print(F("Looking for file: "));
-    printlnRaw(path);
 
     if (FileServer::fileExists(path)) {
-        println(F("Sending file."));
-
         File f = FileServer::getFile(path);
         String contentType = FileServer::getContentType(path);
         server.streamFile(f, contentType);
