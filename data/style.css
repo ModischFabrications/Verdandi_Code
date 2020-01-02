@@ -1,0 +1,15 @@
+* {
+    font-family: "Trebuchet MS", sans-serif;
+}
+.width100 {
+    width: 100%;
+}
+.config-table td {
+    padding: 10px;
+}
+.showDisabled {
+    filter: grayscale(0.8) contrast(0.5);
+}
+.blurred {
+    filter: blur(3px);
+}
