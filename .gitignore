@@ -6,4 +6,4 @@
 
 .vscode/extensions.json
 
-data/index.min.html
+data/*.gz
