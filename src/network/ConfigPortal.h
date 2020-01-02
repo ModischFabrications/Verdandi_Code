@@ -29,15 +29,17 @@ void check() {
 }
 
 void setup() {
-    server.on(F("/"), handleServer);
     server.on(F("/config"), handleConfigRequest);
     server.on(F("/update"), handleDataUpdate);
+    server.onNotFound(handleServer);
     server.begin();
     println(F("Server started"));
 }
 
 void handleServer() {
-    String path = F("/index.html");
+    String path = server.uri();
+    if (path.endsWith("/")) path += "index.html";
+
     if (FileServer::fileExists(path)) {
         println(F("Sending file."));
 
@@ -48,7 +50,7 @@ void handleServer() {
     } else {
         println(F("File does not exist."));
 
-        server.send(200, "text/html", "Index.html not found. Reupload the file store.");
+        server.send(404, "text/html", "Requested file not found. Reupload the file store.");
     }
 }
 
