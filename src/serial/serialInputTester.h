@@ -7,7 +7,6 @@
 namespace SerialInputTest {
 
 void handleInput() {
-    // TODO: remove or extract
     String received = readString(1);
     if (received == "I") {
         println(F("Resetting config"));

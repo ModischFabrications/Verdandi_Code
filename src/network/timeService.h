@@ -22,18 +22,7 @@ namespace {
 const char* TIMEZONE = "TZ_Europe_London";
 
 timeval tv;
-time_t now;
-uint32_t now_ms;
-
 Time currentTime = {0, 0, 0, 0};
-
-// TODO: make parameter
-// utc offset for your timezone: e.g. GMT +1 = 3600
-// can be set with timeClient.setTimeOffset(offset);
-const long utcOffsetInSeconds = 3600;
-
-// WiFiUDP ntpUDP;
-// NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds);
 } // namespace
 
 void setup();
@@ -42,11 +31,11 @@ Time getCurrentTime();
 
 void setup() {
     configTime(TIMEZONE, "pool.ntp.org");
-
-    // timeClient.begin();
+    // TODO: add listener to change timezone and poll interval
 }
 
 void timeUpdate() {
+    // TODO: check how it get the new time
     gettimeofday(&tv, nullptr);
     time_t now = time(nullptr);
     tm* t = localtime(&now);

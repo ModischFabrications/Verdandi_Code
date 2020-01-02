@@ -60,13 +60,12 @@ void set(Configuration newConfig) {
         return;
     }
 
-    // TODO: copy or reassign? Reference could be tricky
+    // reference too dangerous
     configuration = newConfig;
 
     // set "moving" timer to save as soon as user is done
     tNextSavepoint = (millis() + delayToSaveMs);
 
-    // TODO: notify every listener of PersistenceManager that the values changed?
     callListeners();
 }
 
