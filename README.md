@@ -17,6 +17,8 @@ We are using the Clang Formatter with the style configuration from the included 
 This is a follow up to a now deprecated previous project of mine: https://github.com/ModischFabrications/RGB_Clock
 
 ### RGB clocks
+https://github.com/marijoblaz/iOWatch
+
 https://www.reddit.com/r/functionalprint/comments/e5marv/led_wall_clock/ -> https://github.com/Petrovjan/3D-printed-LED-clock
 
 https://github.com/dheera/shadow-clock
