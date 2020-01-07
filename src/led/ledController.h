@@ -20,7 +20,7 @@ const uint16_t T_ANIMATION_MS = (1 * 1000);
 const uint16_t MAX_MILLIAMPS = 1000;
 
 const uint8_t PIN_LEDS = D1;
-const uint8_t N_LEDS = 6;
+const uint8_t N_LEDS = 24;
 // the index of the led that represents 12 o'clock
 const uint8_t I_LED_12H = 0;
 
@@ -113,9 +113,9 @@ void tick() {
     TimeService::Time currentTime = TimeService::getCurrentTime();
 
     // show clock hand as fraction
-    float h = (float)currentTime.hour + (float)currentTime.minute / 60;
-    float m = (float)currentTime.minute + (float)currentTime.second / 60;
-    float s = (float)currentTime.second + (float)currentTime.millisecond / 1000;
+    float h = (float)currentTime.hour + (float)currentTime.minute / 60.0;
+    float m = (float)currentTime.minute + (float)currentTime.second / 60.0;
+    float s = (float)currentTime.second + (float)currentTime.millisecond / 1000.0;
 
     Configuration config = PersistenceManager::get();
     if (config.showHours)

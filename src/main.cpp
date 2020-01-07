@@ -96,7 +96,7 @@ void setup() {
 
 void loop() {
     // reduce as needed
-    FastLED.delay(666);
+    FastLED.delay(1);
 
     if (DEBUG_MODE) {
         SerialInputTest::handleInput();
