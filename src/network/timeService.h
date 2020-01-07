@@ -8,7 +8,13 @@
 
 #include "TZ.h"
 #include "serial/SerialWrapper.h"
+#include "persistence/persistenceManager.h"
 #include <coredecls.h>
+
+uint32_t sntp_update_delay_MS_rfc_not_less_than_15000 ()
+{
+   return PersistenceManager::get().pollInterval * 60 * 1000;
+}
 
 namespace TimeService {
 

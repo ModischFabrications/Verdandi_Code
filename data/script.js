@@ -99,7 +99,7 @@ function onValueChange(htmlElement, targetVar) {
             ];
             break;
         case "pollInterval":
-            config.pollInterval = Math.min(Math.max(htmlElement.value, 0), 10000);
+            config.pollInterval = Math.min(Math.max(htmlElement.value, 0), 100000);
             break;
         default:
             break;
