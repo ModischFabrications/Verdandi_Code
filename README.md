@@ -1,7 +1,7 @@
 # Verdandi
 Cooperative project to display an analog clock with digital RGB LEDs.
 
-
+PCb can be found at https://github.com/ModischFabrications/Verdandi_PCB.
 
 ## Usage
 
@@ -17,6 +17,8 @@ We are using the Clang Formatter with the style configuration from the included 
 This is a follow up to a now deprecated previous project of mine: https://github.com/ModischFabrications/RGB_Clock
 
 ### RGB clocks
+https://www.instructables.com/id/Easy-Infinity-Mirror-Clock/
+
 https://github.com/marijoblaz/iOWatch
 
 https://www.reddit.com/r/functionalprint/comments/e5marv/led_wall_clock/ -> https://github.com/Petrovjan/3D-printed-LED-clock
