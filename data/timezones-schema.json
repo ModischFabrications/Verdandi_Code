@@ -1,0 +1,50 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "Time zone definitions",
+	"description": "JSON Schema for the time zone definitions of the Verdandi project.",
+	"definitions": {
+		"generalTimeZone": {
+			"type": "object",
+			"properties": {
+				"same_time": {
+					"description": "Boolean indicating if divisions share the same time zone.",
+					"type": "boolean"
+				},
+				"divisions": {
+					"description": "Contains all sub-time zones. Either general or specific time zone",
+					"type": "object",
+					"patternProperties": {
+						"^.*$": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"$ref": "#/definitions/generalTimeZone"
+								}
+							]
+						}
+					}
+				}
+			},
+			"required": [
+				"same_time",
+				"divisions"
+			],
+			"additionalProperties": false
+		}
+	},
+	"patternProperties": {
+		"^.*$": {
+			"anyOf": [
+				{
+					"type": "string"
+				},
+				{
+					"$ref": "#/definitions/generalTimeZone"
+				}
+			]
+		}
+	},
+	"additionalProperties": false
+}

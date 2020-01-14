@@ -377,14 +377,14 @@
                     },
                     "Brazil": {
                         "same_time": false,
-                        "division": {
+                        "divisions": {
                             "Acre Time": "TZ_America_Rio_Branco",
                             "Amazon Time": {
                                 "same_time": true,
-                                "division": {
+                                "divisions": {
                                     "Amazonas": {
                                         "same_time": false,
-                                        "division": {
+                                        "divisions": {
                                             "Manaus": "TZ_America_Manaus",
                                             "Eirunepe": "TZ_America_Eirunepe"
                                         }
@@ -397,7 +397,7 @@
                             },
                             "Brasilia Time": {
                                 "same_time": true,
-                                "division": {
+                                "divisions": {
                                     "Bahia": "TZ_America_Bahia",
                                     "Para": {
                                         "same_time": true,
@@ -555,52 +555,52 @@
                     "Aqtobe": "TZ_Asia_Aqtobe",
                     "Atyrau": "TZ_Asia_Atyrau"
                 }
-            }
-        },
-        "Russia (Asia)": {
-            "same_time": false,
-            "divisions": {
-                "Yekaterinburg": "TZ_Asia_Yekaterinburg",
-                "Omsk": "TZ_Asia_Omsk",
-                "Krasnoyarsk": {
-                    "same_time": true,
-                    "divisions": {
-                        "Krasnoyarsk": "TZ_Asia_Krasnoyarsk",
-                        "Barnaul": "TZ_Asia_Barnaul",
-                        "Novokuznetsk": "TZ_Asia_Novokuznetsk",
-                        "Tomsk": "TZ_Asia_Tomsk",
-                        "Novosibirsk": "TZ_Asia_Novosibirsk"
-                    }
-                },
-                "Irkutsk": "TZ_Asia_Irkutsk",
-                "Yakutsk": {
-                    "same_time": true,
-                    "divisions": {
-                        "Yakutsk": "TZ_Asia_Yakutsk",
-                        "Khandyga": "TZ_Asia_Khandyga",
-                        "Chita": "TZ_Asia_Chita"
-                    }
-                },
-                "Vladivostok": {
-                    "same_time": true,
-                    "divisions": {
-                        "Vladivostok": "TZ_Asia_Vladivostok",
-                        "UstmNera": "TZ_Asia_UstmNera"
-                    }
-                },
-                "Magadan": {
-                    "same_time": true,
-                    "divisions": {
-                        "Magadan": "TZ_Asia_Magadan",
-                        "Sakhalin": "TZ_Asia_Sakhalin",
-                        "Srednekolymsk": "TZ_Asia_Srednekolymsk"
-                    }
-                },
-                "Kamchatka": {
-                    "same_time": true,
-                    "divisions": {
-                        "Kamchatka": "TZ_Asia_Kamchatka",
-                        "Anadyr": "TZ_Asia_Anadyr"
+            },
+            "Russia (Asia)": {
+                "same_time": false,
+                "divisions": {
+                    "Yekaterinburg": "TZ_Asia_Yekaterinburg",
+                    "Omsk": "TZ_Asia_Omsk",
+                    "Krasnoyarsk": {
+                        "same_time": true,
+                        "divisions": {
+                            "Krasnoyarsk": "TZ_Asia_Krasnoyarsk",
+                            "Barnaul": "TZ_Asia_Barnaul",
+                            "Novokuznetsk": "TZ_Asia_Novokuznetsk",
+                            "Tomsk": "TZ_Asia_Tomsk",
+                            "Novosibirsk": "TZ_Asia_Novosibirsk"
+                        }
+                    },
+                    "Irkutsk": "TZ_Asia_Irkutsk",
+                    "Yakutsk": {
+                        "same_time": true,
+                        "divisions": {
+                            "Yakutsk": "TZ_Asia_Yakutsk",
+                            "Khandyga": "TZ_Asia_Khandyga",
+                            "Chita": "TZ_Asia_Chita"
+                        }
+                    },
+                    "Vladivostok": {
+                        "same_time": true,
+                        "divisions": {
+                            "Vladivostok": "TZ_Asia_Vladivostok",
+                            "UstmNera": "TZ_Asia_UstmNera"
+                        }
+                    },
+                    "Magadan": {
+                        "same_time": true,
+                        "divisions": {
+                            "Magadan": "TZ_Asia_Magadan",
+                            "Sakhalin": "TZ_Asia_Sakhalin",
+                            "Srednekolymsk": "TZ_Asia_Srednekolymsk"
+                        }
+                    },
+                    "Kamchatka": {
+                        "same_time": true,
+                        "divisions": {
+                            "Kamchatka": "TZ_Asia_Kamchatka",
+                            "Anadyr": "TZ_Asia_Anadyr"
+                        }
                     }
                 }
             }
