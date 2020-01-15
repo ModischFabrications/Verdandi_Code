@@ -34,17 +34,31 @@
 			"additionalProperties": false
 		}
 	},
-	"patternProperties": {
-		"^.*$": {
-			"anyOf": [
-				{
-					"type": "string"
-				},
-				{
-					"$ref": "#/definitions/generalTimeZone"
+	"properties": {
+		"same_time": {
+			"description": "Boolean indicating if divisions share the same time zone.",
+			"type": "boolean"
+		},
+		"divisions": {
+			"description": "Contains all sub-time zones. Either general or specific time zone",
+			"type": "object",
+			"patternProperties": {
+				"^.*$": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"$ref": "#/definitions/generalTimeZone"
+						}
+					]
 				}
-			]
+			}
 		}
 	},
+	"required": [
+		"same_time",
+		"divisions"
+	],
 	"additionalProperties": false
 }
