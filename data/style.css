@@ -1,15 +1,26 @@
 * {
-    font-family: "Trebuchet MS", sans-serif;
+  font-family: "Trebuchet MS", sans-serif;
 }
 .width100 {
-    width: 100%;
+  width: 100%;
 }
 .config-table td {
-    padding: 10px;
+  padding: 10px;
 }
 .showDisabled {
-    filter: grayscale(0.8) contrast(0.5);
+  filter: grayscale(0.8) contrast(0.5);
 }
 .blurred {
-    filter: blur(3px);
+  filter: blur(3px);
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -1px;
+}
+.hidden {
+  display: none;
 }

@@ -18,6 +18,7 @@ let config = {
     colorS: [255, 0, 0],
     pollInterval: 10
 };
+let timezones = {};
 
 function toggleHiddenById(id) {
     d.getElementById(id).classList.toggle("showDisabled");
@@ -38,6 +39,7 @@ function onload() {
     // brightnessOutput.value = brightenessEl.value;
 
     loadConfigValues();
+    loadTimezones();
 }
 function loadConfigValues() {
     var xhttp = new XMLHttpRequest();
@@ -62,6 +64,76 @@ function loadConfigValues() {
         }
     };
 }
+
+function loadTimezones() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open('GET', d.URL + 'timezones.json', true);
+    xhttp.send();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            timezones = JSON.parse(xhttp.responseText);
+            console.log(timezones);
+            let tzElements = generateHTMLForDivisions(timezones);
+            tzElements.classList.remove('hidden');
+            document.getElementsByClassName('tz-selection')[0].appendChild(tzElements);
+        }
+    }
+}
+
+function generateHTMLForDivisions(generalTimeZone) {
+    let sameTime = generalTimeZone.same_time;
+    let divisions = generalTimeZone.divisions;
+    console.log(sameTime, divisions);
+    divisions = sortJsonByKey(divisions);
+
+    let ul = document.createElement('ul');
+    ul.classList.add('dropdown-menu');
+    ul.classList.add('hidden');
+
+    for (const [key, value] of Object.entries(divisions)) {
+        ul.appendChild(generateTimezoneItem(key, value));
+    }
+
+    return ul;
+}
+
+function generateTimezoneItem(key, value) {
+    let li = document.createElement('li');
+    let a = document.createElement('a');
+    a.innerHTML = key;
+    a.setAttribute('tz', key);
+    // a.setAttribute('tabindex', '-1');
+    li.appendChild(a);
+
+    // generate submenu if the value is an object (-> list of more specific time zones)
+    // and they do not represent the same time zone
+    if (typeof (value) == "object" && !value.same_time) {
+        a.classList.add('open-dropdown-button');
+        a.addEventListener('click', openDropdown);
+        li.classList.add('dropdown-submenu');
+        li.appendChild(generateHTMLForDivisions(value));
+    }
+
+    return li;
+}
+
+function sortJsonByKey(unordered) {
+    const ordered = {};
+
+    Object.keys(unordered).sort().forEach(function (key) {
+        ordered[key] = unordered[key];
+    });
+
+    return ordered;
+}
+
+function openDropdown(event) {
+    console.log(event);
+    event.target.nextElementSibling.classList.toggle('hidden');
+    event.stopPropagation();
+    event.preventDefault();
+}
+
 function sendUpdatedData() {
     // TODO: send only every 200 ms
     let urlString = generateUrlString();
@@ -71,11 +143,15 @@ function sendUpdatedData() {
     xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhttp.send(urlString);
 }
+
+
 function generateUrlString() {
     console.log(config);
     // TODO: create string from config variable
     return `brightness=${config.brightness}&showHours=${config.showHours}&showMinutes=${config.showMinutes}&showSeconds=${config.showSeconds}&colorH_R=${config.colorH[0]}&colorH_G=${config.colorH[1]}&colorH_B=${config.colorH[2]}&colorM_R=${config.colorM[0]}&colorM_G=${config.colorM[1]}&colorM_B=${config.colorM[2]}&colorS_R=${config.colorS[0]}&colorS_G=${config.colorS[1]}&colorS_B=${config.colorS[2]}&pollInterval=${config.pollInterval}`;
 }
+
+
 function onValueChange(htmlElement, targetVar) {
     /* possibly remove switch statement to update everything all the time to remove characters */
     switch (targetVar) {
@@ -106,6 +182,8 @@ function onValueChange(htmlElement, targetVar) {
     }
     sendUpdatedData();
 }
+
+
 function updateUIElements() {
     brightenessEl.value = config.brightness;
     brightnessOutput.value = config.brightness;
@@ -156,6 +234,8 @@ function updateUIElements() {
         get2DigitHex(config.colorS[2]);
     pollingEl.value = config.pollInterval;
 }
+
+
 function get2DigitHex(value) {
     return ("00" + value.toString(16).toUpperCase()).slice(-2);
 }
