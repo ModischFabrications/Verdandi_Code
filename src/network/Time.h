@@ -4,6 +4,7 @@
 
 // no namespace, just like configuration.h
 
+// include this first if you get some weird "type not defined" errors
 struct Time {
     uint8_t hour;
     uint8_t minute;

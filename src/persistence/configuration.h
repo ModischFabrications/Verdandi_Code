@@ -1,5 +1,8 @@
 #pragma once
+
 #include <stdint.h>
+
+#include "Time.h"
 
 struct Configuration {
     uint8_t brightness;
@@ -8,12 +11,20 @@ struct Configuration {
     bool showMinutes;
     bool showSeconds;
 
-    uint8_t colorH[3];
     // irrelevant if "!showX"
+    uint8_t colorH[3];
     uint8_t colorM[3];
     uint8_t colorS[3];
 
     uint16_t pollInterval;
+
+    bool nightmode;
+
+    // irrelevant if "!nightmode"
+    Time turnOffAt;
+    Time turnOnAt;
+
+    // TODO: timezone, don't forget operator
 
     const bool operator==(const Configuration& other) {
         return (this->brightness == other.brightness &&
@@ -29,9 +40,18 @@ struct Configuration {
                 this->colorS[0] == other.colorS[0] &&
                 this->colorS[1] == other.colorS[1] &&
                 this->colorS[2] == other.colorS[2] &&
-                this->pollInterval == other.pollInterval);
+                this->pollInterval == other.pollInterval &&
+                this->nightmode == other.nightmode &&
+                this->turnOffAt == other.turnOffAt &&
+                this->turnOnAt == other.turnOnAt
+                );
     }
 };
 
 Configuration defaultConfiguration = {
-    127, true, true, true, {255, 0, 0}, {0, 255, 0}, {0, 0, 255}, 3 * 60};
+    127, 
+    true, true, true, 
+    {255, 0, 0}, {0, 255, 0}, {0, 0, 255},
+    3 * 60, 
+    false, {10}, {11}
+    };
