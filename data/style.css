@@ -13,14 +13,30 @@
 .blurred {
   filter: blur(3px);
 }
-.dropdown-submenu {
-  position: relative;
-}
-.dropdown-submenu .dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -1px;
-}
 .hidden {
   display: none;
+}
+.dropdown-menu {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.dropdown-menu li {
+  position: relative;
+  float:left;
+  margin-right:1px;
+  background-color:#f0f0f0;
+  -webkit-transition: background-color 0.5s ease-out;
+  -moz-transition: background-color 0.5s ease-out;
+  -o-transition: background-color 0.5s ease-out;
+  transition: background-color 0.5s ease-out;
+}
+.dropdown-menu li a {
+  text-decoration: none;
+  display:inline-block;
+  padding:4px 10px 0;
+  height:25px;
+}
+.dropdown-menu li:hover {
+  background:#000;
 }

@@ -19,6 +19,7 @@ let config = {
     pollInterval: 10
 };
 let timezones = {};
+let currentTimezonePath = [];
 
 function toggleHiddenById(id) {
     d.getElementById(id).classList.toggle("showDisabled");
@@ -72,50 +73,102 @@ function loadTimezones() {
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             timezones = JSON.parse(xhttp.responseText);
-            console.log(timezones);
-            let tzElements = generateHTMLForDivisions(timezones);
-            tzElements.classList.remove('hidden');
-            document.getElementsByClassName('tz-selection')[0].appendChild(tzElements);
+
+            updateTimezoneDisplay();
+
+            // console.log(timezones);
+            // let tzElements = generateHTMLForDivisions(timezones);
+            // tzElements.classList.remove('hidden');
+            // document.getElementsByClassName('tz-selection')[0].appendChild(tzElements);
         }
     }
 }
 
-function generateHTMLForDivisions(generalTimeZone) {
-    let sameTime = generalTimeZone.same_time;
-    let divisions = generalTimeZone.divisions;
-    console.log(sameTime, divisions);
-    divisions = sortJsonByKey(divisions);
+function updateTimezoneDisplay() {
+    let tzToDisplay = getChildrenInCurrentTimezonePath();
+    console.log(tzToDisplay);
 
-    let ul = document.createElement('ul');
-    ul.classList.add('dropdown-menu');
-    ul.classList.add('hidden');
+    let tzElements = generateTzHtmlList(tzToDisplay);
 
-    for (const [key, value] of Object.entries(divisions)) {
-        ul.appendChild(generateTimezoneItem(key, value));
+    document.getElementsByClassName('tz-selection-container')[0].appendChild(tzElements);
+}
+
+function getChildrenInCurrentTimezonePath() {
+    let tempPart = timezones;
+    currentTimezonePath.forEach(function (tzName, index) {
+        // check if current path has divisions object
+        // the time zone name is indeed part of the divisions
+        // and there are subdivisions with in this selected part
+        if ("divisions" in tempPart
+            && tzName in tempPart.divisions
+            && "divisions" in tempPart.divisions[tzName]) {
+            tempPart = tempPart.divisions[tzName];
+        } else {
+            let msg = `Incorrect time zones where found while generating searching for a specific time zone.`;
+            throw new Error(msg);
+        }
+    });
+
+    let tzToDisplay = [];
+    for (const [key, _] of Object.entries(tempPart.divisions)) {
+        tzToDisplay.push(key);
     }
+    return tzToDisplay;
+}
 
+function generateTzHtmlList(timezoneArray) {
+    // TODO: add arrow if there are further sub time zones
+    // for that the "timezoneArray" has to have the info about whether it is an object or a string
+    // so maybe pass whole "divisions" array instead of only the keys
+    let ul = document.createElement('ul');
+
+    for(let tz of timezoneArray) {
+        let li = document.createElement('li');
+        let a = document.createElement('a');
+        a.innerHTML = tz;
+        a.setAttribute('tz', tz);
+        li.appendChild(a);
+        ul.appendChild(li);
+    }
     return ul;
 }
 
-function generateTimezoneItem(key, value) {
-    let li = document.createElement('li');
-    let a = document.createElement('a');
-    a.innerHTML = key;
-    a.setAttribute('tz', key);
-    // a.setAttribute('tabindex', '-1');
-    li.appendChild(a);
+// function generateHTMLForDivisions(generalTimeZone) {
+//     let sameTime = generalTimeZone.same_time;
+//     let divisions = generalTimeZone.divisions;
+//     console.log(sameTime, divisions);
+//     divisions = sortJsonByKey(divisions);
 
-    // generate submenu if the value is an object (-> list of more specific time zones)
-    // and they do not represent the same time zone
-    if (typeof (value) == "object" && !value.same_time) {
-        a.classList.add('open-dropdown-button');
-        a.addEventListener('click', openDropdown);
-        li.classList.add('dropdown-submenu');
-        li.appendChild(generateHTMLForDivisions(value));
-    }
+//     let ul = document.createElement('ul');
+//     ul.classList.add('dropdown-menu');
+//     ul.classList.add('hidden');
 
-    return li;
-}
+//     for (const [key, value] of Object.entries(divisions)) {
+//         ul.appendChild(generateTimezoneItem(key, value));
+//     }
+
+//     return ul;
+// }
+
+// function generateTimezoneItem(key, value) {
+//     let li = document.createElement('li');
+//     let a = document.createElement('a');
+//     a.innerHTML = key;
+//     a.setAttribute('tz', key);
+//     // a.setAttribute('tabindex', '-1');
+//     li.appendChild(a);
+
+//     // generate submenu if the value is an object (-> list of more specific time zones)
+//     // and they do not represent the same time zone
+//     if (typeof (value) == "object" && !value.same_time) {
+//         a.classList.add('open-dropdown-button');
+//         a.addEventListener('click', openDropdown);
+//         li.classList.add('dropdown-submenu');
+//         li.appendChild(generateHTMLForDivisions(value));
+//     }
+
+//     return li;
+// }
 
 function sortJsonByKey(unordered) {
     const ordered = {};
@@ -127,12 +180,12 @@ function sortJsonByKey(unordered) {
     return ordered;
 }
 
-function openDropdown(event) {
-    console.log(event);
-    event.target.nextElementSibling.classList.toggle('hidden');
-    event.stopPropagation();
-    event.preventDefault();
-}
+// function openDropdown(event) {
+//     console.log(event);
+//     event.target.nextElementSibling.classList.toggle('hidden');
+//     event.stopPropagation();
+//     event.preventDefault();
+// }
 
 function sendUpdatedData() {
     // TODO: send only every 200 ms
