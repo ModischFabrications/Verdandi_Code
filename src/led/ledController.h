@@ -37,6 +37,7 @@ void updateDisplay();
 void clearPreMultipliers();
 void setPreMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider);
 void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]);
+bool isInNightMode(Time currentTime);
 // -----------------------
 
 void updateDisplay(Time currentTime) {
@@ -106,6 +107,18 @@ void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]) {
     }
     FastLED.show();
 }
+
+bool isInNightMode(Time currentTime) {
+    Configuration config = PersistenceManager::get();
+
+    if (!config.nightmode) return false;
+
+    if (currentTime > config.turnOffAt || currentTime < config.turnOnAt) 
+        return true;
+    
+    return false;
+}
+
 } // namespace
 
 void setup();
@@ -140,7 +153,11 @@ void helloPower() {
 void tick() {
     Time currentTime = TimeService::getCurrentTime();
 
-    // TODO: turn off LEDs and skip updating outside of working hours
+    // turn off LEDs and skip updating outside of working hours
+    if (isInNightMode(currentTime)) {
+        // TODO: turn off LEDs on transition -> state keeping? 
+        //  might be good for error state as well
+    } return;
 
     updateDisplay(currentTime);
 }
