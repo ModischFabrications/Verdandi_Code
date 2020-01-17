@@ -8,6 +8,8 @@
 namespace PersistenceStore {
 // Preserve EEPROM while programming with the EESAVE fuse on AVR
 
+using namespace Config;
+
 namespace {
 
 // MAKE SURE TO DEFINE VERSION IN YOUR CONFIG FILE!
@@ -22,8 +24,8 @@ namespace {
  * Storage pointers burn out the pointer cell, random won't be found
  * after a restart.
  * */
-const uint16_t EEPROM_VERSION_ADDR = Config::VERSION;
-const uint16_t EEPROM_SETTINGS_ADDR = EEPROM_VERSION_ADDR + sizeof(Config::VERSION);
+const uint16_t EEPROM_VERSION_ADDR = VERSION;
+const uint16_t EEPROM_SETTINGS_ADDR = EEPROM_VERSION_ADDR + sizeof(VERSION);
 
 const uint16_t MAX_BYTES_USED = 127;
 } // namespace
@@ -37,8 +39,8 @@ void setup() {
 /**
  * save settings to EEPROM for persistent storage
  * */
-void saveSettings(Config::Configuration settings) {
-    EEPROM.write(EEPROM_VERSION_ADDR, Config::VERSION);
+void saveSettings(Configuration settings) {
+    EEPROM.write(EEPROM_VERSION_ADDR, VERSION);
     EEPROM.put(EEPROM_SETTINGS_ADDR, settings);
 
     // commit planned changes
@@ -50,19 +52,19 @@ void saveSettings(Config::Configuration settings) {
  * corrupted, outdated or missing settings.
  * The chance that a random, unset combination is a match is very low.
  * */
-Config::Configuration loadSettings() {
+Configuration loadSettings() {
     // could be rubbish or zeros, either way should work
     uint8_t savedVersion = EEPROM.read(EEPROM_VERSION_ADDR);
 
-    if (savedVersion != Config::VERSION) {
+    if (savedVersion != VERSION) {
         // save new default settings as fallback, updates version for next run
-        saveSettings(Config::defaultConfiguration);
+        saveSettings(defaultConfiguration);
 
-        return Config::defaultConfiguration;
+        return defaultConfiguration;
     }
 
     // content should be correct, return it
-    Config::Configuration settings;
+    Configuration settings;
     EEPROM.get(EEPROM_SETTINGS_ADDR, settings);
 
     return settings;
