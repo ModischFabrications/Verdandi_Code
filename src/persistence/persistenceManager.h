@@ -14,8 +14,8 @@ typedef void (*fListener)();
 // classes don't behave well with pointers, trust me!
 namespace PersistenceManager {
 
-Configuration get();
-void set(Configuration newConfig);
+Config::Configuration get();
+void set(Config::Configuration newConfig);
 void trySave();
 void registerListener(fListener listener);
 void callListeners();
@@ -32,7 +32,7 @@ bool initialized = false;
 
 // it's dangerous to leave this uninitialized but we get these values
 //  with the first get()
-Configuration configuration;
+Config::Configuration configuration;
 uint32_t tNextSavepoint = 0;
 
 fListener listeners[N_MAX_LISTENERS] = {nullptr};
@@ -40,7 +40,7 @@ uint8_t i_listeners = 0;
 } // namespace
 
 // get with included lazy load from EEPROM
-Configuration get() {
+Config::Configuration get() {
     // singleton-like
     if (!initialized) {
         println(F("Loading initial config from EEPROM"));
@@ -54,7 +54,7 @@ Configuration get() {
 
 // set with lazy save, persistent only after a small timeout to reduce EEPROM
 // wear
-void set(Configuration newConfig) {
+void set(Config::Configuration newConfig) {
     if (configuration == newConfig) {
         println(F("config identical, skipping save"));
         return;

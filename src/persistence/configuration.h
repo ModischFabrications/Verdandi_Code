@@ -4,10 +4,12 @@
 
 #include "Time.h"
 
+namespace Config {
+
 /* change with each design iteration to prevent EEPROM inconsistency and help
  * with wear leveling of EEPROM cells.
  */
-const uint8_t CONFIG_VERSION = 3;
+const uint8_t VERSION = 3;
 
 struct Configuration {
     uint8_t brightness;
@@ -63,3 +65,5 @@ Configuration defaultConfiguration = {
     false, {10}, {11}, 
     "TZ_Europe_London"
     };
+
+} // namespace Configuration

@@ -22,8 +22,8 @@ namespace {
  * Storage pointers burn out the pointer cell, random won't be found
  * after a restart.
  * */
-const uint16_t EEPROM_VERSION_ADDR = CONFIG_VERSION;
-const uint16_t EEPROM_SETTINGS_ADDR = EEPROM_VERSION_ADDR + sizeof(CONFIG_VERSION);
+const uint16_t EEPROM_VERSION_ADDR = Config::VERSION;
+const uint16_t EEPROM_SETTINGS_ADDR = EEPROM_VERSION_ADDR + sizeof(Config::VERSION);
 
 const uint16_t MAX_BYTES_USED = 127;
 } // namespace
@@ -37,8 +37,8 @@ void setup() {
 /**
  * save settings to EEPROM for persistent storage
  * */
-void saveSettings(Configuration settings) {
-    EEPROM.write(EEPROM_VERSION_ADDR, CONFIG_VERSION);
+void saveSettings(Config::Configuration settings) {
+    EEPROM.write(EEPROM_VERSION_ADDR, Config::VERSION);
     EEPROM.put(EEPROM_SETTINGS_ADDR, settings);
 
     // commit planned changes
@@ -50,19 +50,19 @@ void saveSettings(Configuration settings) {
  * corrupted, outdated or missing settings.
  * The chance that a random, unset combination is a match is very low.
  * */
-Configuration loadSettings() {
+Config::Configuration loadSettings() {
     // could be rubbish or zeros, either way should work
     uint8_t savedVersion = EEPROM.read(EEPROM_VERSION_ADDR);
 
-    if (savedVersion != CONFIG_VERSION) {
+    if (savedVersion != Config::VERSION) {
         // save new default settings as fallback, updates version for next run
-        saveSettings(defaultConfiguration);
+        saveSettings(Config::defaultConfiguration);
 
-        return defaultConfiguration;
+        return Config::defaultConfiguration;
     }
 
     // content should be correct, return it
-    Configuration settings;
+    Config::Configuration settings;
     EEPROM.get(EEPROM_SETTINGS_ADDR, settings);
 
     return settings;

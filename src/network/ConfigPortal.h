@@ -15,7 +15,7 @@ void handleConfigRequest();
 void handleDataUpdate();
 void check();
 String ArgsToString();
-Configuration ArgsToConfiguration();
+Config::Configuration ArgsToConfiguration();
 
 namespace {
 ESP8266WebServer server(80);
@@ -55,7 +55,7 @@ void handleServer() {
 
 void handleConfigRequest() {
     println(F("Received config request"));
-    Configuration config = PersistenceManager::get();
+    Config::Configuration config = PersistenceManager::get();
 
     // actual number of objects, in this case number of lines
     const uint16_t capacity = JSON_OBJECT_SIZE(17);
@@ -110,8 +110,8 @@ String ArgsToString() {
     return message;
 }
 
-Configuration ArgsToConfiguration() {
-    Configuration new_values = Configuration();
+Config::Configuration ArgsToConfiguration() {
+    Config::Configuration new_values = Config::Configuration();
 
     // implicit clamping could make problems but it's just nicer to read
     if (server.argName(0) == "brightness")
