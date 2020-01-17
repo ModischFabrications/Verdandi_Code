@@ -9,11 +9,14 @@ namespace PersistenceStore {
 // Preserve EEPROM while programming with the EESAVE fuse on AVR
 
 namespace {
+
+// TODO: move into configuration to allow increasing with every iteration
+
 /* change with each design iteration to prevent EEPROM inconsistency and help
  * with wear leveling of EEPROM cells.
  * The chance that a random, unset combination is a match is very low.
  */
-const uint8_t VERSION = 2;
+const uint8_t VERSION = 3;
 
 /**
  * EEPROM has around 100k writes per cell, so use them carefully!

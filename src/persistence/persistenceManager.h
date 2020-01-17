@@ -85,6 +85,9 @@ void trySave() {
     }
 }
 
+/**
+ * Calls listeners automatically while loading a initial config
+ * */
 void registerListener(fListener listener) {
     println(F("Adding listener"));
 

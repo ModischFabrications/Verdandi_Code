@@ -55,6 +55,8 @@ void handleConfigRequest() {
     println(F("Received config request"));
     Configuration config = PersistenceManager::get();
 
+    // TODO: replace this magic number with an actual calculation
+    //  this should lead to it being easier to extend
     const uint16_t capacity = JSON_OBJECT_SIZE(17);
     StaticJsonDocument<capacity> doc;
 
@@ -75,6 +77,7 @@ void handleConfigRequest() {
     colorS.add(config.colorS[1]);
     colorS.add(config.colorS[2]);
     doc["pollInterval"] = config.pollInterval;
+    // TODO: add new fields and increase JSON size
 
     String json = "";
     serializeJson(doc, json);
