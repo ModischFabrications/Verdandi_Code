@@ -4,6 +4,11 @@
 
 #include "Time.h"
 
+/* change with each design iteration to prevent EEPROM inconsistency and help
+ * with wear leveling of EEPROM cells.
+ */
+const uint8_t CONFIG_VERSION = 3;
+
 struct Configuration {
     uint8_t brightness;
 
