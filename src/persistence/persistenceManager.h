@@ -100,7 +100,7 @@ void registerListener(fListener listener) {
 
 void callListeners() {
     for (uint8_t i = 0; i < i_listeners; i++) {
-        printlnRaw("Calling listener " + i);
+        printlnRaw("Calling listener " + String(i));
 
         fListener listener = listeners[i];
 

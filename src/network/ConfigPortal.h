@@ -45,9 +45,11 @@ void handleServer() {
         server.streamFile(f, contentType);
         f.close();
     } else {
-        println(F("File does not exist."));
+        print(F("File '"));
+        printRaw(path);
+        println(F("' does not exist"));
 
-        server.send(404, "text/html", "Requested file not found. Reupload the file store.");
+        server.send(404, "text/html", "Requested file not found. Reupload the file system image.");
     }
 }
 
@@ -55,8 +57,7 @@ void handleConfigRequest() {
     println(F("Received config request"));
     Configuration config = PersistenceManager::get();
 
-    // TODO: replace this magic number with an actual calculation
-    //  this should lead to it being easier to extend
+    // actual number of objects, in this case number of lines
     const uint16_t capacity = JSON_OBJECT_SIZE(17);
     StaticJsonDocument<capacity> doc;
 

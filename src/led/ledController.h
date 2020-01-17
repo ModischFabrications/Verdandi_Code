@@ -165,6 +165,8 @@ void tick() {
 void updateConfiguration() {
     // color does not need to be cached here, read every time from config
     Configuration config = PersistenceManager::get();
+    print(F("Updating brightness to "));
+    printlnRaw(config.brightness);
     FastLED.setBrightness(config.brightness);
 }
 
