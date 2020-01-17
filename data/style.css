@@ -1,26 +1,110 @@
 * {
-  font-family: "Trebuchet MS", sans-serif;
+    font-family: "Trebuchet MS", sans-serif;
 }
 .width100 {
-  width: 100%;
+    width: 100%;
 }
 .config-table td {
-  padding: 10px;
+    padding: 10px;
 }
 .showDisabled {
-  filter: grayscale(0.8) contrast(0.5);
+    filter: grayscale(0.8) contrast(0.5);
 }
 .blurred {
-  filter: blur(3px);
-}
-.dropdown-submenu {
-  position: relative;
-}
-.dropdown-submenu .dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -1px;
+    filter: blur(3px);
 }
 .hidden {
-  display: none;
+    display: none;
+}
+
+.dropdown-menu {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.dropdown-menu li {
+    position: relative;
+    padding: 6px;
+    background-color:#ddd;
+    -webkit-transition: background-color 0.15s ease-in-out;
+    -moz-transition: background-color 0.15s ease-in-out;
+    -o-transition: background-color 0.15s ease-in-out;
+    transition: background-color 0.15s ease-in-out;
+    border-top: 1px solid #c7c7c7;
+    cursor: pointer;
+}
+.dropdown-menu li:hover {
+    background:#bbb;
+}
+
+.tz-info-container {
+    background-color: #fafafa;
+    border-radius: 2px;
+    display: flex;
+}
+.tz-input {
+    width: calc(100% - 2rem);
+    border-right: 1px solid grey;
+    border-top: 1px solid grey;
+    border-bottom: 1px solid grey;
+    border-left: none;
+    height: 18px;
+    padding-left: 0.5rem;
+    user-select: none; /* TODO: user select not working? */
+
+}
+.tz-selection-container {
+    max-height: 250px;
+    overflow-y: scroll;
+}
+.tz-selection-button {
+    border-left: 1px solid grey;
+    border-top: 1px solid grey;
+    border-bottom: 1px solid grey;
+    border-right: none;
+    width: 2rem;
+}
+.tz-selection-button:focus {
+    outline: 0;
+}
+i {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+}
+.tz-selection-button i {
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    top: 0;
+}
+i.right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+i.left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}
+i.up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+}
+i.down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    top: -2px !important;
+}
+.back-button-container {
+    padding-left: 0.5rem;
+}
+.next-button-span {
+    float: right;
+    margin-right: 1rem;
+}
+.highlighted-item {
+    background-color: #ecd1a6 !important;
 }

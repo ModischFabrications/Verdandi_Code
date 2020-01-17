@@ -1,67 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset='utf-8'>
-    <meta name='viewport' content='width=device-width,initial-scale=1.0, shrink-to-fit=no'>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, shrink-to-fit=no" />
     <title>Verdandi Configuration</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
 </head>
-<body class="blurred" onload='onload()'>
-    <div style='margin: auto;
+<body class="blurred" onload="onload()">
+    <div style="margin: auto;
         width: fit-content;
         padding: 2rem;
         background-color: #efefef;
         height: 100%;
-    '>
-        <h1 style='border-radius: 1rem;
+    ">
+        <h1 style="border-radius: 1rem;
                 margin: auto;
                 width: fit-content;
                 padding: 2rem;
                 background: black;
                 color: white;
                 margin-bottom: 1rem;
-        '>Verdandi Configuration Page</h1>
+        ">
+            Verdandi Configuration Page
+        </h1>
         <div>
-            <table class='config-table width100'>
+            <table class="config-table width100">
                 <tbody>
                     <tr>
                         <td>Brightness:</td>
-                        <td colspan='3'>
-                            <input
-                                id='brightnessSlider' type='range' min='0' max='255'
-                                value='127' oninput='onValueChange(this, "brightness")'
-                                >&nbsp;
-                            <output id='brightnessOutput'></output>
+                        <td colspan="3">
+                            <input id="brightnessSlider" type="range" min="0" max="255" value="127"
+                                oninput='onValueChange(this, "brightness")' />&nbsp;
+                            <output id="brightnessOutput"></output>
                         </td>
                     </tr>
                     <tr>
                         <td>Colors:</td>
                         <td>
-                            <input id='showHours' for='colorH' class='css-checkbox' onchange='onValueChange(this, "showHours")' type='checkbox' checked>
-                            <label for='colorH' class='css-label'>&nbsp;H&nbsp;</label>
-                            <input id='colorH' type='color' value='#ff0000' onchange='onValueChange(this, "colorH")'>
+                            <input id="showHours" for="colorH" class="css-checkbox"
+                                onchange='onValueChange(this, "showHours")' type="checkbox" checked />
+                            <label for="colorH" class="css-label">&nbsp;H&nbsp;</label>
+                            <input id="colorH" type="color" value="#ff0000" onchange='onValueChange(this, "colorH")' />
                         </td>
                         <td>
-                            <input id='showMinutes' for='colorM' class='css-checkbox' onchange='onValueChange(this, "showMinutes")' type='checkbox' checked>
-                            <label for='colorM' class='css-label'>&nbsp;M&nbsp;</label>
-                            <input id='colorM' type='color' value='#00ff00' onchange='onValueChange(this, "colorM")'>
+                            <input id="showMinutes" for="colorM" class="css-checkbox"
+                                onchange='onValueChange(this, "showMinutes")' type="checkbox" checked />
+                            <label for="colorM" class="css-label">&nbsp;M&nbsp;</label>
+                            <input id="colorM" type="color" value="#00ff00" onchange='onValueChange(this, "colorM")' />
                         </td>
                         <td>
-                            <input id='showSeconds' for='colorS' class='css-checkbox' onchange='onValueChange(this, "showSeconds")' type='checkbox' checked>
-                            <label for='colorS' class='css-label'>&nbsp;S&nbsp;</label>
-                            <input id='colorS' type='color' value='#0000ff' onchange='onValueChange(this, "colorS")'>
+                            <input id="showSeconds" for="colorS" class="css-checkbox"
+                                onchange='onValueChange(this, "showSeconds")' type="checkbox" checked />
+                            <label for="colorS" class="css-label">&nbsp;S&nbsp;</label>
+                            <input id="colorS" type="color" value="#0000ff" onchange='onValueChange(this, "colorS")' />
                         </td>
                     </tr>
                     <tr>
                         <td>Poll interval:</td>
-                        <td colspan='3'>
-                            <input id='pollInterval' onchange='onValueChange(this, "pollInterval")' type='number' max='10000' min='1' value='10'> min
+                        <td colspan="3">
+                            <input id="pollInterval" onchange='onValueChange(this, "pollInterval")' type="number"
+                                max="10000" min="1" value="10" />
+                            min
                         </td>
                     </tr>
                     <tr>
-                        <td>Time zone:</td>
-                        <td class="tz-selection" colspan='3'>
+                        <td style="vertical-align: top;">Time zone:</td>
+                        <td class="tz-selection" colspan="3">
+                            <div class="tz-info-container" onclick="showTzSelection()">
+                                <button class="tz-selection-button"><i class="arrow right"></i></button>
+                                <input for="timezone" class="css-label tz-input" disabled />
+                            </div>
+                            <div class="tz-selection-container hidden"></div>
                         </td>
                     </tr>
                 </tbody>
@@ -69,4 +79,5 @@
         </div>
     </div>
 </body>
+
 </html>
