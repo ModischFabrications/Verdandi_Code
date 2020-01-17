@@ -65,11 +65,13 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Time zone:</td>
+                        <td style="vertical-align: top;">Time zone:</td>
                         <td class="tz-selection" colspan="3">
-                            <button>&#8250;</button>
-                            <label for="timezone" class="css-label">Nothing yet selected yet.</label>
-                            <div class="tz-selection-container"></div>
+                            <div class="tz-info-container" onclick="showTzSelection()">
+                                <button class="tz-selection-button"><i class="arrow right"></i></button>
+                                <input for="timezone" class="css-label tz-input" disabled />
+                            </div>
+                            <div class="tz-selection-container hidden"></div>
                         </td>
                     </tr>
                 </tbody>
