@@ -2,13 +2,13 @@
 
 #define FASTLED_INTERNAL // disable pragma message
 #include <FastLED.h>
+#include <math.h>
 
 #include "persistence/configuration.h"
 #include "persistence/persistenceManager.h"
 
 #include "network/timeService.h"
 
-#include "math.h"
 
 namespace LedController {
 
@@ -33,11 +33,42 @@ float preMultipliersHour[N_LEDS];
 float preMultipliersMinute[N_LEDS];
 float preMultipliersSecond[N_LEDS];
 
+void updateDisplay();
 void clearPreMultipliers();
 void setPreMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider);
 void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]);
-
+bool isInNightMode(Time currentTime);
 // -----------------------
+
+void updateDisplay(Time currentTime) {
+    clearPreMultipliers();
+
+    // show clock hand as fraction
+    float h = (float)currentTime.hour + (float)currentTime.minute / 60.0;
+    float m = (float)currentTime.minute + (float)currentTime.second / 60.0;
+    float s = (float)currentTime.second + (float)currentTime.millisecond / 1000.0;
+
+    Configuration config = PersistenceManager::get();
+    if (config.showHours)
+        setPreMultiplier(preMultipliersHour, h, 12);
+    if (config.showMinutes)
+        setPreMultiplier(preMultipliersMinute, m, 60);
+    if (config.showSeconds)
+        setPreMultiplier(preMultipliersSecond, s, 60);
+
+    // generate normalized multipliers
+    for (uint8_t i = 0; i < N_LEDS; i++) {
+        float sum = preMultipliersHour[i] + preMultipliersMinute[i] + preMultipliersSecond[i];
+        // if adding up the color multipliers is greater than one than they need to be normalized
+        if (sum > 1.0) {
+            preMultipliersHour[i] /= sum;
+            preMultipliersMinute[i] /= sum;
+            preMultipliersSecond[i] /= sum;
+        }
+    }
+
+    writeLeds(config.colorH, config.colorM, config.colorS);
+}
 
 void clearPreMultipliers() {
     for (uint8_t i = 0; i < N_LEDS; i++) {
@@ -76,6 +107,18 @@ void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]) {
     }
     FastLED.show();
 }
+
+bool isInNightMode(Time currentTime) {
+    Configuration config = PersistenceManager::get();
+
+    if (!config.nightmode) return false;
+
+    if (currentTime > config.turnOffAt || currentTime < config.turnOnAt) 
+        return true;
+    
+    return false;
+}
+
 } // namespace
 
 void setup();
@@ -108,35 +151,15 @@ void helloPower() {
 }
 
 void tick() {
-    clearPreMultipliers();
+    Time currentTime = TimeService::getCurrentTime();
 
-    TimeService::Time currentTime = TimeService::getCurrentTime();
+    // turn off LEDs and skip updating outside of working hours
+    if (isInNightMode(currentTime)) {
+        // TODO: turn off LEDs on transition -> state keeping? 
+        //  might be good for error state as well
+    } return;
 
-    // show clock hand as fraction
-    float h = (float)currentTime.hour + (float)currentTime.minute / 60.0;
-    float m = (float)currentTime.minute + (float)currentTime.second / 60.0;
-    float s = (float)currentTime.second + (float)currentTime.millisecond / 1000.0;
-
-    Configuration config = PersistenceManager::get();
-    if (config.showHours)
-        setPreMultiplier(preMultipliersHour, h, 12);
-    if (config.showMinutes)
-        setPreMultiplier(preMultipliersMinute, m, 60);
-    if (config.showSeconds)
-        setPreMultiplier(preMultipliersSecond, s, 60);
-
-    // generate normalized multipliers
-    for (uint8_t i = 0; i < N_LEDS; i++) {
-        float sum = preMultipliersHour[i] + preMultipliersMinute[i] + preMultipliersSecond[i];
-        // if adding up the color multipliers is greater than one than they need to be normalized
-        if (sum > 1.0) {
-            preMultipliersHour[i] /= sum;
-            preMultipliersMinute[i] /= sum;
-            preMultipliersSecond[i] /= sum;
-        }
-    }
-
-    writeLeds(config.colorH, config.colorM, config.colorS);
+    updateDisplay(currentTime);
 }
 
 void updateConfiguration() {

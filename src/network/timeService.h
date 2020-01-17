@@ -5,11 +5,12 @@
 #include <sntp.h>
 #include <sys/time.h>
 #include <time.h>
+#include <coredecls.h>
 
+#include "Time.h"
 #include "TZ.h"
 #include "serial/SerialWrapper.h"
 #include "persistence/persistenceManager.h"
-#include <coredecls.h>
 
 uint32_t sntp_update_delay_MS_rfc_not_less_than_15000 ()
 {
@@ -17,13 +18,6 @@ uint32_t sntp_update_delay_MS_rfc_not_less_than_15000 ()
 }
 
 namespace TimeService {
-
-struct Time {
-    uint8_t hour;
-    uint8_t minute;
-    uint8_t second;
-    uint16_t millisecond;
-};
 
 bool initializedOffset = false;
 
