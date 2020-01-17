@@ -37,7 +37,8 @@ void setup() {
 
 void handleServer() {
     String path = server.uri();
-    if (path.endsWith("/")) path += "index.html";
+    if (path.endsWith("/"))
+        path += "index.html";
 
     if (FileServer::fileExists(path)) {
         File f = FileServer::getFile(path);
@@ -62,9 +63,11 @@ void handleConfigRequest() {
     StaticJsonDocument<capacity> doc;
 
     doc["brightness"] = config.brightness;
+
     doc["showHours"] = config.showHours;
     doc["showMinutes"] = config.showMinutes;
     doc["showSeconds"] = config.showSeconds;
+
     JsonArray colorH = doc.createNestedArray("colorH");
     JsonArray colorM = doc.createNestedArray("colorM");
     JsonArray colorS = doc.createNestedArray("colorS");
@@ -77,8 +80,17 @@ void handleConfigRequest() {
     colorS.add(config.colorS[0]);
     colorS.add(config.colorS[1]);
     colorS.add(config.colorS[2]);
-    doc["pollInterval"] = config.pollInterval;
-    // TODO: add new fields and increase JSON size
+    // 17 elements up to here
+
+    doc["nightmode"] = config.nightmode;
+    // FIXME: use manual serialisation?
+    doc["turnOffAt"] = config.turnOffAt;
+    doc["turnOnAt"] = config.turnOnAt;
+
+    doc["timezone"] = config.timezone;
+    // 21 elements
+
+    // add new fields here and increase JSON size
 
     String json = "";
     serializeJson(doc, json);
@@ -118,6 +130,7 @@ Config::Configuration ArgsToConfiguration() {
         new_values.brightness = server.arg(0).toInt();
     else
         println(F("Value 0 not found"));
+
     if (server.argName(1) == "showHours")
         new_values.showHours = server.arg(1) == "true" ? true : false;
     else
@@ -130,6 +143,7 @@ Config::Configuration ArgsToConfiguration() {
         new_values.showSeconds = server.arg(3) == "true" ? true : false;
     else
         println(F("Value 3 not found"));
+
     if (server.argName(4) == "colorH_R")
         new_values.colorH[0] = server.arg(4).toInt();
     else
@@ -166,10 +180,15 @@ Config::Configuration ArgsToConfiguration() {
         new_values.colorS[2] = server.arg(12).toInt();
     else
         println(F("Value 12 not found"));
+
     if (server.argName(13) == "pollInterval")
         new_values.pollInterval = server.arg(13).toInt();
     else
         println(F("Value 13 not found"));
+    
+    // TODO: add fields for nightmode, Times and timezone
+
+    // add new fields here
 
     return new_values;
 }
