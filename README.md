@@ -17,6 +17,7 @@ In order to increase speed and reduce memory, files should be stored in the GNU 
 - `src/website/index.html`
 - `src/website/script.js`
 - `src/website/style.css`
+- `src/website/timezones.json`
 
 To do that, use your favourite zip tool to compress them into a `.gz` file. Place these files in the `data` folder and upload the file system image.
 
