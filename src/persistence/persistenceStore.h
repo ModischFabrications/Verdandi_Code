@@ -8,12 +8,11 @@
 namespace PersistenceStore {
 // Preserve EEPROM while programming with the EESAVE fuse on AVR
 
+using namespace Config;
+
 namespace {
-/* change with each design iteration to prevent EEPROM inconsistency and help
- * with wear leveling of EEPROM cells.
- * The chance that a random, unset combination is a match is very low.
- */
-const uint8_t VERSION = 2;
+
+// MAKE SURE TO DEFINE VERSION IN YOUR CONFIG FILE!
 
 /**
  * EEPROM has around 100k writes per cell, so use them carefully!
@@ -51,6 +50,7 @@ void saveSettings(Configuration settings) {
 /**
  * load settings from EEPROM, this will reset and return default values for
  * corrupted, outdated or missing settings.
+ * The chance that a random, unset combination is a match is very low.
  * */
 Configuration loadSettings() {
     // could be rubbish or zeros, either way should work

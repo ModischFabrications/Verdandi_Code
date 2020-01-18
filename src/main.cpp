@@ -26,11 +26,11 @@ const bool DEBUG_MODE = true;
 const bool DEBUG_MODE = false;
 #endif
 
-HTTPClient http;
 WiFiClient client;
 
-// TODO: remove as soon as ntp time fetch works
 void testInternetConnection() {
+    HTTPClient http;
+
     http.begin(client, F("http://worldtimeapi.org/api/ip"));
     int httpCode = http.GET();
 
@@ -46,6 +46,7 @@ void testInternetConnection() {
     } else {
         printRaw("[HTTP] GET... failed, error: ");
         printlnRaw(http.errorToString(httpCode).c_str());
+        logError(F("No connection to the internet"));
     }
 
     println(F("connected to the internet"));
@@ -73,15 +74,12 @@ void setup() {
 
     setupSerial(115200);
     PersistenceStore::setup();
+    FileServer::setup();
     WiFiLoginManager::setup();
-    ConfigPortal::setup();
     TimeService::setup();
     LedController::setup();
-    FileServer::setup();
+    ConfigPortal::setup();
 
-    // TODO: remove
-    PersistenceManager::registerListener(testListener);
-    PersistenceManager::registerListener(testListener);
     PersistenceManager::registerListener(testListener);
 
     // TODO: display connection error

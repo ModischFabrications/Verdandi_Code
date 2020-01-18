@@ -48,7 +48,7 @@ void updateDisplay(Time currentTime) {
     float m = (float)currentTime.minute + (float)currentTime.second / 60.0;
     float s = (float)currentTime.second + (float)currentTime.millisecond / 1000.0;
 
-    Configuration config = PersistenceManager::get();
+    Config::Configuration config = PersistenceManager::get();
     if (config.showHours)
         setPreMultiplier(preMultipliersHour, h, 12);
     if (config.showMinutes)
@@ -109,7 +109,7 @@ void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]) {
 }
 
 bool isInNightMode(Time currentTime) {
-    Configuration config = PersistenceManager::get();
+    Config::Configuration config = PersistenceManager::get();
 
     if (!config.nightmode) return false;
 
@@ -164,7 +164,9 @@ void tick() {
 
 void updateConfiguration() {
     // color does not need to be cached here, read every time from config
-    Configuration config = PersistenceManager::get();
+    Config::Configuration config = PersistenceManager::get();
+    print(F("Updating brightness to "));
+    printlnRaw(config.brightness);
     FastLED.setBrightness(config.brightness);
 }
 

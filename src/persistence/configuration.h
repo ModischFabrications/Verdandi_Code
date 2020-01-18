@@ -4,6 +4,13 @@
 
 #include "Time.h"
 
+namespace Config {
+
+/* change with each design iteration to prevent EEPROM inconsistency and help
+ * with wear leveling of EEPROM cells.
+ */
+const uint8_t VERSION = 3;
+
 struct Configuration {
     uint8_t brightness;
 
@@ -24,7 +31,8 @@ struct Configuration {
     Time turnOffAt;
     Time turnOnAt;
 
-    // TODO: timezone, don't forget operator
+    // TODO: evaluate size, this is by far the biggest contributor to size
+    char timezone[64];
 
     const bool operator==(const Configuration& other) {
         return (this->brightness == other.brightness &&
@@ -43,7 +51,8 @@ struct Configuration {
                 this->pollInterval == other.pollInterval &&
                 this->nightmode == other.nightmode &&
                 this->turnOffAt == other.turnOffAt &&
-                this->turnOnAt == other.turnOnAt
+                this->turnOnAt == other.turnOnAt &&
+                this->timezone == other.timezone
                 );
     }
 };
@@ -53,5 +62,8 @@ Configuration defaultConfiguration = {
     true, true, true, 
     {255, 0, 0}, {0, 255, 0}, {0, 0, 255},
     3 * 60, 
-    false, {10}, {11}
+    false, {10}, {11}, 
+    "TZ_Europe_London"
     };
+
+} // namespace Configuration

@@ -15,7 +15,7 @@ void handleConfigRequest();
 void handleDataUpdate();
 void check();
 String ArgsToString();
-Configuration ArgsToConfiguration();
+Config::Configuration ArgsToConfiguration();
 
 namespace {
 ESP8266WebServer server(80);
@@ -37,7 +37,8 @@ void setup() {
 
 void handleServer() {
     String path = server.uri();
-    if (path.endsWith("/")) path += "index.html";
+    if (path.endsWith("/"))
+        path += "index.html";
 
     if (FileServer::fileExists(path)) {
         File f = FileServer::getFile(path);
@@ -45,23 +46,28 @@ void handleServer() {
         server.streamFile(f, contentType);
         f.close();
     } else {
-        println(F("File does not exist."));
+        print(F("File '"));
+        printRaw(path);
+        println(F("' does not exist"));
 
-        server.send(404, "text/html", "Requested file not found. Reupload the file store.");
+        server.send(404, "text/html", "Requested file not found. Reupload the file system image.");
     }
 }
 
 void handleConfigRequest() {
     println(F("Received config request"));
-    Configuration config = PersistenceManager::get();
+    Config::Configuration config = PersistenceManager::get();
 
+    // actual number of objects, in this case number of lines
     const uint16_t capacity = JSON_OBJECT_SIZE(17);
     StaticJsonDocument<capacity> doc;
 
     doc["brightness"] = config.brightness;
+
     doc["showHours"] = config.showHours;
     doc["showMinutes"] = config.showMinutes;
     doc["showSeconds"] = config.showSeconds;
+
     JsonArray colorH = doc.createNestedArray("colorH");
     JsonArray colorM = doc.createNestedArray("colorM");
     JsonArray colorS = doc.createNestedArray("colorS");
@@ -74,7 +80,17 @@ void handleConfigRequest() {
     colorS.add(config.colorS[0]);
     colorS.add(config.colorS[1]);
     colorS.add(config.colorS[2]);
-    doc["pollInterval"] = config.pollInterval;
+    // 17 elements up to here
+
+    doc["nightmode"] = config.nightmode;
+    // FIXME: use manual serialisation?
+    doc["turnOffAt"] = config.turnOffAt;
+    doc["turnOnAt"] = config.turnOnAt;
+
+    doc["timezone"] = config.timezone;
+    // 21 elements
+
+    // add new fields here and increase JSON size
 
     String json = "";
     serializeJson(doc, json);
@@ -106,14 +122,15 @@ String ArgsToString() {
     return message;
 }
 
-Configuration ArgsToConfiguration() {
-    Configuration new_values = Configuration();
+Config::Configuration ArgsToConfiguration() {
+    Config::Configuration new_values = Config::Configuration();
 
     // implicit clamping could make problems but it's just nicer to read
     if (server.argName(0) == "brightness")
         new_values.brightness = server.arg(0).toInt();
     else
         println(F("Value 0 not found"));
+
     if (server.argName(1) == "showHours")
         new_values.showHours = server.arg(1) == "true" ? true : false;
     else
@@ -126,6 +143,7 @@ Configuration ArgsToConfiguration() {
         new_values.showSeconds = server.arg(3) == "true" ? true : false;
     else
         println(F("Value 3 not found"));
+
     if (server.argName(4) == "colorH_R")
         new_values.colorH[0] = server.arg(4).toInt();
     else
@@ -162,10 +180,15 @@ Configuration ArgsToConfiguration() {
         new_values.colorS[2] = server.arg(12).toInt();
     else
         println(F("Value 12 not found"));
+
     if (server.argName(13) == "pollInterval")
         new_values.pollInterval = server.arg(13).toInt();
     else
         println(F("Value 13 not found"));
+    
+    // TODO: add fields for nightmode, Times and timezone
+
+    // add new fields here
 
     return new_values;
 }

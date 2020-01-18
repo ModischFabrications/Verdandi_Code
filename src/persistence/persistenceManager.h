@@ -11,6 +11,8 @@
 // definition for all handlers
 typedef void (*fListener)();
 
+using namespace Config;
+
 // classes don't behave well with pointers, trust me!
 namespace PersistenceManager {
 
@@ -85,6 +87,9 @@ void trySave() {
     }
 }
 
+/**
+ * Calls listeners automatically while loading a initial config
+ * */
 void registerListener(fListener listener) {
     println(F("Adding listener"));
 
@@ -97,7 +102,7 @@ void registerListener(fListener listener) {
 
 void callListeners() {
     for (uint8_t i = 0; i < i_listeners; i++) {
-        printlnRaw("Calling listener " + i);
+        printlnRaw("Calling listener " + String(i));
 
         fListener listener = listeners[i];
 

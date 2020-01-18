@@ -10,16 +10,16 @@ void handleInput() {
     String received = readString(1);
     if (received == "I") {
         println(F("Resetting config"));
-        PersistenceManager::set(defaultConfiguration);
+        PersistenceManager::set(Config::defaultConfiguration);
     }
     if (received == "L") {
         println(F("Loading config"));
-        Configuration config = PersistenceManager::get();
+        Config::Configuration config = PersistenceManager::get();
         printlnRaw(config.brightness);
     }
     if (received == "S") {
         println(F("Modifying config"));
-        Configuration config = PersistenceManager::get();
+        Config::Configuration config = PersistenceManager::get();
         config.brightness += 8;
         PersistenceManager::set(config);
     }

@@ -26,13 +26,15 @@ void timeUpdate();
 Time getCurrentTime();
 
 namespace {
-const char* TIMEZONE = "TZ_Europe_London";
 
 timeval tv;
 Time currentTime = {0, 0, 0, 0};
 uint16_t millisOffset = 0;
 
+void updateConfiguration();
 void initializeMillisOffset();
+
+// ---------
 
 void initializeMillisOffset() {
     gettimeofday(&tv, nullptr);
@@ -50,16 +52,26 @@ void initializeMillisOffset() {
     }
     millisOffset = 1000 - (millis() % 1000);
 
-    println(F("Synchronized with NTP server."));
+    println(F("Synchronized with NTP server"));
     initializedOffset = true;
 }
+
+void updateConfiguration() {
+    Config::Configuration config = PersistenceManager::get();
+    configTime(config.timezone, "pool.ntp.org");
+
+    print(F("Setting new timezone to "));
+    printlnRaw(config.timezone);
+    // pollInterval fetched live, no need to cache
+}
+
 } // namespace
 
 void setup() {
-    configTime(TIMEZONE, "pool.ntp.org");
-    // TODO: add listener to change timezone and poll interval
-
     settimeofday_cb(initializeMillisOffset);
+    PersistenceManager::registerListener(updateConfiguration);
+
+    // updateConfiguration will be called automatically when registering
 }
 
 void timeUpdate() {
