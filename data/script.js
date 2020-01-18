@@ -137,6 +137,7 @@ function getChildrenInCurrentTimezonePath() {
 }
 
 function generateTzHtmlList(timezoneArray) {
+    // TODO: add search bar
     let ul = createDomElement('ul', ['dropdown-menu']);
     let sortedTimezoneArray = sortJsonByKey(timezoneArray);
 
@@ -245,7 +246,7 @@ function sendUpdatedData() {
     var xhttp = new XMLHttpRequest();
     xhttp.open("POST", d.URL + "update", true);
     xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    // xhttp.send(urlString);
+    xhttp.send(urlString);
 }
 
 
