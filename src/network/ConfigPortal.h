@@ -194,7 +194,7 @@ Config::Configuration ArgsToConfiguration() {
     else
         println(F("Value 13 not found"));
     if (server.argName(14) == "timezone")
-        newValues.timezone = server.arg(14).c_str();
+        strcpy(newValues.timezone, server.arg(14).c_str());
     else
         println(F("Value 14 not found"));
 

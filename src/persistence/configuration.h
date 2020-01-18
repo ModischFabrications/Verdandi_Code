@@ -32,7 +32,7 @@ struct Configuration {
     Time turnOnAt;
 
     // TODO: evaluate size, this is by far the biggest contributor to size
-    const char* timezone;
+    char timezone[40];
 
     const bool operator==(const Configuration& other) {
         return (this->brightness == other.brightness &&
