@@ -92,12 +92,8 @@ void handleConfigRequest() {
     turnOnAt.add(config.turnOnAt.hour);
     turnOnAt.add(config.turnOnAt.minute);
 
-    doc["timezone"] = config.timezone;
+    doc["timezone"] = (const char*)config.timezone;
     // 25 elements
-
-    Serial.println("=============================");
-    Serial.println(config.timezone);
-    Serial.println("=============================");
 
     // add new fields here and increase JSON size
 
