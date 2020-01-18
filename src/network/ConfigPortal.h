@@ -59,7 +59,7 @@ void handleConfigRequest() {
     Config::Configuration config = PersistenceManager::get();
 
     // actual number of objects, in this case number of lines
-    const uint16_t capacity = JSON_OBJECT_SIZE(24);
+    const uint16_t capacity = JSON_OBJECT_SIZE(25);
     StaticJsonDocument<capacity> doc;
 
     doc["brightness"] = config.brightness;
@@ -92,8 +92,8 @@ void handleConfigRequest() {
     turnOnAt.add(config.turnOnAt.hour);
     turnOnAt.add(config.turnOnAt.minute);
 
-    doc["timezone"] = config.timezone;
-    // 24 elements
+    doc["timezone"] = config.timezone.c_str();
+    // 25 elements
 
     // add new fields here and increase JSON size
 
@@ -185,11 +185,14 @@ Config::Configuration ArgsToConfiguration() {
         new_values.colorS[2] = server.arg(12).toInt();
     else
         println(F("Value 12 not found"));
-
     if (server.argName(13) == "pollInterval")
         new_values.pollInterval = max(server.arg(13).toInt(), (long)1);
     else
         println(F("Value 13 not found"));
+    if (server.argName(14) == "timezone")
+        new_values.timezone = server.arg(14);
+    else
+        println(F("Value 14 not found"));
 
     // TODO: add fields for nightmode, Times and timezone
 

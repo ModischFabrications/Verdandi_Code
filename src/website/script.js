@@ -93,8 +93,7 @@ function loadConfigValues() {
 function getTzNameFromTzString(tzString, tzObject) {
     if(tzString == undefined) return '';
     for (const [tzKey, tzValue] of Object.entries(tzObject)) {
-        console.log(tzKey, tzValue);
-        if(tzValue == tzString) return tzKey;
+        if(typeof(tzValue) == 'string' && tzValue == tzString) return tzKey;
 
         if(typeof(tzValue) == 'object') {
             let temp = getTzNameFromTzString(tzString, tzValue);
