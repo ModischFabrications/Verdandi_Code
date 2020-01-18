@@ -12,6 +12,14 @@ PCb can be found at https://github.com/ModischFabrications/Verdandi_PCB.
 ### CPP Formatting
 We are using the Clang Formatter with the style configuration from the included ´.clang-format´ file. For that install the [Clang compiler](https://github.com/nextcloud/desktop/wiki) as well as the Clang-Format extension for vscode.
 
+### Uploading the file system
+In order to increase speed and reduce memory, files should be stored in the GNU zip file format on the ESP. The files that need to be uploaded onto the file system are: 
+- `src/website/index.html`
+- `src/website/script.js`
+- `src/website/style.css`
+
+To do that, use your favourite zip tool to compress them into a `.gz` file. Place these files in the `data` folder and upload the file system image.
+
 ## Related projects and links
 
 This is a follow up to a now deprecated previous project of mine: https://github.com/ModischFabrications/RGB_Clock
