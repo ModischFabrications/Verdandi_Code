@@ -182,10 +182,10 @@ Config::Configuration ArgsToConfiguration() {
         println(F("Value 12 not found"));
 
     if (server.argName(13) == "pollInterval")
-        new_values.pollInterval = server.arg(13).toInt();
+        new_values.pollInterval = max(server.arg(13).toInt(), (long)1);
     else
         println(F("Value 13 not found"));
-    
+
     // TODO: add fields for nightmode, Times and timezone
 
     // add new fields here
