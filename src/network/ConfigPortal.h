@@ -59,7 +59,7 @@ void handleConfigRequest() {
     Config::Configuration config = PersistenceManager::get();
 
     // actual number of objects, in this case number of lines
-    const uint16_t capacity = JSON_OBJECT_SIZE(17);
+    const uint16_t capacity = JSON_OBJECT_SIZE(24);
     StaticJsonDocument<capacity> doc;
 
     doc["brightness"] = config.brightness;
@@ -82,13 +82,18 @@ void handleConfigRequest() {
     colorS.add(config.colorS[2]);
     // 17 elements up to here
 
+    doc["pollInterval"] = config.pollInterval;
     doc["nightmode"] = config.nightmode;
-    // FIXME: use manual serialisation?
-    doc["turnOffAt"] = config.turnOffAt;
-    doc["turnOnAt"] = config.turnOnAt;
+
+    JsonArray turnOffAt = doc.createNestedArray("turnOffAt");
+    JsonArray turnOnAt = doc.createNestedArray("turnOnAt");
+    turnOffAt.add(config.turnOffAt.hour);
+    turnOffAt.add(config.turnOffAt.minute);
+    turnOnAt.add(config.turnOnAt.hour);
+    turnOnAt.add(config.turnOnAt.minute);
 
     doc["timezone"] = config.timezone;
-    // 21 elements
+    // 24 elements
 
     // add new fields here and increase JSON size
 
