@@ -67,37 +67,61 @@ function loadConfigValues() {
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            /* sucessful response */
-            let res = JSON.parse(xhttp.responseText);
-            console.log(xhttp.responseText);
-            console.log(res);
-            config.brightness = parseInt(res.brightness);
-            config.showHours = res.showHours;
-            config.showMinutes = res.showMinutes;
-            config.showSeconds = res.showSeconds;
-            config.colorH = res.colorH;
-            config.colorM = res.colorM;
-            config.colorS = res.colorS;
-            config.pollInterval = parseInt(res.pollInterval);
-            config.timezone = res.timezone;
 
-            lastSelectedTzName = getTzNameFromTzString(config.timezone, timezones);
+            // TODO: fix this try-catch...maybe send reset or something
+            // provisorial try-catch to catch errors when json cannot be parsed
+            try {
+                let res = JSON.parse(xhttp.responseText);
+                console.log(xhttp.responseText);
+                console.log(res);
+                config.brightness = parseInt(res.brightness);
+                config.showHours = res.showHours;
+                config.showMinutes = res.showMinutes;
+                config.showSeconds = res.showSeconds;
+                config.colorH = res.colorH;
+                config.colorM = res.colorM;
+                config.colorS = res.colorS;
+                config.pollInterval = parseInt(res.pollInterval);
+                config.timezone = res.timezone;
 
-            // update ui according to loaded configuration and unblur site
-            updateUIElements();
+                lastSelectedTzName = getTzNameFromTzString(config.timezone, timezones);
+
+                // update ui according to loaded configuration and unblur site
+                updateUIElements();
+            } catch { }
             d.body.classList.remove("blurred");
         }
     };
 }
 
-function getTzNameFromTzString(tzString, tzObject) {
-    if(tzString == undefined) return '';
-    for (const [tzKey, tzValue] of Object.entries(tzObject)) {
-        if(typeof(tzValue) == 'string' && tzValue == tzString) return tzKey;
+// find the correct time zone key from a time zone string
+// pass the parent name if all the subdivisions have the same time
+function getTzNameFromTzString(tzString, tzObject, sameTime = false, parentName = '') {
+    if (tzString == undefined) return '';
 
-        if(typeof(tzValue) == 'object') {
-            let temp = getTzNameFromTzString(tzString, tzValue);
-            if (temp != '') return temp;
+    // if type of first object is boolean go deeper into the divisions
+    let objectKeys = Object.keys(tzObject);
+    if (typeof (tzObject[objectKeys[0]]) == 'boolean') {
+
+        if (tzObject[objectKeys[0]] == true) sameTime = true;
+
+        let tzReturn = getTzNameFromTzString(tzString, tzObject[objectKeys[1]], sameTime, parentName);
+        if (tzReturn != '') return tzReturn;
+
+    } else {
+
+        // else it must be a list of time zones, go through the lists
+        for (const [tzKey, tzValue] of Object.entries(tzObject)) {
+
+            // return the parent name if the time zones in the list have the same time
+            if (typeof (tzValue) == 'string' && tzValue == tzString)
+                return sameTime ? parentName : tzKey;
+
+            // go deeper if the value has subidivions
+            if (typeof (tzValue) == 'object') {
+                let tzReturn = getTzNameFromTzString(tzString, tzValue, sameTime, tzKey);
+                if (tzReturn != '') return tzReturn;
+            }
         }
     }
 

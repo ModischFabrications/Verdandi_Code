@@ -60,7 +60,7 @@ void initializeMillisOffset() {
 
 void updateConfiguration() {
     Config::Configuration config = PersistenceManager::get();
-    configTime(config.timezone.c_str(), "pool.ntp.org");
+    configTime(config.timezone, "pool.ntp.org");
 
     print(F("Setting new timezone to "));
     printlnRaw(config.timezone);
