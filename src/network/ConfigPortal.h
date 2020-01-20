@@ -92,7 +92,7 @@ void handleConfigRequest() {
     turnOnAt.add(config.turnOnAt.hour);
     turnOnAt.add(config.turnOnAt.minute);
 
-    doc["timezone"] = config.timezone.c_str();
+    doc["timezone"] = (const char*)config.timezone;
     // 25 elements
 
     // add new fields here and increase JSON size
@@ -128,69 +128,69 @@ String ArgsToString() {
 }
 
 Config::Configuration ArgsToConfiguration() {
-    Config::Configuration new_values = Config::Configuration();
+    Config::Configuration newValues = Config::Configuration();
 
     // implicit clamping could make problems but it's just nicer to read
     if (server.argName(0) == "brightness")
-        new_values.brightness = server.arg(0).toInt();
+        newValues.brightness = server.arg(0).toInt();
     else
         println(F("Value 0 not found"));
 
     if (server.argName(1) == "showHours")
-        new_values.showHours = server.arg(1) == "true" ? true : false;
+        newValues.showHours = server.arg(1) == "true" ? true : false;
     else
         println(F("Value 1 not found"));
     if (server.argName(2) == "showMinutes")
-        new_values.showMinutes = server.arg(2) == "true" ? true : false;
+        newValues.showMinutes = server.arg(2) == "true" ? true : false;
     else
         println(F("Value 2 not found"));
     if (server.argName(3) == "showSeconds")
-        new_values.showSeconds = server.arg(3) == "true" ? true : false;
+        newValues.showSeconds = server.arg(3) == "true" ? true : false;
     else
         println(F("Value 3 not found"));
 
     if (server.argName(4) == "colorH_R")
-        new_values.colorH[0] = server.arg(4).toInt();
+        newValues.colorH[0] = server.arg(4).toInt();
     else
         println(F("Value 4 not found"));
     if (server.argName(5) == "colorH_G")
-        new_values.colorH[1] = server.arg(5).toInt();
+        newValues.colorH[1] = server.arg(5).toInt();
     else
         println(F("Value 5 not found"));
     if (server.argName(6) == "colorH_B")
-        new_values.colorH[2] = server.arg(6).toInt();
+        newValues.colorH[2] = server.arg(6).toInt();
     else
         println(F("Value 6 not found"));
     if (server.argName(7) == "colorM_R")
-        new_values.colorM[0] = server.arg(7).toInt();
+        newValues.colorM[0] = server.arg(7).toInt();
     else
         println(F("Value 7 not found"));
     if (server.argName(8) == "colorM_G")
-        new_values.colorM[1] = server.arg(8).toInt();
+        newValues.colorM[1] = server.arg(8).toInt();
     else
         println(F("Value 8 not found"));
     if (server.argName(9) == "colorM_B")
-        new_values.colorM[2] = server.arg(9).toInt();
+        newValues.colorM[2] = server.arg(9).toInt();
     else
         println(F("Value 9 not found"));
     if (server.argName(10) == "colorS_R")
-        new_values.colorS[0] = server.arg(10).toInt();
+        newValues.colorS[0] = server.arg(10).toInt();
     else
         println(F("Value 10 not found"));
     if (server.argName(11) == "colorS_G")
-        new_values.colorS[1] = server.arg(11).toInt();
+        newValues.colorS[1] = server.arg(11).toInt();
     else
         println(F("Value 11 not found"));
     if (server.argName(12) == "colorS_B")
-        new_values.colorS[2] = server.arg(12).toInt();
+        newValues.colorS[2] = server.arg(12).toInt();
     else
         println(F("Value 12 not found"));
     if (server.argName(13) == "pollInterval")
-        new_values.pollInterval = max(server.arg(13).toInt(), (long)1);
+        newValues.pollInterval = max(server.arg(13).toInt(), (long)1);
     else
         println(F("Value 13 not found"));
     if (server.argName(14) == "timezone")
-        new_values.timezone = server.arg(14);
+        strcpy(newValues.timezone, server.arg(14).c_str());
     else
         println(F("Value 14 not found"));
 
@@ -198,7 +198,7 @@ Config::Configuration ArgsToConfiguration() {
 
     // add new fields here
 
-    return new_values;
+    return newValues;
 }
 
 } // namespace ConfigPortal
