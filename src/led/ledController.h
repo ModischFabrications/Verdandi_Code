@@ -9,8 +9,9 @@
 
 #include "network/timeService.h"
 
-
 namespace LedController {
+
+enum State { INIT, RUNNING, NIGHTMODE };
 
 // hidden globals
 namespace {
@@ -27,6 +28,8 @@ const uint8_t I_LED_12H = 0;
 const CRGB C_OK = CRGB::Green;
 const CRGB C_WARN = CRGB::Yellow;
 const CRGB C_ERR = CRGB::Red;
+
+State state = State::INIT;
 
 CRGB leds[N_LEDS];
 float preMultipliersHour[N_LEDS];
@@ -111,11 +114,12 @@ void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]) {
 bool isInNightMode(Time currentTime) {
     Config::Configuration config = PersistenceManager::get();
 
-    if (!config.nightmode) return false;
+    if (!config.nightmode)
+        return false;
 
-    if (currentTime > config.turnOffAt || currentTime < config.turnOnAt) 
+    if (currentTime > config.turnOffAt || currentTime < config.turnOnAt)
         return true;
-    
+
     return false;
 }
 
@@ -151,13 +155,31 @@ void helloPower() {
 }
 
 void tick() {
+    // TODO: display error state while state == INIT
+    /*     
+    // display error until ready
+    if (state == INIT)
+        state = RUNNING;
+    */
+
     Time currentTime = TimeService::getCurrentTime();
 
+    // TODO: implement dimming when near night time
     // turn off LEDs and skip updating outside of working hours
     if (isInNightMode(currentTime)) {
-        // TODO: turn off LEDs on transition -> state keeping? 
-        //  might be good for error state as well
-    } return;
+        if (state != NIGHTMODE) {
+            // turn off LEDs on transition to prevent stuck LEDs
+            fill_solid(leds, N_LEDS, CRGB::Black);
+            FastLED.show();
+            state = NIGHTMODE;
+        }
+
+        return;
+    }
+
+    // TODO: execute previous functions only every x cycles
+    // --> check nightmode by minute, init probably with higher refresh rate
+    // --> scheduler? callEveryMinute, callEverySecond
 
     updateDisplay(currentTime);
 }
