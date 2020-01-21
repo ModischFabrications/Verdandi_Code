@@ -53,6 +53,7 @@ struct Configuration {
                 this->turnOffAt == other.turnOffAt &&
                 this->turnOnAt == other.turnOnAt &&
                 this->timezone == other.timezone
+                // TODO: char array comparison for timezone
                 );
     }
 };
@@ -63,7 +64,7 @@ Configuration defaultConfiguration = {
     {255, 0, 0}, {0, 255, 0}, {0, 0, 255},
     3 * 60, 
     false, {10}, {11}, 
-    "TZ_Europe_London"
+    "GMT0"
     };
 
 } // namespace Configuration
