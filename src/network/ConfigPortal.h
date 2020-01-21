@@ -129,17 +129,17 @@ String ArgsToString() {
     return message;
 }
 
-void splitCSVToArray(const char* input, uint8_t* output) {
+void splitCSVToArray(const char* input, uint8_t* output, const char *token=",") {
     // unsafe and shit code, but it could work
     char buffer[16];
     strcpy(buffer, input);
     char* segment_holder;
-    segment_holder = strtok(buffer, ",");
+    segment_holder = strtok(buffer, token);
 
     uint8_t i = 0;
     while (segment_holder != NULL) {
         printlnRaw(segment_holder);
-        segment_holder = strtok(NULL, ",");
+        segment_holder = strtok(NULL, token);
         if (segment_holder == NULL)
             continue;
         char* unused_tail;
@@ -177,13 +177,13 @@ Config::Configuration ArgsToConfiguration() {
     } else
         println(F("Value 4 not found"));
 
-    if (server.argName(4) == "colorM") {
+    if (server.argName(5) == "colorM") {
         const char* input = server.arg(5).c_str();
         splitCSVToArray(input, newValues.colorM);
     } else
         println(F("Value 5 not found"));
 
-    if (server.argName(6) == "colorH") {
+    if (server.argName(6) == "colorS") {
         const char* input = server.arg(6).c_str();
         splitCSVToArray(input, newValues.colorS);
     } else
@@ -194,25 +194,23 @@ Config::Configuration ArgsToConfiguration() {
     else
         println(F("Value 7 not found"));
 
-    // TODO: add fields for nightmode and Times
-
     if (server.argName(8) == "nightmode")
         newValues.nightmode = server.arg(8) == "true" ? true : false;
     else
         println(F("Value 8 not found"));
     if (server.argName(9) == "turnOffAt") {
         newValues.turnOffAt = Time{(uint8_t)server.arg(9).toInt()};
-        const char* input = server.arg(4).c_str();
+        const char* input = server.arg(9).c_str();
         uint8_t times[2];
-        splitCSVToArray(input, times);
+        splitCSVToArray(input, times, ":");
         newValues.turnOffAt = Time{times[0], times[1]};
     } else
         println(F("Value 9 not found"));
     if (server.argName(10) == "turnOnAt") {
-        newValues.turnOnAt = Time{(uint8_t)server.arg(9).toInt()};
-        const char* input = server.arg(4).c_str();
+        newValues.turnOnAt = Time{(uint8_t)server.arg(10).toInt()};
+        const char* input = server.arg(10).c_str();
         uint8_t times[2];
-        splitCSVToArray(input, times);
+        splitCSVToArray(input, times, ":");
         newValues.turnOnAt = Time{times[0], times[1]};
     } else
         println(F("Value 10 not found"));
