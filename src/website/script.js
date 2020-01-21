@@ -240,16 +240,15 @@ function sendUpdatedData() {
     xhttp.send(urlString);
 }
 
-
 function generateUrlString() {
     console.log(config);
     // `brightness=${config.brightness}&showHours=${config.showHours}&showMinutes=${config.showMinutes}&showSeconds=${config.showSeconds}&colorH_R=${config.colorH[0]}&colorH_G=${config.colorH[1]}&colorH_B=${config.colorH[2]}&colorM_R=${config.colorM[0]}&colorM_G=${config.colorM[1]}&colorM_B=${config.colorM[2]}&colorS_R=${config.colorS[0]}&colorS_G=${config.colorS[1]}&colorS_B=${config.colorS[2]}&pollInterval=${config.pollInterval}&nightmode=${config.nightmode}&timezone=${config.timezone}`;
     
     let urlString = '';
     for(let [key, value] of Object.entries(config)) {
-        `${key}=${value}&`
+        urlString += `${key}=${value}&`;
     }
-    urlString.substring(0, urlString.length -1);
+    urlString = urlString.substring(0, urlString.length -1);
 
     return urlString;
 }

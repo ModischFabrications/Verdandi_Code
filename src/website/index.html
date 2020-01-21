@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0, shrink-to-fit=no" />
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
 </head>
+
 <body class="blurred" onload="onload()">
     <div style="margin: auto;
         width: fit-content;
@@ -72,6 +74,22 @@
                                 <input for="timezone" class="css-label tz-input" disabled />
                             </div>
                             <div class="tz-selection-container hidden"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Nightmode:</td>
+                        <td>
+                            <label for="nightmode" class="css-label">&nbsp;Enable&nbsp;</label>
+                            <input id="nightmode" for="colorM" class="css-checkbox"
+                                onchange='onValueChange(this, "nightmode")' type="checkbox" checked />
+                        </td>
+                        <td>
+                            <label for="turnOffAt" class="css-label">&nbsp;Turn off at&nbsp;</label>
+                            <input type="time" id="turnOffAt" name="turnOffAt" value="22:00" onchange='onValueChange(this, "turnOffAt")' min="00:00" max="23:59" required>
+                        </td>
+                        <td>
+                            <label for="turnOnAt" class="css-label">&nbsp;Turn On at&nbsp;</label>
+                            <input type="time" id="turnOnAt" name="turnOnAt" value="06:00" onchange='onValueChange(this, "turnOnAt")' min="00:00" max="23:59" required>
                         </td>
                     </tr>
                 </tbody>
