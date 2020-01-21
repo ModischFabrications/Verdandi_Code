@@ -67,16 +67,6 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="vertical-align: top;">Time zone:</td>
-                        <td class="tz-selection" colspan="3">
-                            <div class="tz-info-container" onclick="showTzSelection()">
-                                <button class="tz-selection-button"><i class="arrow right"></i></button>
-                                <input for="timezone" class="css-label tz-input" disabled />
-                            </div>
-                            <div class="tz-selection-container hidden"></div>
-                        </td>
-                    </tr>
-                    <tr>
                         <td>Nightmode:</td>
                         <td>
                             <label for="nightmode" class="css-label">&nbsp;Enable&nbsp;</label>
@@ -85,11 +75,23 @@
                         </td>
                         <td>
                             <label for="turnOffAt" class="css-label">&nbsp;Turn off at&nbsp;</label>
-                            <input type="time" id="turnOffAt" name="turnOffAt" value="22:00" onchange='onValueChange(this, "turnOffAt")' min="00:00" max="23:59" required>
+                            <input type="time" id="turnOffAt" name="turnOffAt" value="22:00"
+                                onchange='onValueChange(this, "turnOffAt")' min="00:00" max="23:59" required>
                         </td>
                         <td>
-                            <label for="turnOnAt" class="css-label">&nbsp;Turn On at&nbsp;</label>
-                            <input type="time" id="turnOnAt" name="turnOnAt" value="06:00" onchange='onValueChange(this, "turnOnAt")' min="00:00" max="23:59" required>
+                            <label for="turnOnAt" class="css-label">&nbsp;Turn on at&nbsp;</label>
+                            <input type="time" id="turnOnAt" name="turnOnAt" value="06:00"
+                                onchange='onValueChange(this, "turnOnAt")' min="00:00" max="23:59" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top;">Time zone:</td>
+                        <td class="tz-selection" colspan="3">
+                            <div class="tz-info-container" onclick="showTzSelection()">
+                                <button class="tz-selection-button"><i class="arrow right"></i></button>
+                                <input for="timezone" class="css-label tz-input" disabled />
+                            </div>
+                            <div class="tz-selection-container hidden"></div>
                         </td>
                     </tr>
                 </tbody>
