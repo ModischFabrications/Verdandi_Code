@@ -280,6 +280,8 @@ function onValueChange(element, targetVar) {
             break;
         case "nightmode":
             config.nightmode = element.value;
+            d.getElementById("turnOffAt").toggleAttribute("disabled");
+            d.getElementById("turnOnAt").toggleAttribute("disabled");
             break;
         case "turnOffAt":
             // FIXME: this should probably be parsed somehow
