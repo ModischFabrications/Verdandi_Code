@@ -20,8 +20,8 @@ let config = {
     colorS: [0, 0, 255],
     pollInterval: 10,
     nightmode: false,
-    turnOffAt: [1,0],
-    turnOnAt: [2,0],
+    turnOffAt: `11:00`,
+    turnOnAt: `12:00`,
     timezone: 'AWST-8',
     timezone_name: 'Perth'
 };

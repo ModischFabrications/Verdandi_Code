@@ -202,6 +202,7 @@ Config::Configuration ArgsToConfiguration() {
         newValues.turnOffAt = Time{(uint8_t)server.arg(9).toInt()};
         const char* input = server.arg(9).c_str();
         uint8_t times[2];
+        // TODO: check for actual separator
         splitCSVToArray(input, times, ":");
         newValues.turnOffAt = Time{times[0], times[1]};
     } else
