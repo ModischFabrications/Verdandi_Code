@@ -6,10 +6,14 @@
 
 namespace Config {
 
+const uint8_t N_TIMEZONE = 50;
+const uint8_t N_TIMEZONE_NAME = 40;
+
+
 /* change with each design iteration to prevent EEPROM inconsistency and help
  * with wear leveling of EEPROM cells.
  */
-const uint8_t VERSION = 3;
+const uint8_t VERSION = 4;
 
 struct Configuration {
     uint8_t brightness;
@@ -30,9 +34,10 @@ struct Configuration {
     // irrelevant if "!nightmode"
     Time turnOffAt;
     Time turnOnAt;
-
-    // TODO: evaluate size, this is by far the biggest contributor to size
-    char timezone[40];
+    
+    // name is needed to keep a bijective mapping
+    char timezone[N_TIMEZONE];
+    char timezone_name[N_TIMEZONE_NAME];
 
     const bool operator==(const Configuration& other) {
         return (this->brightness == other.brightness &&
@@ -52,8 +57,9 @@ struct Configuration {
                 this->nightmode == other.nightmode &&
                 this->turnOffAt == other.turnOffAt &&
                 this->turnOnAt == other.turnOnAt &&
-                this->timezone == other.timezone
-                // TODO: char array comparison for timezone
+                this->timezone == other.timezone &&
+                (strcmp(this->timezone, other.timezone) == 0) && 
+                (strcmp(this->timezone_name, other.timezone_name) == 0)
                 );
     }
 };
@@ -64,7 +70,8 @@ Configuration defaultConfiguration = {
     {255, 0, 0}, {0, 255, 0}, {0, 0, 255},
     3 * 60, 
     false, {10}, {11}, 
-    "GMT0"
+    "GMT0", 
+    "Ghana"
     };
 
 } // namespace Configuration
