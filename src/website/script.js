@@ -19,7 +19,11 @@ let config = {
     colorM: [0, 255, 0],
     colorS: [0, 0, 255],
     pollInterval: 10,
-    timezone: ''
+    nightmode: false,
+    turnOffAt: [1,0],
+    turnOnAt: [2,0],
+    timezone: 'AWST-8',
+    timezone_name: 'Perth'
 };
 let timezones = {};
 let currentTimezonePath = [];
@@ -84,7 +88,7 @@ function loadConfigValues() {
                 config.pollInterval = parseInt(res.pollInterval);
                 config.timezone = res.timezone;
 
-                lastSelectedTzName = getTzNameFromTzString(config.timezone, timezones);
+                lastSelectedTzName = config.timezone_name;
 
                 // update ui according to loaded configuration and unblur site
                 updateUIElements();
@@ -93,41 +97,6 @@ function loadConfigValues() {
         }
     };
 }
-
-// find the correct time zone key from a time zone string
-// pass the parent name if all the subdivisions have the same time
-function getTzNameFromTzString(tzString, tzObject, sameTime = false, parentName = '') {
-    if (tzString == undefined) return '';
-
-    // if type of first object is boolean go deeper into the divisions
-    let objectKeys = Object.keys(tzObject);
-    if (typeof (tzObject[objectKeys[0]]) == 'boolean') {
-
-        if (tzObject[objectKeys[0]] == true) sameTime = true;
-
-        let tzReturn = getTzNameFromTzString(tzString, tzObject[objectKeys[1]], sameTime, parentName);
-        if (tzReturn != '') return tzReturn;
-
-    } else {
-
-        // else it must be a list of time zones, go through the lists
-        for (const [tzKey, tzValue] of Object.entries(tzObject)) {
-
-            // return the parent name if the time zones in the list have the same time
-            if (typeof (tzValue) == 'string' && tzValue == tzString)
-                return sameTime ? parentName : tzKey;
-
-            // go deeper if the value has subidivions
-            if (typeof (tzValue) == 'object') {
-                let tzReturn = getTzNameFromTzString(tzString, tzValue, sameTime, tzKey);
-                if (tzReturn != '') return tzReturn;
-            }
-        }
-    }
-
-    return '';
-}
-
 
 function updateTimezoneDisplay() {
     let tzToDisplay = getChildrenInCurrentTimezonePath();
@@ -209,7 +178,7 @@ function generateTzHtmlList(timezoneArray) {
             let tzStringDefinition = getTzStringFromTzValue();
 
             // highlight if it's the currently selected tz
-            if (config.timezone == tzStringDefinition) li.classList.add('highlighted-item');
+            if (config.timezone_name == tzStringDefinition) li.classList.add('highlighted-item');
 
             // update the config and send the updated data
             li.addEventListener('click', function () {
@@ -223,10 +192,9 @@ function generateTzHtmlList(timezoneArray) {
         function getTzStringFromTzValue() {
             if (typeof (tzValue) == 'object') {
                 let subDivisions = tzValue.divisions;
-                let firstKey = Object.keys(subDivisions)[0];
-                return subDivisions[firstKey];
+                return Object.keys(subDivisions)[0];
             }
-            return tzValue;
+            return tzKey;
         }
     }
 }
@@ -275,8 +243,15 @@ function sendUpdatedData() {
 
 function generateUrlString() {
     console.log(config);
-    // TODO: create string from config variable
-    return `brightness=${config.brightness}&showHours=${config.showHours}&showMinutes=${config.showMinutes}&showSeconds=${config.showSeconds}&colorH_R=${config.colorH[0]}&colorH_G=${config.colorH[1]}&colorH_B=${config.colorH[2]}&colorM_R=${config.colorM[0]}&colorM_G=${config.colorM[1]}&colorM_B=${config.colorM[2]}&colorS_R=${config.colorS[0]}&colorS_G=${config.colorS[1]}&colorS_B=${config.colorS[2]}&pollInterval=${config.pollInterval}&timezone=${config.timezone}`;
+    // `brightness=${config.brightness}&showHours=${config.showHours}&showMinutes=${config.showMinutes}&showSeconds=${config.showSeconds}&colorH_R=${config.colorH[0]}&colorH_G=${config.colorH[1]}&colorH_B=${config.colorH[2]}&colorM_R=${config.colorM[0]}&colorM_G=${config.colorM[1]}&colorM_B=${config.colorM[2]}&colorS_R=${config.colorS[0]}&colorS_G=${config.colorS[1]}&colorS_B=${config.colorS[2]}&pollInterval=${config.pollInterval}&nightmode=${config.nightmode}&timezone=${config.timezone}`;
+    
+    let urlString = '';
+    for(let [key, value] of Object.entries(config)) {
+        `${key}=${value}&`
+    }
+    urlString.substring(0, urlString.length -1);
+
+    return urlString;
 }
 
 function onValueChange(element, targetVar) {
@@ -304,7 +279,24 @@ function onValueChange(element, targetVar) {
         case "pollInterval":
             config.pollInterval = Math.min(Math.max(element.value, 0), 100000);
             break;
+        case "nightmode":
+            config.nightmode = element.value;
+            break;
+        case "turnOffAt":
+            // FIXME: this should probably be parsed somehow
+            config.turnOffAt = element.value;
+            break;
+        case "turnOnAt":
+            // FIXME: this should probably be parsed somehow
+            config.turnOnAt = element.value;
+            break;
         case "timezone":
+            config.timezone = element[1];
+            lastSelectedTzName = element[0];
+            showTzSelection();
+            break;
+        case "timezone_name":
+            // FIXME: this is copy-paste
             config.timezone = element[1];
             lastSelectedTzName = element[0];
             showTzSelection();
@@ -365,6 +357,7 @@ function updateUIElements() {
         get2DigitHex(config.colorS[1]) +
         get2DigitHex(config.colorS[2]);
     pollingEl.value = config.pollInterval;
+    // TODO: update with nightmode, offAt & onAt, timezone_name
     d.getElementsByClassName('tz-input')[0].value = lastSelectedTzName;
 }
 
