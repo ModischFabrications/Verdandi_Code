@@ -129,7 +129,7 @@ String ArgsToString() {
     return message;
 }
 
-void splitCSVToArray(const char* input, uint8_t* output, const char *token=",") {
+void splitCSVToArray(const char* input, uint8_t* output, const char* token = ",") {
     // unsafe and shit code, but it could work
     char buffer[16];
     strcpy(buffer, input);
@@ -138,14 +138,12 @@ void splitCSVToArray(const char* input, uint8_t* output, const char *token=",") 
 
     uint8_t i = 0;
     while (segment_holder != NULL) {
-        printlnRaw(segment_holder);
-        segment_holder = strtok(NULL, token);
-        if (segment_holder == NULL)
-            continue;
         char* unused_tail;
         uint8_t color = strtol(segment_holder, &unused_tail, 10);
         // really unsafe usage here!
         output[i++] = color;
+
+        segment_holder = strtok(NULL, token);
     }
 }
 
@@ -174,18 +172,21 @@ Config::Configuration ArgsToConfiguration() {
     if (server.argName(4) == "colorH") {
         const char* input = server.arg(4).c_str();
         splitCSVToArray(input, newValues.colorH);
+        printArray(newValues.colorH, 3);
     } else
         println(F("Value 4 not found"));
 
     if (server.argName(5) == "colorM") {
         const char* input = server.arg(5).c_str();
         splitCSVToArray(input, newValues.colorM);
+        printArray(newValues.colorM, 3);
     } else
         println(F("Value 5 not found"));
 
     if (server.argName(6) == "colorS") {
         const char* input = server.arg(6).c_str();
         splitCSVToArray(input, newValues.colorS);
+        printArray(newValues.colorS, 3);
     } else
         println(F("Value 6 not found"));
 

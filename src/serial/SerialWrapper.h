@@ -101,6 +101,19 @@ void printRaw(uint16_t number) {
     Serial.print(number);
 }
 
+void printArray(const uint8_t* rgb_array, uint8_t length) {
+    if (!USE_SERIAL)
+        return;
+    Serial.print("[");
+    for (uint8_t i = 0; i < length; i++) {
+        Serial.print(rgb_array[i]);
+        Serial.print(",");
+    }
+    Serial.println("]");
+}
+
+// ------ errors
+
 void logWarning(const __FlashStringHelper* string) {
     if (warnings.iLog >= N_MAX_LOGS) {
         println(F("Warning list is full, wraparound"));
