@@ -2,6 +2,7 @@
 
 #include <ArduinoJson.h>
 #include <ESP8266WebServer.h> // config portal
+#include <string.h>
 
 #include "fileServer.h"
 #include "persistence/persistenceManager.h"
@@ -59,7 +60,7 @@ void handleConfigRequest() {
     Config::Configuration config = PersistenceManager::get();
 
     // actual number of objects, in this case number of lines
-    const uint16_t capacity = JSON_OBJECT_SIZE(25);
+    const uint16_t capacity = JSON_OBJECT_SIZE(26);
     StaticJsonDocument<capacity> doc;
 
     doc["brightness"] = config.brightness;
@@ -93,7 +94,8 @@ void handleConfigRequest() {
     turnOnAt.add(config.turnOnAt.minute);
 
     doc["timezone"] = (const char*)config.timezone;
-    // 25 elements
+    doc["timezone_name"] = (const char*)config.timezone_name;
+    // 26 elements
 
     // add new fields here and increase JSON size
 
@@ -127,6 +129,24 @@ String ArgsToString() {
     return message;
 }
 
+void splitCSVToArray(const char* input, uint8_t* output, const char* token = ",") {
+    // unsafe and shit code, but it could work
+    char buffer[16];
+    strcpy(buffer, input);
+    char* segment_holder;
+    segment_holder = strtok(buffer, token);
+
+    uint8_t i = 0;
+    while (segment_holder != NULL) {
+        char* unused_tail;
+        uint8_t color = strtol(segment_holder, &unused_tail, 10);
+        // really unsafe usage here!
+        output[i++] = color;
+
+        segment_holder = strtok(NULL, token);
+    }
+}
+
 Config::Configuration ArgsToConfiguration() {
     Config::Configuration newValues = Config::Configuration();
 
@@ -149,52 +169,62 @@ Config::Configuration ArgsToConfiguration() {
     else
         println(F("Value 3 not found"));
 
-    if (server.argName(4) == "colorH_R")
-        newValues.colorH[0] = server.arg(4).toInt();
-    else
+    if (server.argName(4) == "colorH") {
+        const char* input = server.arg(4).c_str();
+        splitCSVToArray(input, newValues.colorH);
+        printArray(newValues.colorH, 3);
+    } else
         println(F("Value 4 not found"));
-    if (server.argName(5) == "colorH_G")
-        newValues.colorH[1] = server.arg(5).toInt();
-    else
+
+    if (server.argName(5) == "colorM") {
+        const char* input = server.arg(5).c_str();
+        splitCSVToArray(input, newValues.colorM);
+        printArray(newValues.colorM, 3);
+    } else
         println(F("Value 5 not found"));
-    if (server.argName(6) == "colorH_B")
-        newValues.colorH[2] = server.arg(6).toInt();
-    else
+
+    if (server.argName(6) == "colorS") {
+        const char* input = server.arg(6).c_str();
+        splitCSVToArray(input, newValues.colorS);
+        printArray(newValues.colorS, 3);
+    } else
         println(F("Value 6 not found"));
-    if (server.argName(7) == "colorM_R")
-        newValues.colorM[0] = server.arg(7).toInt();
+
+    if (server.argName(7) == "pollInterval")
+        newValues.pollInterval = max(server.arg(7).toInt(), (long)1);
     else
         println(F("Value 7 not found"));
-    if (server.argName(8) == "colorM_G")
-        newValues.colorM[1] = server.arg(8).toInt();
+
+    if (server.argName(8) == "nightmode")
+        newValues.nightmode = server.arg(8) == "true" ? true : false;
     else
         println(F("Value 8 not found"));
-    if (server.argName(9) == "colorM_B")
-        newValues.colorM[2] = server.arg(9).toInt();
-    else
+    if (server.argName(9) == "turnOffAt") {
+        newValues.turnOffAt = Time{(uint8_t)server.arg(9).toInt()};
+        const char* input = server.arg(9).c_str();
+        uint8_t times[2];
+        // TODO: check for actual separator
+        splitCSVToArray(input, times, ":");
+        newValues.turnOffAt = Time{times[0], times[1]};
+    } else
         println(F("Value 9 not found"));
-    if (server.argName(10) == "colorS_R")
-        newValues.colorS[0] = server.arg(10).toInt();
-    else
+    if (server.argName(10) == "turnOnAt") {
+        newValues.turnOnAt = Time{(uint8_t)server.arg(10).toInt()};
+        const char* input = server.arg(10).c_str();
+        uint8_t times[2];
+        splitCSVToArray(input, times, ":");
+        newValues.turnOnAt = Time{times[0], times[1]};
+    } else
         println(F("Value 10 not found"));
-    if (server.argName(11) == "colorS_G")
-        newValues.colorS[1] = server.arg(11).toInt();
+
+    if (server.argName(11) == "timezone")
+        strcpy(newValues.timezone, server.arg(11).c_str());
     else
         println(F("Value 11 not found"));
-    if (server.argName(12) == "colorS_B")
-        newValues.colorS[2] = server.arg(12).toInt();
+    if (server.argName(12) == "timezone_name")
+        strcpy(newValues.timezone_name, server.arg(12).c_str());
     else
         println(F("Value 12 not found"));
-    if (server.argName(13) == "pollInterval")
-        newValues.pollInterval = max(server.arg(13).toInt(), (long)1);
-    else
-        println(F("Value 13 not found"));
-    if (server.argName(14) == "timezone")
-        strcpy(newValues.timezone, server.arg(14).c_str());
-    else
-        println(F("Value 14 not found"));
-
-    // TODO: add fields for nightmode, Times and timezone
 
     // add new fields here
 

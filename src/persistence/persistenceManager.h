@@ -80,14 +80,8 @@ void set(Configuration newConfig) {
 void trySave() {
     // TODO: is this safe with overflowing values (> 1 day)?
     if (tNextSavepoint != 0 && millis() >= tNextSavepoint) {
-        Serial.println("Not saved yet.....");
-        Serial.println(get().timezone);
-
         PersistenceStore::saveSettings(configuration);
         tNextSavepoint = 0;
-
-        Serial.println("Now saved.........");
-        Serial.println(get().timezone);
 
         println(F("Saving to EEPROM"));
     }
