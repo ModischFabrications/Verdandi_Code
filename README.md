@@ -1,7 +1,7 @@
 # Verdandi
 Cooperative project to display an analog clock with digital RGB LEDs.
 
-PCb can be found at https://github.com/ModischFabrications/Verdandi_PCB.
+PCB can be found at https://github.com/ModischFabrications/Verdandi_PCB.
 
 ## Usage
 
