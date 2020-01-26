@@ -64,13 +64,13 @@ struct Configuration {
 };
 
 Configuration defaultConfiguration = {
-    127, 
-    true, true, true, 
+    127,
+    true, true, true,
     {255, 0, 0}, {0, 255, 0}, {0, 0, 255},
-    3 * 60, 
-    false, {10}, {11}, 
-    "GMT0", 
-    "Ghana"
+    3 * 60,
+    false, {10}, {11},
+    "GMT0",
+    "GMT"
     };
 
 } // namespace Configuration
