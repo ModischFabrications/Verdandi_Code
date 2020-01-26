@@ -34,10 +34,10 @@ struct Configuration {
     // irrelevant if "!nightmode"
     Time turnOffAt;
     Time turnOnAt;
-    
+
     // name is needed to keep a bijective mapping
     char timezone[N_TIMEZONE];
-    char timezone_name[N_TIMEZONE_NAME];
+    char timezoneName[N_TIMEZONE_NAME];
 
     const bool operator==(const Configuration& other) {
         return (this->brightness == other.brightness &&
@@ -58,7 +58,7 @@ struct Configuration {
                 this->turnOffAt == other.turnOffAt &&
                 this->turnOnAt == other.turnOnAt &&
                 (strcmp(this->timezone, other.timezone) == 0) && 
-                (strcmp(this->timezone_name, other.timezone_name) == 0)
+                (strcmp(this->timezoneName, other.timezoneName) == 0)
                 );
     }
 };

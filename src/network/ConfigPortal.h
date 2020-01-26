@@ -4,7 +4,9 @@
 #include <ESP8266WebServer.h> // config portal
 #include <string.h>
 
+#include "Time.h"
 #include "fileServer.h"
+#include "network/timeService.h"
 #include "persistence/persistenceManager.h"
 #include "serial/SerialWrapper.h"
 
@@ -14,6 +16,7 @@ void setup();
 void handleServer();
 void handleConfigRequest();
 void handleDataUpdate();
+void handleTimeRequest();
 void check();
 String ArgsToString();
 Config::Configuration ArgsToConfiguration();
@@ -31,6 +34,7 @@ void check() {
 void setup() {
     server.on(F("/config"), handleConfigRequest);
     server.on(F("/update"), handleDataUpdate);
+    server.on(F("/time"), handleTimeRequest);
     server.onNotFound(handleServer);
     server.begin();
     println(F("Server started"));
@@ -94,7 +98,7 @@ void handleConfigRequest() {
     turnOnAt.add(config.turnOnAt.minute);
 
     doc["timezone"] = (const char*)config.timezone;
-    doc["timezone_name"] = (const char*)config.timezone_name;
+    doc["timezoneName"] = (const char*)config.timezoneName;
     // 26 elements
 
     // add new fields here and increase JSON size
@@ -114,6 +118,26 @@ void handleDataUpdate() {
 
     // everything is fine
     server.send(200);
+}
+
+void handleTimeRequest() {
+    println(F("Received time request"));
+
+    Time t = TimeService::getCurrentTime();
+
+    // actual number of objects, in this case number of lines
+    const uint16_t capacity = JSON_OBJECT_SIZE(3);
+    StaticJsonDocument<capacity> doc;
+
+    doc["hours"] = t.hour;
+    doc["minutes"] = t.minute;
+    doc["seconds"] = t.second;
+
+    String json = "";
+    serializeJson(doc, json);
+    printlnRaw(json);
+
+    server.send(200, F("application/json"), json);
 }
 
 String ArgsToString() {
@@ -221,8 +245,8 @@ Config::Configuration ArgsToConfiguration() {
         strcpy(newValues.timezone, server.arg(11).c_str());
     else
         println(F("Value 11 not found"));
-    if (server.argName(12) == "timezone_name")
-        strcpy(newValues.timezone_name, server.arg(12).c_str());
+    if (server.argName(12) == "timezoneName")
+        strcpy(newValues.timezoneName, server.arg(12).c_str());
     else
         println(F("Value 12 not found"));
 

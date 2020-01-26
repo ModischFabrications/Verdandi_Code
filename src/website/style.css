@@ -1,6 +1,13 @@
 * {
     font-family: "Trebuchet MS", sans-serif;
 }
+#timeDisplay {
+    font-size: 60pt;
+    font-weight: bold;
+    margin-left: auto;
+    margin-right: auto;
+    display: table;
+}
 .width100 {
     width: 100%;
 }
