@@ -4,30 +4,20 @@ Cooperative project to display an analog clock with digital RGB LEDs.
 PCB can be found at https://github.com/ModischFabrications/Verdandi_PCB.
 
 ## Usage
+VSCode should offer you a task to do everything automatically:
+1. Close Serial Monitor
+2. CTRL+ALT+T -> "deploy project"
 
-
-
-
-## Contributing
-### CPP Formatting
-We are using the Clang Formatter with the style configuration from the included ´.clang-format´ file. For that install the [Clang compiler](https://github.com/nextcloud/desktop/wiki) as well as the Clang-Format extension for vscode.
+Call "/deploy/deploy.sh" manually if that doesn't work or you don't believe in VSCode.
 
 ### Uploading the file system
 In order to increase transmission speed and reduce memory usage, files are stored in the GNU zip file format on the ESP8266 and unpacked in your browser. 
 
-VSCode should offer you a task to do everything automatically:
-1. Close Serial Monitor
-2. CTRL+ALT+T -> "deploy file system"
-3. Upload program code as usual
+VSCode Task: "deploy file system" with the respective script "/deploy/deploy_fs.sh". 
 
-The files that need to be uploaded onto the file system are: 
-- `src/website/index.html`
-- `src/website/script.js`
-- `src/website/style.css`
-- `src/website/timezones.json`
-
-To do that, use your favourite zip tool to compress them into a `.gz` file. Place these files in the `data` folder and upload the file system image.
-
+## Contributing
+### CPP Formatting
+We are using the Clang Formatter with the style configuration from the included ´.clang-format´ file. For that install the [Clang compiler](https://github.com/nextcloud/desktop/wiki) as well as the Clang-Format extension for vscode.
 
 ## Related projects and links
 

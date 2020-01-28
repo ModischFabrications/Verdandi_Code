@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 
-echo "[MPC] --- deploying to target device ---"
+# exit when any command fails
+set -e
 
-echo "[MPC] prepare /data"
-rm -r ./data/
-mkdir ./data/
+echo "[MPC] --- Deploying the whole project --- "
 
-echo "[MPC] copying /website to /data"
-cp -rf ./website/* ./data/
+command -v pio >/dev/null 2>&1 || { echo >&2 "pio can't be found. Add to PATH!"; exit 1; }
 
-echo "[MPC] converting to *.gz"
+# TODO: won't exit correctly
+echo "[MPC] Uploading file system"
+./deploy/deploy_fs.sh || exit $?
 
-gzip -rf ./data*
+echo "[MPC] Uploading program code and monitoring serial"
+pio run --target upload --target monitor || exit 3;
 
-pio run --target uploadfs
-
+echo "[MPC] --- Finished successfully --- "
+exit 0

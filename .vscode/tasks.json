@@ -15,12 +15,23 @@
             "type": "shell",
             "command": "bash",
             "args": [
-                "./deploy/deploy.sh"
+                "./deploy/deploy_fs.sh"
             ],
             "problemMatcher": [
                 "$platformio"
             ],
             "label": "deploy file system",
+        },
+        {
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "./deploy/deploy.sh"
+            ],
+            "problemMatcher": [
+                "$platformio"
+            ],
+            "label": "deploy project",
         },
     ]
 }
