@@ -19,6 +19,7 @@ void handleConfigRequest();
 void handleDataUpdate();
 void handleTimeRequest();
 void handleDebug();
+void handleMessageRequest();
 void check();
 String ArgsToString();
 Config::Configuration ArgsToConfiguration();
@@ -38,6 +39,7 @@ void setup() {
     server.on(F("/update"), handleDataUpdate);
     server.on(F("/time"), handleTimeRequest);
     server.on(F("/debug"), handleDebug);
+    server.on(F("/debug/messages"), handleMessageRequest);
     server.onNotFound(handleServer);
     server.begin();
     println(F("Server started"));
@@ -65,8 +67,31 @@ void handleFile(String path) {
     }
 }
 
-void handleDebug() {
-    handleFile("/debug.html");
+void handleDebug() { handleFile("/debug.html"); }
+
+void handleMessageRequest() {
+    const RingBuffer& warnings = getWarnLog();
+    const RingBuffer& errors = getErrorLog();
+
+    const uint16_t capacity = JSON_OBJECT_SIZE(2 * N_MAX_LOGS + 2);
+    StaticJsonDocument<capacity> doc;
+
+    JsonArray warningsField = doc.createNestedArray("warnings");
+    JsonArray errorsField = doc.createNestedArray("errors");
+
+    for(uint8_t i = 0; i < N_MAX_LOGS; ++i) {
+        if(warnings.log[i] != nullptr) {
+            warningsField.add(warnings.log[i]);
+        }
+        if(errors.log[i] != nullptr) {
+            errorsField.add(errors.log[i]);
+        }
+    }
+    String json = "";
+    serializeJson(doc, json);
+    printlnRaw(json);
+
+    server.send(200, F("application/json"), json);
 }
 
 void handleConfigRequest() {
