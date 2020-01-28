@@ -11,7 +11,8 @@
 
 namespace LedController {
 
-enum State { INIT, RUNNING, NIGHTMODE };
+enum State { INIT = 0, RUNNING, NIGHTMODE };
+State state = State::INIT;
 
 // hidden globals
 namespace {
@@ -29,8 +30,6 @@ const CRGB C_OK = CRGB::Green;
 const CRGB C_WARN = CRGB::Yellow;
 const CRGB C_ERR = CRGB::Red;
 
-State state = State::INIT;
-
 CRGB leds[N_LEDS];
 float preMultipliersHour[N_LEDS];
 float preMultipliersMinute[N_LEDS];
@@ -40,7 +39,7 @@ void updateDisplay();
 void clearPreMultipliers();
 void setPreMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider);
 void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]);
-bool isInNightMode(Time currentTime);
+bool shouldBeNightMode(Time currentTime);
 // -----------------------
 
 void updateDisplay(Time currentTime) {
@@ -111,7 +110,7 @@ void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]) {
     FastLED.show();
 }
 
-bool isInNightMode(Time currentTime) {
+bool shouldBeNightMode(Time currentTime) {
     Config::Configuration config = PersistenceManager::get();
 
     if (!config.nightmode)
@@ -166,7 +165,7 @@ void tick() {
 
     // TODO: implement dimming when near night time
     // turn off LEDs and skip updating outside of working hours
-    if (isInNightMode(currentTime)) {
+    if (shouldBeNightMode(currentTime)) {
         if (state != NIGHTMODE) {
             // turn off LEDs on transition to prevent stuck LEDs
             fill_solid(leds, N_LEDS, CRGB::Black);
