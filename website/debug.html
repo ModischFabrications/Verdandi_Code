@@ -12,13 +12,7 @@
 </head>
 
 <body onload="onload()">
-    <div style="margin: auto;
-    width: fit-content;
-    padding: 2rem;
-    background-color: #efefef;
-    height: 100%;
-    min-width: 640px;
-">
+    <div id="mainContainer">
         <h1 style="border-radius: 1rem;
             margin: auto;
             width: fit-content;
@@ -29,7 +23,22 @@
     ">
             Verdandi Debug Page
         </h1>
-        <div id="debugContainer"></div>
+        <div id="debugContainer">
+            <div>
+                <h2> Warnings: </h2>
+                <ol class="debugListContainer" id="warningsContainer">-
+                </ol>
+            </div>
+            <div>
+                <h2> Errors: </h2>
+                <ol class="debugListContainer" id="errorsContainer">-
+                </ol>
+            </div>
+        </div>
+        <button class="cst-btn" style="left: 2rem;"
+            onclick="window.location.href = window.location.protocol + '/\/' + window.location.hostname;">
+            Back to Config
+        </button>
     </div>
 </body>
 

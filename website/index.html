@@ -12,13 +12,7 @@
 </head>
 
 <body class="blurred" onload="onload()">
-    <div style="margin: auto;
-        width: fit-content;
-        padding: 2rem;
-        background-color: #efefef;
-        height: 100%;
-        min-width: 640px;
-    ">
+    <div id="mainContainer">
         <h1 style="border-radius: 1rem;
                 margin: auto;
                 width: fit-content;
@@ -103,6 +97,10 @@
                 </tbody>
             </table>
         </div>
+        <button class="cst-btn" style="right: 2rem;"
+            onclick="window.location.href = window.location.protocol + '/\/' + window.location.hostname + '/debug';">
+            Debug Messages
+        </button>
     </div>
 </body>
 
