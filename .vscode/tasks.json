@@ -20,7 +20,7 @@
             "problemMatcher": [
                 "$platformio"
             ],
-            "label": "SPIFFS deploy",
+            "label": "deploy file system",
         },
     ]
 }
