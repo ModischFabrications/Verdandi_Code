@@ -14,9 +14,11 @@ namespace ConfigPortal {
 
 void setup();
 void handleServer();
+void handleFile(String path);
 void handleConfigRequest();
 void handleDataUpdate();
 void handleTimeRequest();
+void handleDebug();
 void check();
 String ArgsToString();
 Config::Configuration ArgsToConfiguration();
@@ -35,6 +37,7 @@ void setup() {
     server.on(F("/config"), handleConfigRequest);
     server.on(F("/update"), handleDataUpdate);
     server.on(F("/time"), handleTimeRequest);
+    server.on(F("/debug"), handleDebug);
     server.onNotFound(handleServer);
     server.begin();
     println(F("Server started"));
@@ -44,7 +47,10 @@ void handleServer() {
     String path = server.uri();
     if (path.endsWith("/"))
         path += "index.html";
+    handleFile(path);
+}
 
+void handleFile(String path) {
     if (FileServer::fileExists(path)) {
         File f = FileServer::getFile(path);
         String contentType = FileServer::getContentType(path);
@@ -57,6 +63,10 @@ void handleServer() {
 
         server.send(404, "text/html", "Requested file not found. Reupload the file system image.");
     }
+}
+
+void handleDebug() {
+    handleFile("/debug.html");
 }
 
 void handleConfigRequest() {
