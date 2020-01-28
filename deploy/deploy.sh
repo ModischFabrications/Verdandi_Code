@@ -2,13 +2,16 @@
 
 echo "[MPC] --- deploying to target device ---"
 
+echo "[MPC] prepare /data"
+rm -r ./data/
+mkdir ./data/
+
 echo "[MPC] copying /website to /data"
-cp -rf ./website/ ./data/
+cp -rf ./website/* ./data/
 
 echo "[MPC] converting to *.gz"
-for file in ./website*; do
-  gzip $file
-done
 
-pio pio run --target uploadfs
+gzip -rf ./data*
+
+pio run --target uploadfs
 
