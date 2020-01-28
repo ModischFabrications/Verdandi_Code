@@ -101,20 +101,23 @@ let httpRequests = {
         };
         xhttp.send();
     },
+    dataUpdateTimeout: null,
     sendDataUpdate: function () {
-        // TODO: send only every 200 ms
-        let self = this;
-        let urlString = generateUrlString();
+        // clear existing timeout and set new one to send only every 200 ms
+        clearTimeout(this.dataUpdateTimeout);
+        this.dataUpdateTimeout = setTimeout(() => {
+            let urlString = generateUrlString();
 
-        let xhttp = new XMLHttpRequest();
-        xhttp.open("POST", d.URL + "update", true);
-        xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                self.loadCurrentTime();
+            let xhttp = new XMLHttpRequest();
+            xhttp.open("POST", d.URL + "update", true);
+            xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    httpRequests.loadCurrentTime();
+                }
             }
-        }
-        xhttp.send(urlString);
+            xhttp.send(urlString);
+        }, 200);
 
         function generateUrlString() {
             console.log(config);
