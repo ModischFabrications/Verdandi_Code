@@ -89,7 +89,11 @@ let httpRequests = {
                     config.colorM = res.colorM;
                     config.colorS = res.colorS;
                     config.pollInterval = parseInt(res.pollInterval);
+                    config.nightmode = res.nightmode;
+                    config.turnOffAt = `${res.turnOffAt[0]}:${res.turnOffAt[1]}`;
+                    config.turnOnAt = `${res.turnOnAt[0]}:${res.turnOnAt[1]}`;
                     config.timezone = res.timezone;
+                    config.timezoneName = res.timezoneName;
 
                     timezoneDisplay.lastSelectedTzName = config.timezoneName;
 
@@ -318,7 +322,8 @@ function onValueChange(element, targetVar) {
         case 'showHours':
         case 'showMinutes':
         case 'showSeconds':
-            config[targetVar] = !config[targetVar];
+            console.log(element.checked);
+            config[targetVar] = element.checked;
             toggleHiddenById(element.getAttribute('for'));
             break;
         case 'colorH':
@@ -334,16 +339,14 @@ function onValueChange(element, targetVar) {
             config.pollInterval = Math.min(Math.max(element.value, 0), 100000);
             break;
         case 'nightmode':
-            config.nightmode = element.value;
+            config.nightmode = element.checked;
             d.getElementById('turnOffAt').toggleAttribute('disabled');
             d.getElementById('turnOnAt').toggleAttribute('disabled');
             break;
         case 'turnOffAt':
-            // FIXME: this should probably be parsed somehow
             config.turnOffAt = element.value;
             break;
         case 'turnOnAt':
-            // FIXME: this should probably be parsed somehow
             config.turnOnAt = element.value;
             break;
         case 'timezone':

@@ -21,9 +21,9 @@ const uint16_t T_ANIMATION_MS = (1 * 1000);
 const uint16_t MAX_MILLIAMPS = 1000;
 
 const uint8_t PIN_LEDS = D1;
-const uint8_t N_LEDS = 6;
+const uint8_t N_LEDS = 24;
 // the index of the led that represents 12 o'clock
-const uint8_t I_LED_12H = 0;
+const uint8_t I_LED_12H = 12;
 
 const CRGB C_OK = CRGB::Green;
 const CRGB C_WARN = CRGB::Yellow;
