@@ -40,6 +40,8 @@ void clearPreMultipliers();
 void setPreMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider);
 void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]);
 bool shouldBeNightMode(Time currentTime);
+void checkNightMode(Time currentTime);
+
 // -----------------------
 
 void updateDisplay(Time currentTime) {
@@ -122,6 +124,20 @@ bool shouldBeNightMode(Time currentTime) {
     return false;
 }
 
+void checkNightMode(Time currentTime) {
+    if (shouldBeNightMode(currentTime) && state != NIGHTMODE) {
+        println(F("Switching to NIGHTMODE"));
+        // turn off LEDs on transition to prevent stuck LEDs
+        fill_solid(leds, N_LEDS, CRGB::Black);
+        FastLED.show();
+
+        state = NIGHTMODE;
+    } else if (!shouldBeNightMode(currentTime) && state == NIGHTMODE) {
+        println(F("Switching to RUNNING"));
+        state = RUNNING;
+    }
+}
+
 } // namespace
 
 void setup();
@@ -154,33 +170,23 @@ void helloPower() {
 }
 
 void tick() {
-    // TODO: display error state while state == INIT
-    /*     
-    // display error until ready
-    if (state == INIT)
+    // display error while state == INIT
+    if (state == INIT) {
+        println(F("Switching INIT to RUNNING"));
         state = RUNNING;
-    */
+    }
 
     Time currentTime = TimeService::getCurrentTime();
 
-    // TODO: implement dimming when near night time
-    // turn off LEDs and skip updating outside of working hours
-    if (shouldBeNightMode(currentTime)) {
-        if (state != NIGHTMODE) {
-            // turn off LEDs on transition to prevent stuck LEDs
-            fill_solid(leds, N_LEDS, CRGB::Black);
-            FastLED.show();
-            state = NIGHTMODE;
-        }
-
-        return;
-    }
-
-    // TODO: execute previous functions only every x cycles
+    // TODO: execute some functions only every x cycles
     // --> check nightmode by minute, init probably with higher refresh rate
     // --> scheduler? callEveryMinute, callEverySecond
+    checkNightMode(currentTime);
 
-    updateDisplay(currentTime);
+    // TODO: implement dimming when near night time
+    // turn off LEDs and skip updating outside of working hours
+    if (state == RUNNING)
+        updateDisplay(currentTime);
 }
 
 void updateConfiguration() {
