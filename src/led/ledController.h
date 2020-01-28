@@ -170,7 +170,8 @@ void helloPower() {
 }
 
 void tick() {
-    // display error while state == INIT
+    // TODO: display error while state == INIT, will probably need 
+    // a INVALID state in time or a listener
     if (state == INIT) {
         println(F("Switching INIT to RUNNING"));
         state = RUNNING;
