@@ -4,18 +4,16 @@ Cooperative project to display an analog clock with digital RGB LEDs.
 PCB can be found at https://github.com/ModischFabrications/Verdandi_PCB.
 
 ## Usage
+VSCode should offer you a task to do everything automatically:
+1. Close Serial Monitor
+2. CTRL+ALT+T -> "deploy project"
 
+Call "/deploy/deploy.sh" manually if that doesn't work or you don't believe in VSCode.
 
 ### Uploading the file system
 In order to increase transmission speed and reduce memory usage, files are stored in the GNU zip file format on the ESP8266 and unpacked in your browser. 
 
-VSCode should offer you a task to do everything automatically:
-1. Close Serial Monitor
-2. CTRL+ALT+T -> "deploy file system"
-3. Upload program code as usual
-
-Call /deploy/deploy_fs.sh manually if that does not work or you don't believe in VSCode.
-
+VSCode Task: "deploy file system" with the respective script "/deploy/deploy_fs.sh". 
 
 ## Contributing
 ### CPP Formatting

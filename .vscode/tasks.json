@@ -22,5 +22,16 @@
             ],
             "label": "deploy file system",
         },
+        {
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "./deploy/deploy.sh"
+            ],
+            "problemMatcher": [
+                "$platformio"
+            ],
+            "label": "deploy project",
+        },
     ]
 }
