@@ -75,7 +75,7 @@ let httpRequests = {
                 // send request to currently displayed time
                 self.loadCurrentTime();
 
-                // TODO: fix this try-catch...maybe send reset or something
+                // TODO: extract to function
                 // provisorial try-catch to catch errors when json cannot be parsed
                 try {
                     let res = JSON.parse(xhttp.responseText);
@@ -90,7 +90,6 @@ let httpRequests = {
                     config.colorS = res.colorS;
                     config.pollInterval = parseInt(res.pollInterval);
                     config.nightmode = res.nightmode;
-                    console.log(res.turnOffAt)
                     config.turnOffAt =
                         `${
                             res.turnOffAt[0].toString().padStart(2, '0')

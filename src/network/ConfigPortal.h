@@ -76,8 +76,8 @@ void handleMessageRequest() {
     const uint16_t capacity = JSON_OBJECT_SIZE(2 * N_MAX_LOGS + 2);
     StaticJsonDocument<capacity> doc;
 
-    JsonArray warningsField = doc.createNestedArray(F("warnings"));
-    JsonArray errorsField = doc.createNestedArray(F("errors"));
+    JsonArray warningsField = doc.createNestedArray("warnings");
+    JsonArray errorsField = doc.createNestedArray("errors");
 
     for(uint8_t i = 0; i < N_MAX_LOGS; ++i) {
         if(warnings.log[i] != nullptr) {
@@ -102,15 +102,15 @@ void handleConfigRequest() {
     const uint16_t capacity = JSON_OBJECT_SIZE(26);
     StaticJsonDocument<capacity> doc;
 
-    doc[F("brightness")] = config.brightness;
+    doc["brightness"] = config.brightness;
 
-    doc[F("showHours")] = config.showHours;
-    doc[F("showMinutes")] = config.showMinutes;
-    doc[F("showSeconds")] = config.showSeconds;
+    doc["showHours"] = config.showHours;
+    doc["showMinutes"] = config.showMinutes;
+    doc["showSeconds"] = config.showSeconds;
 
-    JsonArray colorH = doc.createNestedArray(F("colorH"));
-    JsonArray colorM = doc.createNestedArray(F("colorM"));
-    JsonArray colorS = doc.createNestedArray(F("colorS"));
+    JsonArray colorH = doc.createNestedArray("colorH");
+    JsonArray colorM = doc.createNestedArray("colorM");
+    JsonArray colorS = doc.createNestedArray("colorS");
     colorH.add(config.colorH[0]);
     colorH.add(config.colorH[1]);
     colorH.add(config.colorH[2]);
@@ -122,18 +122,18 @@ void handleConfigRequest() {
     colorS.add(config.colorS[2]);
     // 17 elements up to here
 
-    doc[F("pollInterval")] = config.pollInterval;
-    doc[F("nightmode")] = config.nightmode;
+    doc["pollInterval"] = config.pollInterval;
+    doc["nightmode"] = config.nightmode;
 
-    JsonArray turnOffAt = doc.createNestedArray(F("turnOffAt"));
-    JsonArray turnOnAt = doc.createNestedArray(F("turnOnAt"));
+    JsonArray turnOffAt = doc.createNestedArray("turnOffAt");
+    JsonArray turnOnAt = doc.createNestedArray("turnOnAt");
     turnOffAt.add(config.turnOffAt.hour);
     turnOffAt.add(config.turnOffAt.minute);
     turnOnAt.add(config.turnOnAt.hour);
     turnOnAt.add(config.turnOnAt.minute);
 
-    doc[F("timezone")] = (const char*)config.timezone;
-    doc[F("timezoneName")] = (const char*)config.timezoneName;
+    doc["timezone"] = (const char*)config.timezone;
+    doc["timezoneName"] = (const char*)config.timezoneName;
     // 26 elements
 
     // add new fields here and increase JSON size
@@ -164,9 +164,9 @@ void handleTimeRequest() {
     const uint16_t capacity = JSON_OBJECT_SIZE(3);
     StaticJsonDocument<capacity> doc;
 
-    doc[F("hours")] = t.hour;
-    doc[F("minutes")] = t.minute;
-    doc[F("seconds")] = t.second;
+    doc["hours"] = t.hour;
+    doc["minutes"] = t.minute;
+    doc["seconds"] = t.second;
 
     String json = "";
     serializeJson(doc, json);
