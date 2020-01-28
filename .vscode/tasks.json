@@ -15,7 +15,7 @@
             "type": "shell",
             "command": "bash",
             "args": [
-                "./deploy/deploy.sh"
+                "./deploy/deploy_fs.sh"
             ],
             "problemMatcher": [
                 "$platformio"
