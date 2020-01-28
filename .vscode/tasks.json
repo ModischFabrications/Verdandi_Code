@@ -21,10 +21,6 @@
                 "$platformio"
             ],
             "label": "SPIFFS deploy",
-            // TODO: not working!!
-            "options": {
-                "env": {"PATH": "${env:HOME}/.platformio/penv/bin"}
-            }
         },
     ]
 }
