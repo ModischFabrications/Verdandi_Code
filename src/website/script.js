@@ -90,8 +90,19 @@ let httpRequests = {
                     config.colorS = res.colorS;
                     config.pollInterval = parseInt(res.pollInterval);
                     config.nightmode = res.nightmode;
-                    config.turnOffAt = `${res.turnOffAt[0]}:${res.turnOffAt[1]}`;
-                    config.turnOnAt = `${res.turnOnAt[0]}:${res.turnOnAt[1]}`;
+                    console.log(res.turnOffAt)
+                    config.turnOffAt =
+                        `${
+                            res.turnOffAt[0].toString().padStart(2, '0')
+                        }:${
+                            res.turnOffAt[1].toString().padStart(2, '0')
+                        }`;
+                    config.turnOnAt =
+                        `${
+                            res.turnOnAt[0].toString().padStart(2, '0')
+                        }:${
+                            res.turnOnAt[1].toString().padStart(2, '0')
+                        }`;
                     config.timezone = res.timezone;
                     config.timezoneName = res.timezoneName;
 
@@ -121,7 +132,7 @@ let httpRequests = {
                 }
             }
             xhttp.send(urlString);
-        }, 200);
+        }, 100);
 
         function generateUrlString() {
             console.log(config);
@@ -408,7 +419,7 @@ function updateUIElements() {
     pollingEl.value = config.pollInterval;
     d.getElementsByClassName('tz-input')[0].value = config.timezoneName;
     d.getElementById('nightmode').checked = config.nightmode;
-    if(config.nightmode) {
+    if (config.nightmode) {
         d.getElementById('turnOffAt').classList.remove('showDisabled');
         d.getElementById('turnOffAt').removeAttribute('disabled');
         d.getElementById('turnOnAt').classList.remove('showDisabled');
