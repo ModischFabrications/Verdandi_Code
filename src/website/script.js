@@ -366,9 +366,7 @@ function updateUIElements() {
         d.getElementById('colorH').removeAttribute('disabled');
     } else {
         d.getElementById('colorH').classList.add('showDisabled');
-        d.getElementById('colorH').setAttributeNode(
-            d.createAttribute('disabled')
-        );
+        d.getElementById('colorH').setAttributeNode(d.createAttribute('disabled'));
     }
     showMinutesEl.checked = config.showMinutes;
     if (config.showMinutes) {
@@ -376,9 +374,7 @@ function updateUIElements() {
         d.getElementById('colorM').removeAttribute('disabled');
     } else {
         d.getElementById('colorM').classList.add('showDisabled');
-        d.getElementById('colorM').setAttributeNode(
-            d.createAttribute('disabled')
-        );
+        d.getElementById('colorM').setAttributeNode(d.createAttribute('disabled'));
     }
     showSecondsEl.checked = config.showSeconds;
     if (config.showSeconds) {
@@ -386,9 +382,7 @@ function updateUIElements() {
         d.getElementById('colorS').removeAttribute('disabled');
     } else {
         d.getElementById('colorS').classList.add('showDisabled');
-        d.getElementById('colorS').setAttributeNode(
-            d.createAttribute('disabled')
-        );
+        d.getElementById('colorS').setAttributeNode(d.createAttribute('disabled'));
     }
     hourColorEl.value =
         '#' +
@@ -406,8 +400,21 @@ function updateUIElements() {
         get2DigitHex(config.colorS[1]) +
         get2DigitHex(config.colorS[2]);
     pollingEl.value = config.pollInterval;
-    // TODO: update with nightmode, offAt & onAt, timezoneName
-    d.getElementsByClassName('tz-input')[0].value = timezoneDisplay.lastSelectedTzName;
+    d.getElementsByClassName('tz-input')[0].value = config.timezoneName;
+    d.getElementById('nightmode').checked = config.nightmode;
+    if(config.nightmode) {
+        d.getElementById('turnOffAt').classList.remove('showDisabled');
+        d.getElementById('turnOffAt').removeAttribute('disabled');
+        d.getElementById('turnOnAt').classList.remove('showDisabled');
+        d.getElementById('turnOnAt').removeAttribute('disabled');
+    } else {
+        d.getElementById('turnOffAt').classList.add('showDisabled');
+        d.getElementById('turnOffAt').setAttributeNode(d.createAttribute('disabled'));
+        d.getElementById('turnOnAt').classList.add('showDisabled');
+        d.getElementById('turnOnAt').setAttributeNode(d.createAttribute('disabled'));
+    }
+    d.getElementById('turnOffAt').value = config.turnOffAt;
+    d.getElementById('turnOnAt').value = config.turnOnAt;
 }
 
 function get2DigitHex(value) {
