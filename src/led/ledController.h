@@ -48,7 +48,7 @@ float previousMultipliersSecond[N_LEDS];
 void updateDisplay();
 void normalizeMultipliers();
 void clearMultipliers();
-void setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider);
+uint8_t setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider);
 void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]);
 void interpolateLeds();
 bool shouldBeNightMode(Time currentTime);
@@ -113,8 +113,9 @@ void clearMultipliers() {
  * @param multipliers array to modify
  * @param clockProgress 0..timeDivider
  * @param timeDivider e.g. 24 or 60
+ * @return first active led
  */
-void setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider) {
+uint8_t setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider) {
     while (clockProgress > timeDivider)
         clockProgress -= timeDivider;
 
@@ -130,6 +131,8 @@ void setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeD
     } else {
         multipliers[firstActiveLed] = 1.0;
     }
+
+    return firstActiveLed;
 }
 
 /**
