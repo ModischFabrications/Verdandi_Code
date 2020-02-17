@@ -30,14 +30,19 @@ const CRGB C_OK = CRGB::Green;
 const CRGB C_WARN = CRGB::Yellow;
 const CRGB C_ERR = CRGB::Red;
 
+const bool INTERPOLATE = true;
+
 CRGB leds[N_LEDS];
-float preMultipliersHour[N_LEDS];
-float preMultipliersMinute[N_LEDS];
-float preMultipliersSecond[N_LEDS];
+float multipliersHour[N_LEDS];
+float multipliersMinute[N_LEDS];
+float multipliersSecond[N_LEDS];
+float previousMultipliersHour[N_LEDS];
+float previousMultipliersMinute[N_LEDS];
+float previousMultipliersSecond[N_LEDS];
 
 void updateDisplay();
-void clearPreMultipliers();
-void setPreMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider);
+void clearMultipliers();
+void setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider);
 void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]);
 bool shouldBeNightMode(Time currentTime);
 void checkNightMode(Time currentTime);
@@ -45,7 +50,7 @@ void checkNightMode(Time currentTime);
 // -----------------------
 
 void updateDisplay(Time currentTime) {
-    clearPreMultipliers();
+    clearMultipliers();
 
     // show clock hand as fraction
     float h = (float)currentTime.hour + (float)currentTime.minute / 60.0;
@@ -54,31 +59,35 @@ void updateDisplay(Time currentTime) {
 
     Config::Configuration config = PersistenceManager::get();
     if (config.showHours)
-        setPreMultiplier(preMultipliersHour, h, 12);
+        setMultiplier(multipliersHour, h, 12);
     if (config.showMinutes)
-        setPreMultiplier(preMultipliersMinute, m, 60);
+        setMultiplier(multipliersMinute, m, 60);
     if (config.showSeconds)
-        setPreMultiplier(preMultipliersSecond, s, 60);
+        setMultiplier(multipliersSecond, s, 60);
 
     // generate normalized multipliers
     for (uint8_t i = 0; i < N_LEDS; i++) {
-        float sum = preMultipliersHour[i] + preMultipliersMinute[i] + preMultipliersSecond[i];
+        float sum = multipliersHour[i] + multipliersMinute[i] + multipliersSecond[i];
         // if adding up the color multipliers is greater than one than they need to be normalized
         if (sum > 1.0) {
-            preMultipliersHour[i] /= sum;
-            preMultipliersMinute[i] /= sum;
-            preMultipliersSecond[i] /= sum;
+            multipliersHour[i] /= sum;
+            multipliersMinute[i] /= sum;
+            multipliersSecond[i] /= sum;
         }
+    }
+
+    if(INTERPOLATE) {
+        interpolateLeds();
     }
 
     writeLeds(config.colorH, config.colorM, config.colorS);
 }
 
-void clearPreMultipliers() {
+void clearMultipliers() {
     for (uint8_t i = 0; i < N_LEDS; i++) {
-        preMultipliersHour[i] = 0;
-        preMultipliersMinute[i] = 0;
-        preMultipliersSecond[i] = 0;
+        multipliersHour[i] = 0;
+        multipliersMinute[i] = 0;
+        multipliersSecond[i] = 0;
     }
 }
 
@@ -88,10 +97,10 @@ void clearPreMultipliers() {
  * @param clockProgress 0..timeDivider
  * @param timeDivider e.g. 24 or 60
  */
-void setPreMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider) {
+void setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider) {
     while (clockProgress > timeDivider)
         clockProgress -= timeDivider;
-    
+
     // 0..1
     float percentage = clockProgress / (float)timeDivider;
 
@@ -104,20 +113,36 @@ void setPreMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t ti
 void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]) {
     for (uint8_t i = 0; i < N_LEDS; i++) {
         CRGB ledColorH = CRGB(colorH[0], colorH[1], colorH[2]);
-        fract8 normalizedMultiplierHour = 256 * preMultipliersHour[i];
+        fract8 normalizedMultiplierHour = 256 * multipliersHour[i];
         ledColorH.nscale8_video(normalizedMultiplierHour);
 
         CRGB ledColorM = CRGB(colorM[0], colorM[1], colorM[2]);
-        fract8 normalizedMultiplierMinute = 256 * preMultipliersMinute[i];
+        fract8 normalizedMultiplierMinute = 256 * multipliersMinute[i];
         ledColorM.nscale8_video(normalizedMultiplierMinute);
 
         CRGB ledColorS = CRGB(colorS[0], colorS[1], colorS[2]);
-        fract8 normalizedMultiplierSecond = 256 * preMultipliersSecond[i];
+        fract8 normalizedMultiplierSecond = 256 * multipliersSecond[i];
         ledColorS.nscale8_video(normalizedMultiplierSecond);
 
         leds[(i + I_LED_12H) % N_LEDS] = ledColorH + ledColorM + ledColorS;
     }
     FastLED.show();
+}
+
+/**
+ * Smooths the led multipliers by interpolating with the previous value.
+ */
+void interpolateLeds() {
+    for(uint8_t i = 0; i < N_LEDS; ++i) {
+        multipliersHour[i] = 0.5 * (multipliersHour[i] + previousMultipliersHour[i]);
+        previousMultipliersHour[i] = multipliersHour[i];
+        multipliersMinute[i] = 0.5 * (multipliersMinute[i] + previousMultipliersMinute[i]);
+        previousMultipliersMinute[i] = multipliersMinute[i];
+        multipliersSecond[i] = 0.5 * (multipliersSecond[i] + previousMultipliersSecond[i]);
+        previousMultipliersSecond[i] = multipliersSecond[i];
+    }
+
+
 }
 
 bool shouldBeNightMode(Time currentTime) {
