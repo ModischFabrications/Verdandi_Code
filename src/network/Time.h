@@ -12,7 +12,7 @@ struct Time {
     uint16_t millisecond;
 
     const uint32_t toMillis() const {
-        return ((((uint32_t)1 * this->hour * 24) + this->minute) * 60 + this->second) * 60 +
+        return ((((uint32_t)1 * this->hour * 60) + this->minute) * 60 + this->second) * 1000 +
                this->millisecond;
     }
 
@@ -30,6 +30,7 @@ struct Time {
     }
 
     const String toString() {
-        return String(this->hour) + ":" + String(this->minute) + ":" + String(this->second) + ":" + String(this->millisecond);
+        return String(this->hour) + ":" + String(this->minute) + ":" + String(this->second) + ":" +
+               String(this->millisecond);
     }
 };
