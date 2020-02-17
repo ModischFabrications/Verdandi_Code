@@ -31,6 +31,7 @@ const CRGB C_WARN = CRGB::Yellow;
 const CRGB C_ERR = CRGB::Red;
 
 const bool INTERPOLATE = false;
+const float INTERPOLATION_FACTOR = 0.01;
 
 CRGB leds[N_LEDS];
 float multipliersHour[N_LEDS];
@@ -148,11 +149,11 @@ void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]) {
  */
 void interpolateLeds() {
     for(uint8_t i = 0; i < N_LEDS; ++i) {
-        multipliersHour[i] = 0.5 * (multipliersHour[i] + previousMultipliersHour[i]);
+        multipliersHour[i] = INTERPOLATION_FACTOR * multipliersHour[i] + (1 - INTERPOLATION_FACTOR) * previousMultipliersHour[i];
         previousMultipliersHour[i] = multipliersHour[i];
-        multipliersMinute[i] = 0.5 * (multipliersMinute[i] + previousMultipliersMinute[i]);
+        multipliersMinute[i] = INTERPOLATION_FACTOR * multipliersMinute[i] + (1 - INTERPOLATION_FACTOR) * previousMultipliersMinute[i];
         previousMultipliersMinute[i] = multipliersMinute[i];
-        multipliersSecond[i] = 0.5 * (multipliersSecond[i] + previousMultipliersSecond[i]);
+        multipliersSecond[i] = INTERPOLATION_FACTOR * multipliersSecond[i] + (1 - INTERPOLATION_FACTOR) * previousMultipliersSecond[i];
         previousMultipliersSecond[i] = multipliersSecond[i];
     }
 }
