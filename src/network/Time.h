@@ -28,4 +28,8 @@ struct Time {
     const int64_t timeDifferenceInMs(const Time& other) const {
         return this->toMillis() - other.toMillis();
     }
+
+    const String toString() {
+        return String(this->hour) + ":" + String(this->minute) + ":" + String(this->second) + ":" + String(this->millisecond);
+    }
 };
