@@ -39,6 +39,8 @@ struct Configuration {
     char timezone[N_TIMEZONE];
     char timezoneName[N_TIMEZONE_NAME];
 
+    bool useFading;
+
     const bool operator==(const Configuration& other) {
         return (this->brightness == other.brightness &&
                 this->showHours == other.showHours &&
@@ -58,7 +60,8 @@ struct Configuration {
                 this->turnOffAt == other.turnOffAt &&
                 this->turnOnAt == other.turnOnAt &&
                 (strcmp(this->timezone, other.timezone) == 0) &&
-                (strcmp(this->timezoneName, other.timezoneName) == 0)
+                (strcmp(this->timezoneName, other.timezoneName) == 0) &&
+                this->useFading == other.useFading
                 );
     }
 };
@@ -70,7 +73,8 @@ Configuration defaultConfiguration = {
     3 * 60,
     false, {10}, {11},
     "GMT0",
-    "GMT"
+    "GMT",
+    true
     };
 
 } // namespace Configuration

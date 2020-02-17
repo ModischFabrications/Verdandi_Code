@@ -123,7 +123,8 @@ void setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeD
 
     uint8_t firstActiveLed = floor(percentage * (float)N_LEDS);
 
-    if (USE_MULTIPLIERS) {
+    Config::Configuration config = PersistenceManager::get();
+    if(config.useFading){
         multipliers[firstActiveLed] = 1.0 - (percentage * (float)N_LEDS - (float)firstActiveLed);
         multipliers[(firstActiveLed + 1) % N_LEDS] = 1.0 - multipliers[firstActiveLed];
     } else {
