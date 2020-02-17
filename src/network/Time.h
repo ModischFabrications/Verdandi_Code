@@ -25,4 +25,8 @@ struct Time {
         return (this->hour < other.hour && this->minute < other.minute &&
                 this->second < other.second && this->millisecond < other.millisecond);
     }
+
+    const String toString() {
+        return String(this->hour) + ":" + String(this->minute) + ":" + String(this->second) + ":" + String(this->millisecond);
+    }
 };
