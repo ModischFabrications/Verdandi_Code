@@ -44,13 +44,16 @@ void initializeMillisOffset() {
     uint8_t nextSecond = initSecond;
 
     while (initSecond == nextSecond) {
+        // please don't kill me watchdog
+        delay(0);
         gettimeofday(&tv, nullptr);
         now = time(nullptr);
         t = localtime(&now);
         nextSecond = t->tm_sec;
-        delay(1);
     }
+
     // our measurement is never exactly precise!
+    // we archieve +- 10ms
     millisOffset = 1000 - (millis() % 1000);
 
     println(F("Synchronized with NTP server"));
