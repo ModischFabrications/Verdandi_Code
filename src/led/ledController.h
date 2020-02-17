@@ -33,7 +33,7 @@ const CRGB C_ERR = CRGB::Red;
 const bool INTERPOLATE = false;
 const float INTERPOLATION_FACTOR = 0.01;
 
-const bool USE_MULTIPLIERS = false;
+const bool USE_MULTIPLIERS = true;
 
 CRGB leds[N_LEDS];
 // current led multipliers per watch hand
@@ -46,6 +46,7 @@ float previousMultipliersMinute[N_LEDS];
 float previousMultipliersSecond[N_LEDS];
 
 void updateDisplay();
+void normalizeMultipliers();
 void clearMultipliers();
 void setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider);
 void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]);
@@ -75,7 +76,16 @@ void updateDisplay(Time currentTime) {
     if (config.showSeconds)
         setMultiplier(multipliersSecond, s, 60);
 
-    // generate normalized multipliers
+    normalizeMultipliers();
+
+    if (INTERPOLATE) {
+        interpolateLeds();
+    }
+
+    writeLeds(config.colorH, config.colorM, config.colorS);
+}
+
+void normalizeMultipliers() {
     for (uint8_t i = 0; i < N_LEDS; i++) {
         float sum = multipliersHour[i] + multipliersMinute[i] + multipliersSecond[i];
         // if adding up the color multipliers is greater than one than they need to be normalized
@@ -85,12 +95,6 @@ void updateDisplay(Time currentTime) {
             multipliersSecond[i] /= sum;
         }
     }
-
-    if (INTERPOLATE) {
-        interpolateLeds();
-    }
-
-    writeLeds(config.colorH, config.colorM, config.colorS);
 }
 
 /**
@@ -119,7 +123,7 @@ void setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeD
 
     uint8_t firstActiveLed = floor(percentage * (float)N_LEDS);
 
-    if(USE_MULTIPLIERS){
+    if (USE_MULTIPLIERS) {
         multipliers[firstActiveLed] = 1.0 - (percentage * (float)N_LEDS - (float)firstActiveLed);
         multipliers[(firstActiveLed + 1) % N_LEDS] = 1.0 - multipliers[firstActiveLed];
     } else {
@@ -156,12 +160,15 @@ void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]) {
  * Smooths the led multipliers by interpolating with the previous value.
  */
 void interpolateLeds() {
-    for(uint8_t i = 0; i < N_LEDS; ++i) {
-        multipliersHour[i] = INTERPOLATION_FACTOR * multipliersHour[i] + (1 - INTERPOLATION_FACTOR) * previousMultipliersHour[i];
+    for (uint8_t i = 0; i < N_LEDS; ++i) {
+        multipliersHour[i] = INTERPOLATION_FACTOR * multipliersHour[i] +
+                             (1 - INTERPOLATION_FACTOR) * previousMultipliersHour[i];
         previousMultipliersHour[i] = multipliersHour[i];
-        multipliersMinute[i] = INTERPOLATION_FACTOR * multipliersMinute[i] + (1 - INTERPOLATION_FACTOR) * previousMultipliersMinute[i];
+        multipliersMinute[i] = INTERPOLATION_FACTOR * multipliersMinute[i] +
+                               (1 - INTERPOLATION_FACTOR) * previousMultipliersMinute[i];
         previousMultipliersMinute[i] = multipliersMinute[i];
-        multipliersSecond[i] = INTERPOLATION_FACTOR * multipliersSecond[i] + (1 - INTERPOLATION_FACTOR) * previousMultipliersSecond[i];
+        multipliersSecond[i] = INTERPOLATION_FACTOR * multipliersSecond[i] +
+                               (1 - INTERPOLATION_FACTOR) * previousMultipliersSecond[i];
         previousMultipliersSecond[i] = multipliersSecond[i];
     }
 }
