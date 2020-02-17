@@ -66,17 +66,6 @@ void testListener() {
     println(errors.log[errors.iLog - 1]);
 }
 
-void checkCycleTime() {
-    static uint32_t lastCycle = 0;
-    uint32_t thisCycle = millis();
-
-    if ((thisCycle - lastCycle) > 10) {
-        logError(F("Cycle time lower than 10ms"));
-    }
-
-    lastCycle = millis();
-}
-
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
     // light LED whenever user interaction is needed
@@ -120,5 +109,4 @@ void loop() {
     LedController::tick();
 
     heartbeatSerial();
-    checkCycleTime();
 }

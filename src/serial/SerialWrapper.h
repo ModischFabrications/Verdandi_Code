@@ -34,15 +34,23 @@ void heartbeatSerial() {
     if (!USE_SERIAL)
         return;
 
-    static uint32_t lastMsg = 0;
+    static uint32_t lastCycle = millis();
+    static uint32_t lastMsg = millis();
     const uint16_t timeInterval = 5 * 1000;
 
     uint32_t time = millis();
 
     if (time - lastMsg > timeInterval) {
-        Serial.print(F("."));
+        Serial.print(F("cycle time: ["));
+        Serial.print(time - lastCycle);
+        Serial.println(F("]"));
         lastMsg = time;
     }
+
+    if ((time - lastCycle) > 10) {
+        Serial.println(F("Cycle time higher than 10ms"));
+    }
+    lastCycle = millis();
 }
 
 String readString(uint8_t expectedLength = 1) {
