@@ -19,7 +19,7 @@ void handleConfigRequest();
 void handleDataUpdate();
 void handleTimeRequest();
 void handleDebug();
-void handleMessageRequest();
+void handleLogRequest();
 void check();
 String ArgsToString();
 Config::Configuration ArgsToConfiguration();
@@ -39,7 +39,7 @@ void setup() {
     server.on(F("/update"), handleDataUpdate);
     server.on(F("/time"), handleTimeRequest);
     server.on(F("/debug"), handleDebug);
-    server.on(F("/debug/messages"), handleMessageRequest);
+    server.on(F("/debug/messages"), handleLogRequest);
     server.onNotFound(handleServer);
     server.begin();
     println(F("Server started"));
@@ -69,10 +69,11 @@ void handleFile(String path) {
 
 void handleDebug() { handleFile("/debug.html"); }
 
-void handleMessageRequest() {
+void handleLogRequest() {
     const RingBuffer& warnings = getWarnLog();
     const RingBuffer& errors = getErrorLog();
 
+    // TODO: seems to be wrong, capped to N_LOGS - 5
     const uint16_t capacity = JSON_OBJECT_SIZE(2 * N_MAX_LOGS + 2);
     StaticJsonDocument<capacity> doc;
 

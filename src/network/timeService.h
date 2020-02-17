@@ -98,12 +98,9 @@ void timeUpdate() {
     if (newTime.second >= 60) logError(F("second overflow"));
     if (newTime.millisecond >= 1000) logError(F("millisecond overflow"));
 
-    // sorry, we had no better idea
-    uint16_t deltatime = abs(newTime.timeDifferenceInMs(currentTime));
-    // small time is just processing delay, large time is forced update
-    if (deltatime > 500 && deltatime < 2000) {
-        logError(F("Unplausible time Update, ignoring"));
-        printlnRaw(deltatime);
+    if (newTime.second == currentTime.second && newTime.millisecond < currentTime.millisecond) {
+        // ~ every 5sec, we don't care that bad
+        // logError(F("Non continuous time update, ignoring"));
         return;
     }
 
