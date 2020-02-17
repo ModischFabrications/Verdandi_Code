@@ -33,9 +33,11 @@ const CRGB C_ERR = CRGB::Red;
 const bool INTERPOLATE = false;
 
 CRGB leds[N_LEDS];
+// current led multipliers per watch hand
 float multipliersHour[N_LEDS];
 float multipliersMinute[N_LEDS];
 float multipliersSecond[N_LEDS];
+// led multipliers from the previous tick
 float previousMultipliersHour[N_LEDS];
 float previousMultipliersMinute[N_LEDS];
 float previousMultipliersSecond[N_LEDS];
