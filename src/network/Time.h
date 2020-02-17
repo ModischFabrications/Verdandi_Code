@@ -11,19 +11,22 @@ struct Time {
     uint8_t second;
     uint16_t millisecond;
 
-    const bool operator==(const Time& other) {
+    const uint32_t toMillis() const {
+        return ((((uint32_t)1 * this->hour * 24) + this->minute) * 60 + this->second) * 60 +
+               this->millisecond;
+    }
+
+    const bool operator==(const Time& other) const {
         return (this->hour == other.hour && this->minute == other.minute &&
                 this->second == other.second && this->millisecond == other.millisecond);
     }
 
-    const bool operator>(const Time& other) {
-        return (this->hour > other.hour || this->minute > other.minute ||
-                this->second > other.second || this->millisecond > other.millisecond);
-    }
+    const bool operator>(const Time& other) const { return this->toMillis() > other.toMillis(); }
 
-    const bool operator<(const Time& other) {
-        return (this->hour < other.hour && this->minute < other.minute &&
-                this->second < other.second && this->millisecond < other.millisecond);
+    const bool operator<(const Time& other) const { return this->toMillis() < other.toMillis(); }
+
+    const int64_t timeDifferenceInMs(const Time& other) const {
+        return this->toMillis() - other.toMillis();
     }
 
     const String toString() {
