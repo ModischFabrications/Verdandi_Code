@@ -36,7 +36,7 @@ void heartbeatSerial() {
 
     static uint32_t lastCycle = millis();
     static uint32_t lastMsg = millis();
-    const uint16_t timeInterval = 5 * 1000;
+    const uint16_t timeInterval = 10 * 1000;
 
     uint32_t time = millis();
 
