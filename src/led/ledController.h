@@ -83,7 +83,7 @@ void updateDisplay(Time currentTime) {
         }
     }
 
-    if(INTERPOLATE) {
+    if (INTERPOLATE) {
         interpolateLeds();
     }
 
@@ -149,7 +149,7 @@ void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]) {
  * Smooths the led multipliers by interpolating with the previous value.
  */
 void interpolateLeds() {
-    for(uint8_t i = 0; i < N_LEDS; ++i) {
+    for (uint8_t i = 0; i < N_LEDS; ++i) {
         multipliersHour[i] = 0.5 * (multipliersHour[i] + previousMultipliersHour[i]);
         previousMultipliersHour[i] = multipliersHour[i];
         multipliersMinute[i] = 0.5 * (multipliersMinute[i] + previousMultipliersMinute[i]);
@@ -223,7 +223,7 @@ void helloPower() {
 }
 
 void tick() {
-    // TODO: display error while state == INIT, will probably need 
+    // TODO: display error while state == INIT, will probably need
     // a INVALID state in time or a listener
     if (state == INIT) {
         println(F("Switching INIT to RUNNING"));

@@ -21,7 +21,7 @@ struct Time {
                 this->second > other.second || this->millisecond > other.millisecond);
     }
 
-        const bool operator<(const Time& other) {
+    const bool operator<(const Time& other) {
         return (this->hour < other.hour && this->minute < other.minute &&
                 this->second < other.second && this->millisecond < other.millisecond);
     }

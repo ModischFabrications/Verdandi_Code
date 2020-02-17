@@ -79,11 +79,11 @@ void handleMessageRequest() {
     JsonArray warningsField = doc.createNestedArray("warnings");
     JsonArray errorsField = doc.createNestedArray("errors");
 
-    for(uint8_t i = 0; i < N_MAX_LOGS; ++i) {
-        if(warnings.log[i] != nullptr) {
+    for (uint8_t i = 0; i < N_MAX_LOGS; ++i) {
+        if (warnings.log[i] != nullptr) {
             warningsField.add(warnings.log[i]);
         }
-        if(errors.log[i] != nullptr) {
+        if (errors.log[i] != nullptr) {
             errorsField.add(errors.log[i]);
         }
     }

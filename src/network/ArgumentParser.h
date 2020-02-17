@@ -2,6 +2,4 @@
 
 #include <ESP8266WebServer.h>
 
-namespace ArgumentParser {
-    
-}
+namespace ArgumentParser {}

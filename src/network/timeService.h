@@ -7,12 +7,10 @@
 #include <sys/time.h>
 #include <time.h>
 
-
 #include "TZ.h"
 #include "Time.h"
 #include "persistence/persistenceManager.h"
 #include "serial/SerialWrapper.h"
-
 
 uint32_t sntp_update_delay_MS_rfc_not_less_than_15000() {
     uint16_t interval = max(PersistenceManager::get().pollInterval, (uint16_t)1);

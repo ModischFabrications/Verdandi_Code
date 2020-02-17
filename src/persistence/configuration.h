@@ -57,7 +57,7 @@ struct Configuration {
                 this->nightmode == other.nightmode &&
                 this->turnOffAt == other.turnOffAt &&
                 this->turnOnAt == other.turnOnAt &&
-                (strcmp(this->timezone, other.timezone) == 0) && 
+                (strcmp(this->timezone, other.timezone) == 0) &&
                 (strcmp(this->timezoneName, other.timezoneName) == 0)
                 );
     }
