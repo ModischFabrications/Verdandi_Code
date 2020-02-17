@@ -33,6 +33,8 @@ const CRGB C_ERR = CRGB::Red;
 const bool INTERPOLATE = false;
 const float INTERPOLATION_FACTOR = 0.01;
 
+const bool USE_MULTIPLIERS = false;
+
 CRGB leds[N_LEDS];
 // current led multipliers per watch hand
 float multipliersHour[N_LEDS];
@@ -117,8 +119,12 @@ void setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeD
 
     uint8_t firstActiveLed = floor(percentage * (float)N_LEDS);
 
-    multipliers[firstActiveLed] = 1.0 - (percentage * (float)N_LEDS - (float)firstActiveLed);
-    multipliers[(firstActiveLed + 1) % N_LEDS] = 1.0 - multipliers[firstActiveLed];
+    if(USE_MULTIPLIERS){
+        multipliers[firstActiveLed] = 1.0 - (percentage * (float)N_LEDS - (float)firstActiveLed);
+        multipliers[(firstActiveLed + 1) % N_LEDS] = 1.0 - multipliers[firstActiveLed];
+    } else {
+        multipliers[firstActiveLed] = 1.0;
+    }
 }
 
 /**
@@ -130,15 +136,15 @@ void setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeD
 void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]) {
     for (uint8_t i = 0; i < N_LEDS; i++) {
         CRGB ledColorH = CRGB(colorH[0], colorH[1], colorH[2]);
-        uint8_t normalizedMultiplierHour = 256 * multipliersHour[i];
+        uint8_t normalizedMultiplierHour = 255 * multipliersHour[i];
         ledColorH.nscale8_video(normalizedMultiplierHour);
 
         CRGB ledColorM = CRGB(colorM[0], colorM[1], colorM[2]);
-        uint8_t normalizedMultiplierMinute = 256 * multipliersMinute[i];
+        uint8_t normalizedMultiplierMinute = 255 * multipliersMinute[i];
         ledColorM.nscale8_video(normalizedMultiplierMinute);
 
         CRGB ledColorS = CRGB(colorS[0], colorS[1], colorS[2]);
-        uint8_t normalizedMultiplierSecond = 256 * multipliersSecond[i];
+        uint8_t normalizedMultiplierSecond = 255 * multipliersSecond[i];
         ledColorS.nscale8_video(normalizedMultiplierSecond);
 
         leds[(i + I_LED_12H) % N_LEDS] = ledColorH + ledColorM + ledColorS;
