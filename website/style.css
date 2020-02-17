@@ -153,3 +153,9 @@ ol.debugListContainer li:nth-child(even)::before {
   text-decoration: none;
   color: black;
 }
+.colorInput {
+  width: 4rem;
+}
+.css-checkbox {
+  margin-left: 0;
+}

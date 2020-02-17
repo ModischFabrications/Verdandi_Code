@@ -23,7 +23,8 @@ let config = {
     turnOffAt: `11:00`,
     turnOnAt: `12:00`,
     timezone: 'GMT0',
-    timezoneName: 'GMT'
+    timezoneName: 'GMT',
+    useFading: true
 };
 let timezones = {};
 let currentTime = new Date(2000, 1, 1, 0, 0, 0, 0);
@@ -104,6 +105,7 @@ let httpRequests = {
                         }`;
                     config.timezone = res.timezone;
                     config.timezoneName = res.timezoneName;
+                    config.useFading = res.useFading;
 
                     timezoneDisplay.lastSelectedTzName = config.timezoneName;
 
@@ -135,8 +137,6 @@ let httpRequests = {
 
         function generateUrlString() {
             console.log(config);
-            // `brightness=${config.brightness}&showHours=${config.showHours}&showMinutes=${config.showMinutes}&showSeconds=${config.showSeconds}&colorH_R=${config.colorH[0]}&colorH_G=${config.colorH[1]}&colorH_B=${config.colorH[2]}&colorM_R=${config.colorM[0]}&colorM_G=${config.colorM[1]}&colorM_B=${config.colorM[2]}&colorS_R=${config.colorS[0]}&colorS_G=${config.colorS[1]}&colorS_B=${config.colorS[2]}&pollInterval=${config.pollInterval}&nightmode=${config.nightmode}&timezone=${config.timezone}`;
-
             let urlString = '';
             for (let [key, value] of Object.entries(config)) {
                 urlString += `${key}=${value}&`;
@@ -365,6 +365,8 @@ function onValueChange(element, targetVar) {
             timezoneDisplay.lastSelectedTzName = element[0];
             timezoneDisplay.toggleShowSelection();
             break;
+        case 'useFading':
+            config.useFading = element.checked;
         default:
             break;
     }
@@ -430,6 +432,7 @@ function updateUIElements() {
     }
     d.getElementById('turnOffAt').value = config.turnOffAt;
     d.getElementById('turnOnAt').value = config.turnOnAt;
+    d.getElementById('useFading').value = config.useFading;
 }
 
 function get2DigitHex(value) {

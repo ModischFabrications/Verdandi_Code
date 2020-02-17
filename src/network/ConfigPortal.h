@@ -99,7 +99,7 @@ void handleConfigRequest() {
     Config::Configuration config = PersistenceManager::get();
 
     // actual number of objects, in this case number of lines
-    const uint16_t capacity = JSON_OBJECT_SIZE(26);
+    const uint16_t capacity = JSON_OBJECT_SIZE(27);
     StaticJsonDocument<capacity> doc;
 
     doc["brightness"] = config.brightness;
@@ -134,7 +134,9 @@ void handleConfigRequest() {
 
     doc["timezone"] = (const char*)config.timezone;
     doc["timezoneName"] = (const char*)config.timezoneName;
-    // 26 elements
+
+    doc["useFading"] = config.useFading;
+    // 27 elements
 
     // add new fields here and increase JSON size
 
@@ -284,6 +286,11 @@ Config::Configuration ArgsToConfiguration() {
         strcpy(newValues.timezoneName, server.arg(12).c_str());
     else
         println(F("Value 12 not found"));
+    if (server.argName(13) == "useFading")
+        newValues.useFading = server.arg(13) == "true" ? true : false;
+    else
+        println(F("Value 13 not found"));
+
 
     // add new fields here
 
