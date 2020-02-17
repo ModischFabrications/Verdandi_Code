@@ -30,7 +30,7 @@ const CRGB C_OK = CRGB::Green;
 const CRGB C_WARN = CRGB::Yellow;
 const CRGB C_ERR = CRGB::Red;
 
-const bool INTERPOLATE = true;
+const bool INTERPOLATE = false;
 
 CRGB leds[N_LEDS];
 float multipliersHour[N_LEDS];
@@ -44,6 +44,7 @@ void updateDisplay();
 void clearMultipliers();
 void setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider);
 void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]);
+void interpolateLeds();
 bool shouldBeNightMode(Time currentTime);
 void checkNightMode(Time currentTime);
 
@@ -83,6 +84,9 @@ void updateDisplay(Time currentTime) {
     writeLeds(config.colorH, config.colorM, config.colorS);
 }
 
+/**
+ * Reset led multipliers.
+ */
 void clearMultipliers() {
     for (uint8_t i = 0; i < N_LEDS; i++) {
         multipliersHour[i] = 0;
@@ -110,18 +114,24 @@ void setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeD
     multipliers[(firstActiveLed + 1) % N_LEDS] = 1.0 - multipliers[firstActiveLed];
 }
 
+/**
+ * Set the color for every led according to the colors multiplied with the multipliers.
+ * @param colorH color for the hours hand
+ * @param colorM color for the minutes hand
+ * @param colorS color for the seconds hand
+ */
 void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]) {
     for (uint8_t i = 0; i < N_LEDS; i++) {
         CRGB ledColorH = CRGB(colorH[0], colorH[1], colorH[2]);
-        fract8 normalizedMultiplierHour = 256 * multipliersHour[i];
+        uint8_t normalizedMultiplierHour = 256 * multipliersHour[i];
         ledColorH.nscale8_video(normalizedMultiplierHour);
 
         CRGB ledColorM = CRGB(colorM[0], colorM[1], colorM[2]);
-        fract8 normalizedMultiplierMinute = 256 * multipliersMinute[i];
+        uint8_t normalizedMultiplierMinute = 256 * multipliersMinute[i];
         ledColorM.nscale8_video(normalizedMultiplierMinute);
 
         CRGB ledColorS = CRGB(colorS[0], colorS[1], colorS[2]);
-        fract8 normalizedMultiplierSecond = 256 * multipliersSecond[i];
+        uint8_t normalizedMultiplierSecond = 256 * multipliersSecond[i];
         ledColorS.nscale8_video(normalizedMultiplierSecond);
 
         leds[(i + I_LED_12H) % N_LEDS] = ledColorH + ledColorM + ledColorS;
