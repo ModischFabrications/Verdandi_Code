@@ -75,7 +75,11 @@ void setup() {
     setupSerial(115200);
     PersistenceStore::setup();
     FileServer::setup();
+    // reset watchdog
+    delay(0);
     WiFiLoginManager::setup();
+    // reset watchdog
+    delay(0);
     TimeService::setup();
     LedController::setup();
     ConfigPortal::setup();
@@ -87,6 +91,8 @@ void setup() {
 
     // ...
 
+    // reset watchdog
+    delay(0);
     digitalWrite(LED_BUILTIN, HIGH);
 
     LedController::helloPower();
@@ -108,5 +114,5 @@ void loop() {
 
     LedController::tick();
 
-    heartbeatSerial();
+    // heartbeatSerial();
 }

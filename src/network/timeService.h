@@ -44,12 +44,16 @@ void initializeMillisOffset() {
     uint8_t nextSecond = initSecond;
 
     while (initSecond == nextSecond) {
+        // please don't kill me watchdog
+        delay(0);
         gettimeofday(&tv, nullptr);
         now = time(nullptr);
         t = localtime(&now);
         nextSecond = t->tm_sec;
-        delay(1);
     }
+
+    // our measurement is never exactly precise!
+    // we archieve +- 10ms
     millisOffset = 1000 - (millis() % 1000);
 
     println(F("Synchronized with NTP server"));
@@ -78,14 +82,32 @@ void timeUpdate() {
     if (!initializedOffset) {
         return;
     }
+    Time newTime = currentTime;
+
     // TODO: check how it get the new time
     gettimeofday(&tv, nullptr);
     time_t now = time(nullptr);
     tm* t = localtime(&now);
-    currentTime.hour = t->tm_hour;
-    currentTime.minute = t->tm_min;
-    currentTime.second = t->tm_sec;
-    currentTime.millisecond = (millis() + millisOffset) % 1000;
+    newTime.hour = t->tm_hour;
+    newTime.minute = t->tm_min;
+    newTime.second = t->tm_sec;
+    newTime.millisecond = (millis() + millisOffset) % 1000;
+
+    if (newTime.hour >= 24) logError(F("hour overflow"));
+    if (newTime.minute >= 60) logError(F("minute overflow"));
+    if (newTime.second >= 60) logError(F("second overflow"));
+    if (newTime.millisecond >= 1000) logError(F("millisecond overflow"));
+
+    // sorry, we had no better idea
+    uint16_t deltatime = abs(newTime.timeDifferenceInMs(currentTime));
+    // small time is just processing delay, large time is forced update
+    if (deltatime > 500 && deltatime < 2000) {
+        logError(F("Unplausible time Update, ignoring"));
+        printlnRaw(deltatime);
+        return;
+    }
+
+    currentTime = newTime;
 }
 
 Time getCurrentTime() { return currentTime; }
