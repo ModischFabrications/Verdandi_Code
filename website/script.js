@@ -156,7 +156,8 @@ let httpRequests = {
 
                 // set timeout to 900 ms to cope for response time
                 clearTimeout(timeUpdateTimeout);
-                timeUpdateTimeout = setTimeout(updateTime, 900);
+                timeUpdateTimeout = setInterval(updateTime, 1000);
+                setTimeout(this.loadCurrentTime, 10 * 60 * 1000);
             } else {
                 let timeEl = d.getElementById('timeDisplay');
                 timeEl.innerHTML = `--:--:--`;
@@ -308,8 +309,6 @@ function updateTime() {
         m = currentTime.getMinutes().toString().padStart(2, '0'),
         s = currentTime.getSeconds().toString().padStart(2, '0');
     timeEl.innerHTML = `${h}:${m}:${s}`;
-
-    timeUpdateTimeout = setTimeout(updateTime, 1000);
 }
 
 function sortJsonByKey(unordered) {
