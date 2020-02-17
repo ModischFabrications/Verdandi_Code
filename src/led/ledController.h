@@ -82,15 +82,23 @@ void clearPreMultipliers() {
     }
 }
 
+/**
+ * Write sub-division value multipliers.
+ * @param multipliers array to modify
+ * @param clockProgress 0..timeDivider
+ * @param timeDivider e.g. 24 or 60
+ */
 void setPreMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider) {
     while (clockProgress > timeDivider)
         clockProgress -= timeDivider;
+    
+    // 0..1
     float percentage = clockProgress / (float)timeDivider;
 
-    uint8_t firstLed = floor(percentage * N_LEDS);
+    uint8_t firstActiveLed = floor(percentage * (float)N_LEDS);
 
-    multipliers[firstLed] = 1 - (float)(percentage * N_LEDS - firstLed);
-    multipliers[(firstLed + 1) % N_LEDS] = 1 - multipliers[firstLed];
+    multipliers[firstActiveLed] = 1.0 - (percentage * (float)N_LEDS - (float)firstActiveLed);
+    multipliers[(firstActiveLed + 1) % N_LEDS] = 1.0 - multipliers[firstActiveLed];
 }
 
 void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]) {
