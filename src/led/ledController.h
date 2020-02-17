@@ -50,6 +50,10 @@ void checkNightMode(Time currentTime);
 
 // -----------------------
 
+/**
+ * Displays the time from the parameter.
+ * @param currentTime time to display
+ */
 void updateDisplay(Time currentTime) {
     clearMultipliers();
 
@@ -151,10 +155,11 @@ void interpolateLeds() {
         multipliersSecond[i] = 0.5 * (multipliersSecond[i] + previousMultipliersSecond[i]);
         previousMultipliersSecond[i] = multipliersSecond[i];
     }
-
-
 }
 
+/**
+ * Checks if the current time is within the nightmode range.
+ */
 bool shouldBeNightMode(Time currentTime) {
     Config::Configuration config = PersistenceManager::get();
 
@@ -167,6 +172,9 @@ bool shouldBeNightMode(Time currentTime) {
     return false;
 }
 
+/**
+ * Maintains nightmode state and turns off leds at the right time.
+ */
 void checkNightMode(Time currentTime) {
     if (shouldBeNightMode(currentTime) && state != NIGHTMODE) {
         println(F("Switching to NIGHTMODE"));
