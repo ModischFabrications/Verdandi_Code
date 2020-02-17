@@ -124,7 +124,7 @@ void setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeD
     uint8_t firstActiveLed = floor(percentage * (float)N_LEDS);
 
     Config::Configuration config = PersistenceManager::get();
-    if(config.useFading){
+    if (config.useFading) {
         multipliers[firstActiveLed] = 1.0 - (percentage * (float)N_LEDS - (float)firstActiveLed);
         multipliers[(firstActiveLed + 1) % N_LEDS] = 1.0 - multipliers[firstActiveLed];
     } else {
@@ -183,8 +183,16 @@ bool shouldBeNightMode(Time currentTime) {
     if (!config.nightmode)
         return false;
 
-    if (currentTime > config.turnOffAt || currentTime < config.turnOnAt)
-        return true;
+    if (config.turnOffAt == config.turnOnAt)
+        return false;
+
+    if (config.turnOffAt < config.turnOnAt) {
+        if (currentTime > config.turnOffAt && currentTime < config.turnOnAt)
+            return true;
+    } else {
+        if (currentTime > config.turnOffAt || currentTime < config.turnOnAt)
+            return true;
+    }
 
     return false;
 }
