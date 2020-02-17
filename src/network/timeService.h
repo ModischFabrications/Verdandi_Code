@@ -50,6 +50,7 @@ void initializeMillisOffset() {
         nextSecond = t->tm_sec;
         delay(1);
     }
+    // our measurement is never exactly precise!
     millisOffset = 1000 - (millis() % 1000);
 
     println(F("Synchronized with NTP server"));
@@ -86,6 +87,11 @@ void timeUpdate() {
     currentTime.minute = t->tm_min;
     currentTime.second = t->tm_sec;
     currentTime.millisecond = (millis() + millisOffset) % 1000;
+
+    if (currentTime.hour >= 24) logError(F("hour overflow"));
+    if (currentTime.minute >= 60) logError(F("minute overflow"));
+    if (currentTime.second >= 60) logError(F("second overflow"));
+    if (currentTime.millisecond >= 1000) logError(F("millisecond overflow"));
 }
 
 Time getCurrentTime() { return currentTime; }
