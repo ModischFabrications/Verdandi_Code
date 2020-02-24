@@ -8,14 +8,14 @@ Connect the clock to an adequate power supply, 5V and >200mA should be fine.
 We assume that your network allows outgoing connections, a WiFi connection equals 
 network connectivity for us.
 
-## First setup
+### First setup
 1. Power the clock
 2. Check for a wifi network called "Verdandi"
 3. Connect and select your network and set your password
 4. Repeat 2+ if it does not work
 5. If everything worked the hotspot should disappear and the clock should show up
 
-## Find out the IP address
+### Find out your clock IP address
 1. Open up the small hatch in the back of the clock
 1. Connect the wemos to a PC with an usb cable
 1. Open a serial terminal (I know, sorry...)
