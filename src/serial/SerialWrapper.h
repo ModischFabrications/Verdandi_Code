@@ -9,7 +9,7 @@ const bool USE_SERIAL = false;
 #endif
 
 namespace {
-const uint8_t N_MAX_LOGS = 23;
+const uint8_t N_MAX_LOGS = 20;
 
 struct RingBuffer {
     const __FlashStringHelper* log[N_MAX_LOGS] = {nullptr};

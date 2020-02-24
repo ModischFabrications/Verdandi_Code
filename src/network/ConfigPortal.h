@@ -74,9 +74,11 @@ void handleLogRequest() {
     const RingBuffer& errors = getErrorLog();
 
     // TODO: seems to be wrong, capped to N_LOGS - 5
-    const uint16_t capacity = JSON_OBJECT_SIZE(2 * N_MAX_LOGS + 2);
+    const uint16_t capacity = JSON_OBJECT_SIZE(2 * N_MAX_LOGS + 4);
     StaticJsonDocument<capacity> doc;
 
+    doc["warningIndex"] = warnings.iLog;
+    doc["errorIndex"] = errors.iLog;
     JsonArray warningsField = doc.createNestedArray("warnings");
     JsonArray errorsField = doc.createNestedArray("errors");
 

@@ -1,7 +1,5 @@
 let d = document;
 
-// TODO: include warningsIndex and errorsIndex in JSON --> Ringbuffer
-
 function onload() {
     let xhttp = new XMLHttpRequest();
     xhttp.open('GET', d.URL + '/messages', true);
@@ -16,10 +14,10 @@ function onload() {
     xhttp.send();
 }
 
-function displayMessages(debugMessageObject) {
+function displayMessages(debugMessageObj) {
     let warningsContainer = d.getElementById('warningsContainer');
     let errorsContainer = d.getElementById('errorsContainer');
-    if (!('warnings' in debugMessageObject) || !('errors' in debugMessageObject)) {
+    if (!('warnings' in debugMessageObj) || !('errors' in debugMessageObj)) {
         warningsContainer.innerHTML = "Error loading debug messages."
         errorsContainer.innerHTML = "Error loading debug messages."
         return;
@@ -28,16 +26,20 @@ function displayMessages(debugMessageObject) {
     warningsContainer.innerHTML = '';
     errorsContainer.innerHTML = '';
 
-    for (let m of debugMessageObject.warnings) {
+    for (let i = 0; i < debugMessageObj.warnings.length; ++i) {
+        let index = (i + debugMessageObj.warningIndex) % debugMessageObj.warnings.length;
+        let m = debugMessageObj.warnings[index];
         let newItem = d.createElement('li');
         newItem.classList.add('warning');
         newItem.classList.add('debugItem');
         newItem.innerHTML = m;
         warningsContainer.appendChild(newItem);
     }
-    for (let m of debugMessageObject.errors) {
+    for (let i = 0; i < debugMessageObj.errors.length; ++i) {
+        let index = (i + debugMessageObj.errorIndex) % debugMessageObj.errors.length;
+        let m = debugMessageObj.errors[index];
         let newItem = d.createElement('li');
-        newItem.classList.add('warning');
+        newItem.classList.add('error');
         newItem.classList.add('debugItem');
         newItem.innerHTML = m;
         errorsContainer.appendChild(newItem);
