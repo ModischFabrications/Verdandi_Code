@@ -29,6 +29,7 @@ let config = {
 let timezones = {};
 let currentTime = new Date(2000, 1, 1, 0, 0, 0, 0);
 let timeUpdateTimeout;
+let timeUpdateInterval = 10;
 
 function toggleHiddenById(id) {
     d.getElementById(id).classList.toggle("showDisabled");
@@ -80,8 +81,6 @@ let httpRequests = {
                 // provisorial try-catch to catch errors when json cannot be parsed
                 try {
                     let res = JSON.parse(xhttp.responseText);
-                    console.log(xhttp.responseText);
-                    console.log(res);
                     config.brightness = parseInt(res.brightness);
                     config.showHours = res.showHours;
                     config.showMinutes = res.showMinutes;
@@ -93,15 +92,15 @@ let httpRequests = {
                     config.nightmode = res.nightmode;
                     config.turnOffAt =
                         `${
-                            res.turnOffAt[0].toString().padStart(2, '0')
+                        res.turnOffAt[0].toString().padStart(2, '0')
                         }:${
-                            res.turnOffAt[1].toString().padStart(2, '0')
+                        res.turnOffAt[1].toString().padStart(2, '0')
                         }`;
                     config.turnOnAt =
                         `${
-                            res.turnOnAt[0].toString().padStart(2, '0')
+                        res.turnOnAt[0].toString().padStart(2, '0')
                         }:${
-                            res.turnOnAt[1].toString().padStart(2, '0')
+                        res.turnOnAt[1].toString().padStart(2, '0')
                         }`;
                     config.timezone = res.timezone;
                     config.timezoneName = res.timezoneName;
@@ -136,7 +135,6 @@ let httpRequests = {
         }, 100);
 
         function generateUrlString() {
-            console.log(config);
             let urlString = '';
             for (let [key, value] of Object.entries(config)) {
                 urlString += `${key}=${value}&`;
@@ -157,7 +155,7 @@ let httpRequests = {
                 // set timeout to 900 ms to cope for response time
                 clearTimeout(timeUpdateTimeout);
                 timeUpdateTimeout = setInterval(updateTime, 1000);
-                setTimeout(this.loadCurrentTime, 10 * 60 * 1000);
+                setTimeout(this.loadCurrentTime, timeUpdateInterval * 60 * 1000);
             } else {
                 let timeEl = d.getElementById('timeDisplay');
                 timeEl.innerHTML = `--:--:--`;
@@ -325,13 +323,14 @@ function onValueChange(element, targetVar) {
     /* possibly remove switch statement to update everything all the time to remove characters */
     switch (targetVar) {
         case 'brightness':
+            console.log("Element changed, new value: ", element.value)
+            console.log("Set value to: ", Math.round(element.value * 2.55))
             brightnessOutput.value = element.value;
-            config.brightness = parseInt(element.value);
+            config.brightness = Math.round(element.value * 2.55);
             break;
         case 'showHours':
         case 'showMinutes':
         case 'showSeconds':
-            console.log(element.checked);
             config[targetVar] = element.checked;
             toggleHiddenById(element.getAttribute('for'));
             break;
@@ -375,8 +374,10 @@ function onValueChange(element, targetVar) {
 }
 
 function updateUIElements() {
-    brightenessEl.value = config.brightness;
-    brightnessOutput.value = config.brightness;
+    console.log("Updating brightness with value: ", config.brightness)
+    console.log("Updated value for slider: ", Math.round(config.brightness / 2.55))
+    brightenessEl.value = Math.round(config.brightness / 2.55);
+    brightnessOutput.value = Math.round(config.brightness / 2.55);
     showHoursEl.checked = config.showHours;
     if (config.showHours) {
         d.getElementById('colorH').classList.remove('showDisabled');
@@ -432,7 +433,7 @@ function updateUIElements() {
     }
     d.getElementById('turnOffAt').value = config.turnOffAt;
     d.getElementById('turnOnAt').value = config.turnOnAt;
-    d.getElementById('useFading').value = config.useFading;
+    d.getElementById('useFading').checked = config.useFading;
 }
 
 function get2DigitHex(value) {
