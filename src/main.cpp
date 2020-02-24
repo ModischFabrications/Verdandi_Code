@@ -27,34 +27,6 @@ const bool DEBUG_MODE = true;
 const bool DEBUG_MODE = false;
 #endif
 
-WiFiClient client;
-
-void testInternetConnection() {
-    HTTPClient http;
-
-    http.begin(client, F("http://worldtimeapi.org/api/ip"));
-    int httpCode = http.GET();
-
-    if (httpCode > 0) {
-        print(F("[HTTP] GET... code: "));
-        printlnRaw((String)httpCode);
-
-        // file found at server
-        if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
-            String payload = http.getString();
-            printlnRaw(payload);
-        }
-    } else {
-        printRaw("[HTTP] GET... failed, error: ");
-        printlnRaw(http.errorToString(httpCode).c_str());
-        logError(F("No connection to the internet"));
-    }
-
-    println(F("connected to the internet"));
-
-    http.end();
-}
-
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
     // light LED whenever user interaction is needed
@@ -73,14 +45,9 @@ void setup() {
     LedController::setup();
     ConfigPortal::setup();
 
-    if (!MDNS.begin("verdandi")) { // Start the mDNS responder for esp8266.local
+    if (!MDNS.begin("verdandi")) { // Start the mDNS responder
         logWarning(F("Error setting up mDNS responder!"));
     }
-
-    // TODO: display connection error
-    testInternetConnection();
-
-    // ...
 
     // reset watchdog
     delay(0);
@@ -105,5 +72,5 @@ void loop() {
 
     LedController::tick();
 
-    // heartbeatSerial();
+    heartbeatSerial();
 }
