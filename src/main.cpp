@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <ESP8266HTTPClient.h> // connect to API
+#include <ESP8266mDNS.h>
 
 // define before importing anything
 #define DEBUG
@@ -54,18 +55,6 @@ void testInternetConnection() {
     http.end();
 }
 
-void testListener() {
-    println(F("Test listener called"));
-    logWarning(F("Test Warning"));
-    logError(F("Test Error"));
-
-    RingBuffer warnings = getWarnLog();
-    RingBuffer errors = getErrorLog();
-
-    println(warnings.log[warnings.iLog - 1]);
-    println(errors.log[errors.iLog - 1]);
-}
-
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
     // light LED whenever user interaction is needed
@@ -84,7 +73,9 @@ void setup() {
     LedController::setup();
     ConfigPortal::setup();
 
-    PersistenceManager::registerListener(testListener);
+    if (!MDNS.begin("verdandi")) { // Start the mDNS responder for esp8266.local
+        logWarning(F("Error setting up mDNS responder!"));
+    }
 
     // TODO: display connection error
     testInternetConnection();
