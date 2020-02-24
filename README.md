@@ -4,13 +4,33 @@ Cooperative project to display an analog clock with digital RGB LEDs.
 PCB can be found at https://github.com/ModischFabrications/Verdandi_PCB.
 
 ## Usage
+Connect the clock to an adequate power supply, 5V and >200mA should be fine. 
+We assume that your network allows outgoing connections, a WiFi connection equals 
+network connectivity for us.
+
+### First setup
+1. Power the clock
+2. Check for a wifi network called "Verdandi"
+3. Connect and select your network and set your password
+4. Repeat 2+ if it does not work
+5. If everything worked the hotspot should disappear and the clock should show up
+
+### Find out your clock IP address
+1. Open up the small hatch in the back of the clock
+1. Connect the wemos to a PC with an usb cable
+1. Open a serial terminal (I know, sorry...)
+1. Read the terminal output to find out your IP
+
+## Installation
 VSCode should offer you a task to do everything automatically:
 1. Close Serial Monitor
 2. CTRL+ALT+T -> "deploy project"
 
 Call "/deploy/deploy.sh" manually if that doesn't work or you don't believe in VSCode.
+It still depends on platformIO, be aware that you might have to install the toolchain manually without VSCode.
 
 ### Uploading the file system
+*This is included in the previous step, use this only if you know why you want it.*
 In order to increase transmission speed and reduce memory usage, files are stored in the GNU zip file format on the ESP8266 and unpacked in your browser. 
 
 VSCode Task: "deploy file system" with the respective script "/deploy/deploy_fs.sh". 
