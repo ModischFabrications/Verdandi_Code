@@ -6,9 +6,13 @@
 #include "persistence/configuration.h"
 
 namespace PersistenceStore {
-// Preserve EEPROM while programming with the EESAVE fuse on AVR
+// Preserve EEPROM while programming on AVR with the EESAVE fuse
 
 using namespace Config;
+
+void setup();
+void saveSettings(const Configuration settings);
+const Configuration loadSettings();
 
 namespace {
 
@@ -30,16 +34,14 @@ const uint16_t EEPROM_SETTINGS_ADDR = EEPROM_VERSION_ADDR + sizeof(VERSION);
 const uint16_t MAX_BYTES_USED = 127;
 } // namespace
 
-// call once to reserve (emulated) storage for usage
+// call once at startup to reserve (emulated) storage for usage
 void setup() {
     // ESP needs to know how much storage we actually need, AVR won't
     EEPROM.begin(MAX_BYTES_USED);
 }
 
-/**
- * save settings to EEPROM for persistent storage
- * */
-void saveSettings(Configuration settings) {
+// save settings to EEPROM for persistent storage
+void saveSettings(const Configuration settings) {
     EEPROM.write(EEPROM_VERSION_ADDR, VERSION);
     EEPROM.put(EEPROM_SETTINGS_ADDR, settings);
 
@@ -52,7 +54,7 @@ void saveSettings(Configuration settings) {
  * corrupted, outdated or missing settings.
  * The chance that a random, unset combination is a match is very low.
  * */
-Configuration loadSettings() {
+const Configuration loadSettings() {
     // could be rubbish or zeros, either way should work
     uint8_t savedVersion = EEPROM.read(EEPROM_VERSION_ADDR);
 

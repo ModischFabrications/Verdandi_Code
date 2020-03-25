@@ -16,14 +16,15 @@ using namespace Config;
 // classes don't behave well with pointers, trust me!
 namespace PersistenceManager {
 
-Configuration get();
+const Configuration get();
 void set(Configuration newConfig);
 void trySave();
 void registerListener(fListener listener);
-void callListeners();
 
 // anonymous namespace hides globals towards other
 namespace {
+void callListeners();
+
 const uint8_t N_MAX_LISTENERS = 7;
 
 const uint16_t delayToSaveMs = (5 * 1000);
@@ -39,10 +40,29 @@ uint32_t tNextSavepoint = 0;
 
 fListener listeners[N_MAX_LISTENERS] = {nullptr};
 uint8_t i_listeners = 0;
+
+// -----------------------
+
+// notify everyone interested that a new configuration is available
+void callListeners() {
+    for (uint8_t i = 0; i < i_listeners; i++) {
+        printlnRaw("Calling listener " + String(i));
+
+        fListener listener = listeners[i];
+
+        // check for value
+        if (listener == NULL) {
+            println(F("Listener not initialised"));
+        }
+        // unpack function pointer from list and call
+        (*listener)();
+    }
+}
+
 } // namespace
 
-// get with included lazy load from EEPROM
-Configuration get() {
+// access current Configuration from EEPROM, including lazy load
+const Configuration get() {
     // singleton-like
     if (!initialized) {
         println(F("Loading initial config from EEPROM"));
@@ -54,8 +74,7 @@ Configuration get() {
     return configuration;
 }
 
-// set with lazy save, persistent only after a small timeout to reduce EEPROM
-// wear
+// write Configurationto EEPROM, lazy save after a small timeout to reduce EEPROM wear
 void set(Configuration newConfig) {
     if (configuration == newConfig) {
         println(F("config identical, skipping save"));
@@ -87,9 +106,7 @@ void trySave() {
     }
 }
 
-/**
- * Calls listeners automatically while loading a initial config
- * */
+// Calls listeners automatically while loading a initial config
 void registerListener(fListener listener) {
     println(F("Adding listener"));
 
@@ -98,21 +115,6 @@ void registerListener(fListener listener) {
     }
 
     listeners[i_listeners++] = listener;
-}
-
-void callListeners() {
-    for (uint8_t i = 0; i < i_listeners; i++) {
-        printlnRaw("Calling listener " + String(i));
-
-        fListener listener = listeners[i];
-
-        // check for value
-        if (listener == NULL) {
-            println(F("Listener not initialised"));
-        }
-        // unpack function pointer from list and call
-        (*listener)();
-    }
 }
 
 } // namespace PersistenceManager
