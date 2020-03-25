@@ -18,7 +18,7 @@ void configModeCallback(WiFiManager* myWiFiManager) {
     printlnRaw(WiFi.softAPIP().toString());
 }
 
-void setup() {
+void setup(const char *name) {
     println(F("setting up wifi (with captive portal)"));
 
     // DEBUGGING:
@@ -30,10 +30,10 @@ void setup() {
     // wifiManager.setConfigPortalTimeout(60);
 
     // LAN name if successful
-    WiFi.hostname("Verdandi");
+    WiFi.hostname(name);
 
     // hotspot name if not
-    if (!wifiManager.autoConnect("Verdandi")) {
+    if (!wifiManager.autoConnect(name)) {
         println(F("failed to connect and hit timeout"));
         // reset and try again after waking up
         // TODO: put it into deep sleep? How do we handle "broken"?

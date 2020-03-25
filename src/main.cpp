@@ -38,7 +38,7 @@ void setup() {
     FileServer::setup();
     // reset watchdog
     delay(0);
-    WiFiLoginManager::setup();
+    WiFiLoginManager::setup("Verdandi");
     // reset watchdog
     delay(0);
     TimeService::setup();
