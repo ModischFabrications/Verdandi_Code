@@ -23,7 +23,7 @@ namespace {
  * It might be a good idea to switch to new cells with each revision.
  * ATtiny has 512 bytes EEPROM.
  *
- * Wwear leveling is logically impossible to automate without external
+ * Wear leveling is logically impossible to automate without external
  * input, e.g. version numbers.
  * Storage pointers burn out the pointer cell, random won't be found
  * after a restart.
