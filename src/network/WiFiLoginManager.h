@@ -29,6 +29,10 @@ void setup() {
                                     IPAddress(255, 255, 255, 0));
     // wifiManager.setConfigPortalTimeout(60);
 
+    // LAN name if successful
+    WiFi.hostname("Verdandi");
+
+    // hotspot name if not
     if (!wifiManager.autoConnect("Verdandi")) {
         println(F("failed to connect and hit timeout"));
         // reset and try again after waking up
