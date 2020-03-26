@@ -30,11 +30,11 @@ const uint8_t N_MAX_LISTENERS = 7;
 const uint16_t delayToSaveMs = (5 * 1000);
 
 // we are unable to determine if a variable was initialized and
-//  we don't want to define a "null" Configuration as default
+// we don't want to define a "null" Configuration as default
 bool initialized = false;
 
 // it's dangerous to leave this uninitialized but we get these values
-//  with the first get()
+// with the first get()
 Configuration configuration;
 uint32_t tNextSavepoint = 0;
 

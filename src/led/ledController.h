@@ -59,7 +59,7 @@ void checkNightMode(Time currentTime);
 /**
  * Displays the time from the parameter.
  * @param currentTime time to display
- */
+ * */
 void updateDisplay(Time currentTime) {
     clearMultipliers();
 
@@ -85,6 +85,7 @@ void updateDisplay(Time currentTime) {
     writeLeds(config.colorH, config.colorM, config.colorS);
 }
 
+// normalize the multipliers to 1 if their sum is bigger than 1
 void normalizeMultipliers() {
     for (uint8_t i = 0; i < N_LEDS; i++) {
         float sum = multipliersHour[i] + multipliersMinute[i] + multipliersSecond[i];
@@ -97,9 +98,7 @@ void normalizeMultipliers() {
     }
 }
 
-/**
- * Reset led multipliers.
- */
+// reset led multipliers
 void clearMultipliers() {
     for (uint8_t i = 0; i < N_LEDS; i++) {
         multipliersHour[i] = 0;
@@ -114,7 +113,7 @@ void clearMultipliers() {
  * @param clockProgress 0..timeDivider
  * @param timeDivider e.g. 24 or 60
  * @return first active led
- */
+ * */
 uint8_t setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider) {
     while (clockProgress > timeDivider)
         clockProgress -= timeDivider;
@@ -140,7 +139,7 @@ uint8_t setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t ti
  * @param colorH color for the hours hand
  * @param colorM color for the minutes hand
  * @param colorS color for the seconds hand
- */
+ * */
 void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]) {
     for (uint8_t i = 0; i < N_LEDS; i++) {
         CRGB ledColorH = CRGB(colorH[0], colorH[1], colorH[2]);
@@ -160,10 +159,9 @@ void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]) {
     FastLED.show();
 }
 
-/**
- * Smooths the led multipliers by interpolating with the previous value.
- */
+// smooths the led multipliers by interpolating with the previous value
 void interpolateLeds() {
+    // smooth every led by interpolation factor
     for (uint8_t i = 0; i < N_LEDS; ++i) {
         multipliersHour[i] = INTERPOLATION_FACTOR * multipliersHour[i] +
                              (1 - INTERPOLATION_FACTOR) * previousMultipliersHour[i];
@@ -177,9 +175,7 @@ void interpolateLeds() {
     }
 }
 
-/**
- * Checks if the current time is within the nightmode range.
- */
+// checks if the current time is within the nightmode range
 bool shouldBeNightMode(Time currentTime) {
     Config::Configuration config = PersistenceManager::get();
 
@@ -200,9 +196,7 @@ bool shouldBeNightMode(Time currentTime) {
     return false;
 }
 
-/**
- * Maintains nightmode state and turns off leds at the right time.
- */
+// maintains nightmode state and turns off leds at the right time
 void checkNightMode(Time currentTime) {
     if (shouldBeNightMode(currentTime) && state != NIGHTMODE) {
         println(F("Switching to NIGHTMODE"));
@@ -227,6 +221,7 @@ void updateConfiguration();
 
 // -----------------------
 
+// sets up leds for use and registers listener
 void setup() {
     pinMode(PIN_LEDS, OUTPUT);
 
@@ -237,6 +232,7 @@ void setup() {
     PersistenceManager::registerListener(updateConfiguration);
 }
 
+// flash leds one by one
 void helloPower() {
     // TODO: use fading, might want to reuse clock functions
     // might even want to use a rainbow fade? -> check FastLED buildin animations
@@ -269,6 +265,7 @@ void tick() {
         updateDisplay(currentTime);
 }
 
+// updates led values on configuration change
 void updateConfiguration() {
     // color does not need to be cached here, read every time from config
     Config::Configuration config = PersistenceManager::get();
@@ -278,7 +275,7 @@ void updateConfiguration() {
 }
 
 /**
- * quick flash to signal something.
+ * Quick flash to signal something.
  * Designed for debug use.
  * */
 void flash(CRGB color, uint16_t duration) {

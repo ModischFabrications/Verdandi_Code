@@ -12,6 +12,7 @@
 #include "persistence/persistenceManager.h"
 #include "serial/SerialWrapper.h"
 
+// overloading the function that controls the ntp update interval
 uint32_t sntp_update_delay_MS_rfc_not_less_than_15000() {
     uint16_t interval = max(PersistenceManager::get().pollInterval, (uint16_t)1);
     return interval * 60 * 1000;
@@ -34,8 +35,8 @@ uint16_t millisOffset = 0;
 void updateConfiguration();
 void initializeMillisOffset();
 
-// ---------
-
+// initialize the millisecond offset to the ntp clock
+// by waiting to the first change in seconds
 void initializeMillisOffset() {
     gettimeofday(&tv, nullptr);
     time_t now = time(nullptr);
@@ -60,6 +61,7 @@ void initializeMillisOffset() {
     initializedOffset = true;
 }
 
+// updates time values on configuration change
 void updateConfiguration() {
     Config::Configuration config = PersistenceManager::get();
     configTime(config.timezone, "pool.ntp.org");
@@ -71,6 +73,7 @@ void updateConfiguration() {
 
 } // namespace
 
+// set up millisecond offset and register listener
 void setup() {
     settimeofday_cb(initializeMillisOffset);
     PersistenceManager::registerListener(updateConfiguration);
@@ -78,13 +81,14 @@ void setup() {
     // updateConfiguration will be called automatically when registering
 }
 
+// every tick get and display new time
 void timeUpdate() {
     if (!initializedOffset) {
         return;
     }
-    Time newTime = currentTime;
 
-    // TODO: check how it get the new time
+    // create new time object from current time
+    Time newTime = currentTime;
     gettimeofday(&tv, nullptr);
     time_t now = time(nullptr);
     tm* t = localtime(&now);
@@ -93,11 +97,18 @@ void timeUpdate() {
     newTime.second = t->tm_sec;
     newTime.millisecond = (millis() + millisOffset) % 1000;
 
-    if (newTime.hour >= 24) logError(F("hour overflow"));
-    if (newTime.minute >= 60) logError(F("minute overflow"));
-    if (newTime.second >= 60) logError(F("second overflow"));
-    if (newTime.millisecond >= 1000) logError(F("millisecond overflow"));
+    // check for an overflow of each clock handle
+    if (newTime.hour >= 24)
+        logError(F("hour overflow"));
+    if (newTime.minute >= 60)
+        logError(F("minute overflow"));
+    if (newTime.second >= 60)
+        logError(F("second overflow"));
+    if (newTime.millisecond >= 1000)
+        logError(F("millisecond overflow"));
 
+    // since the millisecond offset might not be perfect:
+    // ignore and don't update time when tick happens to fall in that short window
     if (newTime.second == currentTime.second && newTime.millisecond < currentTime.millisecond) {
         // ~ every 5sec, we don't care that bad
         // logError(F("Non continuous time update, ignoring"));

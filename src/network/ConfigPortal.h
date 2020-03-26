@@ -36,6 +36,7 @@ void check() {
     // put everything with regular updates in here
 }
 
+// set up endpoints
 void setup() {
     server.on(F("/config"), handleConfigRequest);
     server.on(F("/update"), handleDataUpdate);
@@ -47,13 +48,19 @@ void setup() {
     println(F("Server started"));
 }
 
+// process undefined endpoints or endpoints to websites
 void handleServer() {
+    // look for a html file within the path of the server
     String path = server.uri();
     if (path.endsWith("/"))
         path += "index.html";
     handleFile(path);
 }
 
+/**
+ * send requested file
+ * @param path path to the file in the data folder
+ * */
 void handleFile(String path) {
     if (FileServer::fileExists(path)) {
         File f = FileServer::getFile(path);
@@ -69,12 +76,15 @@ void handleFile(String path) {
     }
 }
 
+// send debug file
 void handleDebug() { handleFile("/debug.html"); }
 
+// process request for all log and error messages
 void handleLogRequest() {
     const RingBuffer& warnings = getWarnLog();
     const RingBuffer& errors = getErrorLog();
 
+    // gather warnings and errors and create a json string from them
     // TODO: seems to be wrong, capped to N_LOGS - 5
     const uint16_t capacity = JSON_OBJECT_SIZE(2 * N_MAX_LOGS + 4);
     StaticJsonDocument<capacity> doc;
@@ -99,6 +109,7 @@ void handleLogRequest() {
     server.send(200, F("application/json"), json);
 }
 
+// process request to the lates config
 void handleConfigRequest() {
     println(F("Received config request"));
     String json = RequestParser::generateConfigJson();;
@@ -106,9 +117,8 @@ void handleConfigRequest() {
     server.send(200, F("application/json"), json);
 }
 
+// process server receiving a new configuration
 void handleDataUpdate() {
-    // send back information about arguments as a test
-
     printlnRaw(RequestParser::argsToString(server));
     PersistenceManager::set(RequestParser::argsToConfiguration(server));
 
@@ -116,6 +126,7 @@ void handleDataUpdate() {
     server.send(200);
 }
 
+// send the current time
 void handleTimeRequest() {
     println(F("Received time request"));
 

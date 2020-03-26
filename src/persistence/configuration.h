@@ -10,9 +10,10 @@ const uint8_t N_TIMEZONE = 50;
 const uint8_t N_TIMEZONE_NAME = 40;
 
 
-/* change with each design iteration to prevent EEPROM inconsistency and help
+/**
+ * change with each design iteration to prevent EEPROM inconsistency and help
  * with wear leveling of EEPROM cells.
- */
+ * */
 const uint8_t VERSION = 4;
 
 struct Configuration {

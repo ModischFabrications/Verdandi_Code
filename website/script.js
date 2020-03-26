@@ -31,10 +31,13 @@ let currentTime = new Date(2000, 1, 1, 0, 0, 0, 0);
 let timeUpdateTimeout;
 let timeUpdateInterval = 10;
 
+// hide/unhide element with the id 'id'
 function toggleHiddenById(id) {
     d.getElementById(id).classList.toggle("showDisabled");
     d.getElementById(id).toggleAttribute("disabled");
 }
+
+// on page load init html elements and request the timezone json
 function onload() {
     brightenessEl = d.getElementById("brightnessSlider");
     showHoursEl = d.getElementById("showHours");
@@ -54,6 +57,8 @@ function onload() {
 }
 
 let httpRequests = {
+    // request the timezone json file
+    // on finish: request current config values
     loadTimezones: function () {
         let self = this;
         let xhttp = new XMLHttpRequest();
@@ -68,6 +73,8 @@ let httpRequests = {
         }
         xhttp.send();
     },
+    // request config values and save them in the global config object
+    // on finish: request current time
     loadConfigValues: function () {
         let self = this;
         let xhttp = new XMLHttpRequest();
@@ -117,10 +124,12 @@ let httpRequests = {
         xhttp.send();
     },
     dataUpdateTimeout: null,
+    // on config value change: send updated data back to the board
     sendDataUpdate: function () {
         // clear existing timeout and set new one to send only every 200 ms
         clearTimeout(this.dataUpdateTimeout);
         this.dataUpdateTimeout = setTimeout(() => {
+            // generate string from config object and send in url encoded form
             let urlString = generateUrlString();
 
             let xhttp = new XMLHttpRequest();
@@ -134,6 +143,7 @@ let httpRequests = {
             xhttp.send(urlString);
         }, 100);
 
+        // create url string from config object
         function generateUrlString() {
             let urlString = '';
             for (let [key, value] of Object.entries(config)) {
@@ -144,6 +154,7 @@ let httpRequests = {
             return urlString;
         }
     },
+    // request the currently displayed time in an interval
     loadCurrentTime: function () {
         let xhttp = new XMLHttpRequest();
         xhttp.open('GET', d.URL + 'time');
@@ -169,6 +180,7 @@ let httpRequests = {
 let timezoneDisplay = {
     currentTimezonePath: [],
     lastSelectedTzName: 'GMT',
+    // main handler for displaying the timezones
     update: function () {
         let tzToDisplay = this.getChildrenInCurrentTimezonePath();
         let tzElements = this.generateTzHtmlList(tzToDisplay);
@@ -299,6 +311,7 @@ let timezoneDisplay = {
     }
 }
 
+// display updated time
 function updateTime() {
     let timeEl = d.getElementById('timeDisplay');
     currentTime = new Date(currentTime.getTime() + 1000);
@@ -319,6 +332,8 @@ function sortJsonByKey(unordered) {
     return ordered;
 }
 
+// call when any config value changes
+// updates config, their ui elements and calls update to send new config to backend
 function onValueChange(element, targetVar) {
     /* possibly remove switch statement to update everything all the time to remove characters */
     switch (targetVar) {
@@ -373,6 +388,7 @@ function onValueChange(element, targetVar) {
     httpRequests.sendDataUpdate();
 }
 
+// updates the ui elements in order to display the correct config values (shitty two-way binding)
 function updateUIElements() {
     console.log("Updating brightness with value: ", config.brightness)
     console.log("Updated value for slider: ", Math.round(config.brightness / 2.55))

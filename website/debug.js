@@ -1,5 +1,6 @@
 let d = document;
 
+// on page load: request and display error and warning messages
 function onload() {
     let xhttp = new XMLHttpRequest();
     xhttp.open('GET', d.URL + '/messages', true);
@@ -14,6 +15,7 @@ function onload() {
     xhttp.send();
 }
 
+// show display messages in ui
 function displayMessages(debugMessageObj) {
     let warningsContainer = d.getElementById('warningsContainer');
     let errorsContainer = d.getElementById('errorsContainer');
@@ -26,6 +28,7 @@ function displayMessages(debugMessageObj) {
     warningsContainer.innerHTML = '';
     errorsContainer.innerHTML = '';
 
+    // display messaged depending on the current index in the loop
     for (let i = 0; i < debugMessageObj.warnings.length; ++i) {
         let index = (i + debugMessageObj.warningIndex) % debugMessageObj.warnings.length;
         let m = debugMessageObj.warnings[index];

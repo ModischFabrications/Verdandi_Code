@@ -12,6 +12,7 @@ bool fileExists(String path);
 
 void setup() { SPIFFS.begin(); }
 
+// map file name to content type
 String getContentType(String filename) {
     if (filename.endsWith(".html"))
         return "text/html";

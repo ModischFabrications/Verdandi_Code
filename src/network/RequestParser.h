@@ -32,6 +32,10 @@ void splitCSVToArray(const char* input, uint8_t* output, const char* token = ","
 }
 } // namespace
 
+/**
+ * Loads the configuration and creates a json object from it
+ * @return json string representing the current configuration
+ * */
 String generateConfigJson() {
     const Config::Configuration config = PersistenceManager::get();
 
@@ -39,8 +43,8 @@ String generateConfigJson() {
     const uint16_t capacity = JSON_OBJECT_SIZE(27);
     StaticJsonDocument<capacity> doc;
 
+    // add element for every config parameter
     doc["brightness"] = config.brightness;
-
     doc["showHours"] = config.showHours;
     doc["showMinutes"] = config.showMinutes;
     doc["showSeconds"] = config.showSeconds;
@@ -83,6 +87,11 @@ String generateConfigJson() {
     return json;
 }
 
+/**
+ * Takes server arguments and creates new config object out of it
+ * @param server the server object that provides the arguments
+ * @return new config object representing the server arguments
+ * */
 Config::Configuration argsToConfiguration(ESP8266WebServer& server) {
     Config::Configuration newValues = Config::Configuration();
 
@@ -171,6 +180,7 @@ Config::Configuration argsToConfiguration(ESP8266WebServer& server) {
     return newValues;
 }
 
+// convert server arguments to one string message
 String argsToString(ESP8266WebServer& server) {
     String message = "Number of args received: ";
     message += server.args();
