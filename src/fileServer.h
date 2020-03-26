@@ -27,11 +27,13 @@ String getContentType(String filename) {
     return "text/plain";
 }
 
+// includes a check for a .gz variant
 bool fileExists(String path) {
     String pathWithGz = path + ".gz";
     return (SPIFFS.exists(pathWithGz) || SPIFFS.exists(path));
 }
 
+// get the original file or a .gz variant
 File getFile(String path) {
     String pathWithGz = path + ".gz";
     if (SPIFFS.exists(pathWithGz))
