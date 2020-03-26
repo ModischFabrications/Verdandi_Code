@@ -8,6 +8,10 @@ Connect the clock to an adequate power supply, 5V and >200mA should be fine.
 We assume that your network allows outgoing connections, a WiFi connection equals 
 network connectivity for us.
 
+Connect to the IP of your device and start playing around with the UI:
+
+![TODO LUKAS]()
+
 ### First setup
 1. Power the clock
 2. Check for a wifi network called "Verdandi"
@@ -31,10 +35,12 @@ Example output:
 ```
 
 #### by app
-1. Download and start any network manager, for example [Network Analyzer](https://play.google.com/store/apps/details?id=net.techet.netanalyzerlite.an)
+1. Download and start any network manager, for example [Network Analyzer](https://play.google.com/store/apps/details?id=net.techet.netanalyzerlite.an) (Android)
 1. LAN Scan > Scan, remember devices
 1. Plug in the clock
 1. LAN Scan > Scan, look for the new device
+
+Watch out, disconnected devices will persist a bit longer than powered.
 
 ## Installation
 VSCode should offer you a task to do everything automatically:
