@@ -1,7 +1,13 @@
 let d = document;
+let reloadInterval = 5 * 1000;
 
 // on page load: request and display error and warning messages
 function onload() {
+    requestDebugMessages();
+    setInterval(requestDebugMessages, reloadInterval);
+}
+
+function requestDebugMessages() {
     let xhttp = new XMLHttpRequest();
     xhttp.open('GET', d.URL + '/messages', true);
     xhttp.onreadystatechange = function () {
