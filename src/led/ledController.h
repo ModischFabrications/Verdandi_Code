@@ -48,10 +48,10 @@ float previousMultipliersSecond[N_LEDS];
 void updateDisplay();
 void normalizeMultipliers();
 void clearMultipliers();
-uint8_t setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider);
+const uint8_t setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider);
 void writeLeds(uint8_t colorH[3], uint8_t colorM[3], uint8_t colorS[3]);
 void interpolateLeds();
-bool shouldBeNightMode(Time currentTime);
+const bool shouldBeNightMode(Time currentTime);
 void checkNightMode(Time currentTime);
 
 // -----------------------
@@ -114,7 +114,7 @@ void clearMultipliers() {
  * @param timeDivider e.g. 24 or 60
  * @return first active led
  * */
-uint8_t setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider) {
+const uint8_t setMultiplier(float multipliers[N_LEDS], float clockProgress, uint8_t timeDivider) {
     while (clockProgress > timeDivider)
         clockProgress -= timeDivider;
 
@@ -176,7 +176,7 @@ void interpolateLeds() {
 }
 
 // checks if the current time is within the nightmode range
-bool shouldBeNightMode(Time currentTime) {
+const bool shouldBeNightMode(Time currentTime) {
     Config::Configuration config = PersistenceManager::get();
 
     if (!config.nightmode)

@@ -24,7 +24,7 @@ bool initializedOffset = false;
 
 void setup();
 void timeUpdate();
-Time getCurrentTime();
+const Time getCurrentTime();
 
 namespace {
 
@@ -118,5 +118,5 @@ void timeUpdate() {
     currentTime = newTime;
 }
 
-Time getCurrentTime() { return currentTime; }
+const Time getCurrentTime() { return currentTime; }
 } // namespace TimeService
