@@ -53,7 +53,7 @@ void heartbeatSerial() {
     lastCycle = millis();
 }
 
-String readString(uint8_t expectedLength = 1) {
+const String readString(uint8_t expectedLength = 1) {
     if (!USE_SERIAL)
         return "";
 

@@ -7,13 +7,14 @@
 
 namespace FileServer {
 void setup();
-String getContentType(String filename);
-bool fileExists(String path);
+const String getContentType(String filename);
+const bool fileExists(String path);
+const File getFile(String path);
 
 void setup() { SPIFFS.begin(); }
 
 // map file name to content type
-String getContentType(String filename) {
+const String getContentType(String filename) {
     if (filename.endsWith(".html"))
         return "text/html";
     else if (filename.endsWith(".css"))
@@ -27,12 +28,14 @@ String getContentType(String filename) {
     return "text/plain";
 }
 
-bool fileExists(String path) {
+// includes a check for a .gz variant
+const bool fileExists(String path) {
     String pathWithGz = path + ".gz";
     return (SPIFFS.exists(pathWithGz) || SPIFFS.exists(path));
 }
 
-File getFile(String path) {
+// get the original file or a .gz variant
+const File getFile(String path) {
     String pathWithGz = path + ".gz";
     if (SPIFFS.exists(pathWithGz))
         path += ".gz";

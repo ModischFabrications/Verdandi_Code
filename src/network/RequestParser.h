@@ -7,9 +7,9 @@
 #include <ESP8266WebServer.h>
 
 namespace RequestParser {
-static String generateConfigJson();
-static Config::Configuration argsToConfiguration(ESP8266WebServer& server);
-static String argsToString(ESP8266WebServer& server);
+const String generateConfigJson();
+const Config::Configuration argsToConfiguration(ESP8266WebServer& server);
+const String argsToString(ESP8266WebServer& server);
 
 // private namespace
 namespace {
@@ -36,7 +36,7 @@ void splitCSVToArray(const char* input, uint8_t* output, const char* token = ","
  * Loads the configuration and creates a json object from it
  * @return json string representing the current configuration
  * */
-String generateConfigJson() {
+const String generateConfigJson() {
     const Config::Configuration config = PersistenceManager::get();
 
     // actual number of objects, in this case number of lines
@@ -92,7 +92,7 @@ String generateConfigJson() {
  * @param server the server object that provides the arguments
  * @return new config object representing the server arguments
  * */
-Config::Configuration argsToConfiguration(ESP8266WebServer& server) {
+const Config::Configuration argsToConfiguration(ESP8266WebServer& server) {
     Config::Configuration newValues = Config::Configuration();
 
     // implicit clamping could make problems but it's just nicer to read
@@ -181,7 +181,7 @@ Config::Configuration argsToConfiguration(ESP8266WebServer& server) {
 }
 
 // convert server arguments to one string message
-String argsToString(ESP8266WebServer& server) {
+const String argsToString(ESP8266WebServer& server) {
     String message = "Number of args received: ";
     message += server.args();
 
