@@ -16,10 +16,25 @@ network connectivity for us.
 5. If everything worked the hotspot should disappear and the clock should show up
 
 ### Find out your clock IP address
+#### by hardware
 1. Open up the small hatch in the back of the clock
 1. Connect the wemos to a PC with an usb cable
 1. Open a serial terminal (I know, sorry...)
 1. Read the terminal output to find out your IP
+
+Example output:
+```
+*WM: Connection result: 
+*WM: 3
+*WM: IP Address:
+*WM: 192.168.178.69
+```
+
+#### by app
+1. Download and start any network manager, for example [Network Analyzer](https://play.google.com/store/apps/details?id=net.techet.netanalyzerlite.an)
+1. LAN Scan > Scan, remember devices
+1. Plug in the clock
+1. LAN Scan > Scan, look for the new device
 
 ## Installation
 VSCode should offer you a task to do everything automatically:
