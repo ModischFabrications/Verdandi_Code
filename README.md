@@ -4,7 +4,7 @@ Cooperative project to display an analog clock with digital RGB LEDs.
 PCB can be found at https://github.com/ModischFabrications/Verdandi_PCB.
 
 ## Usage
-Connect the clock to an adequate power supply, 5V and >200mA should be fine. 
+Connect the clock to an adequate power supply, 5V and >500mA should be fine. 
 We assume that your network allows outgoing connections, a WiFi connection equals 
 network connectivity for us.
 
