@@ -1,7 +1,7 @@
 # Verdandi
 Cooperative project to display an analog clock with digital RGB LEDs.
 
-PCB can be found at https://github.com/ModischFabrications/Verdandi_PCB.
+Links can be found at https://github.com/ModischFabrications/Verdandi.
 
 ## Usage
 Connect the clock to an adequate power supply, 5V and >500mA should be fine. 
