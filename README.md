@@ -10,7 +10,7 @@ network connectivity for us.
 
 Connect to the IP of your device and start playing around with the UI:
 
-![Verdandi Config Page](../res/verdandi-config-page.png)
+![Verdandi Config Page](https://github.com/ModischFabrications/Verdandi/blob/master/res/verdandi-config-page.png)
 
 ### First setup
 1. Power the clock
