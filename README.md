@@ -8,19 +8,18 @@ Links can be found at https://github.com/ModischFabrications/Verdandi.
 
 ## Usage
 Connect the clock to an adequate power supply, 5V and >500mA should be fine. 
-We assume that your network allows outgoing connections, a WiFi connection equals 
+We assume that your network allows outgoing connections. A WiFi connection equals 
 network connectivity for us.
 
-Connect to the IP of your device and start playing around with the UI:
+Connect to the IP address of your device and start playing around with the UI:
 
 ![Verdandi Config Page](https://github.com/ModischFabrications/Verdandi/blob/master/res/verdandi-config-page.png)
 
 ### First setup
-1. Power the clock
+1. Power on the clock
 2. Check for a wifi network called "Verdandi"
-3. Connect and select your network and set your password
-4. Repeat 2+ if it does not work
-5. If everything worked the hotspot should disappear and the clock should show up
+3. Connect with it, select your network and input your password
+4. If everything worked the hotspot should disappear and the clock should show up. Repeat if not.
 
 ### Find out your clock IP address
 #### by hardware
