@@ -10,7 +10,7 @@ network connectivity for us.
 
 Connect to the IP of your device and start playing around with the UI:
 
-![TODO LUKAS]()
+![Verdandi Config Page](../res/verdandi-config-page.png)
 
 ### First setup
 1. Power the clock
